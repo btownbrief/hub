@@ -1,0 +1,372 @@
+/* ============================================================
+   EVERYTHING — the BTown Brief front door
+
+   The page is a reel of Burlington. A photograph fills the frame,
+   dissolves into black, the links sit in that black, and then the
+   black dissolves into the next photograph. The dark isn't dead
+   space between pictures — it's the room the links live in.
+
+   Cards are glass, not slabs: translucent, blurred, bordered in a
+   hairline of white. They read on a photograph and on black alike,
+   which is what lets a card sit anywhere on the reel.
+============================================================ */
+
+:root {
+  --black: #06080A;
+  --ink: #F2F0EA;
+  --ink-soft: rgba(242, 240, 234, 0.70);
+  --ink-faint: rgba(242, 240, 234, 0.45);
+
+  /* Glass. One material, used everywhere. */
+  --glass: rgba(255, 255, 255, 0.06);
+  --glass-hover: rgba(255, 255, 255, 0.11);
+  --glass-edge: rgba(255, 255, 255, 0.14);
+  --glass-edge-hi: rgba(255, 255, 255, 0.32);
+
+  --gold: #E8A33D;
+
+  --serif: "Instrument Serif", Georgia, serif;
+  --ui: "DM Sans", system-ui, -apple-system, sans-serif;
+
+  --radius: 16px;
+  --pill: 999px;
+  --wrap: 1180px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--black);
+  color: var(--ink);
+  font-family: var(--ui);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: 0 clamp(1.1rem, 4vw, 2.25rem);
+}
+
+/* ============================================================
+   PHOTOGRAPHS
+   Every frame is graded the same way and masked to black top and
+   bottom, so no photo ever ends on a hard edge.
+============================================================ */
+.shot {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: var(--black);
+}
+.shot-img {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center 55%;
+  /* The grade. Matte it so white type simply sits on top — a scrim alone
+     never fixes white-text-on-photo, but a graded photo doesn't need one. */
+  filter: saturate(0.74) contrast(0.88) brightness(0.82);
+}
+/* Dissolve into black at both ends. This is the whole transition. */
+.shot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    var(--black) 0%,
+    rgba(6, 8, 10, 0.35) 16%,
+    rgba(6, 8, 10, 0.18) 42%,
+    rgba(6, 8, 10, 0.55) 78%,
+    var(--black) 100%
+  );
+}
+/* The hero has no black above it — it opens the page. */
+.shot.hero::after {
+  background: linear-gradient(
+    to bottom,
+    rgba(6, 8, 10, 0.55) 0%,
+    rgba(6, 8, 10, 0.15) 22%,
+    rgba(6, 8, 10, 0.30) 55%,
+    rgba(6, 8, 10, 0.88) 88%,
+    var(--black) 100%
+  );
+}
+
+/* Grain, over everything photographic. Ties the set into one family. */
+.grain {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.15;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+/* ---- The opening frame ---- */
+.hero {
+  min-height: clamp(520px, 82vh, 780px);
+  display: flex;
+  align-items: center;
+}
+.hero-copy {
+  position: relative;
+  z-index: 3;
+  max-width: var(--wrap);
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 clamp(1.1rem, 4vw, 2.25rem);
+  text-align: center;
+}
+.eyebrow {
+  font-size: 0.68rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0 0 1rem;
+}
+.hero h1 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(2.8rem, 7.4vw, 5.9rem);
+  line-height: 1.02;
+  letter-spacing: -0.012em;
+  margin: 0;
+  text-wrap: balance;
+  text-shadow: 0 2px 40px rgba(0, 0, 0, 0.45);
+}
+.hero .lede {
+  max-width: 54ch;
+  margin: 1.15rem auto 0;
+  color: var(--ink-soft);
+  font-size: 1.02rem;
+  text-shadow: 0 1px 18px rgba(0, 0, 0, 0.6);
+}
+
+/* The park.photos pill: translucent, not a solid slab. */
+.pillbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.6rem;
+  padding: 0.72rem 1.5rem;
+  border-radius: var(--pill);
+  background: rgba(255, 255, 255, 0.13);
+  border: 1px solid var(--glass-edge-hi);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+.pillbtn:hover, .pillbtn:focus-visible {
+  background: rgba(255, 255, 255, 0.22);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+/* ---- Interstitial frames: a photo carrying a section title ---- */
+.shot.band {
+  min-height: clamp(300px, 44vh, 440px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.band-copy { position: relative; z-index: 3; padding: 0 1.5rem; }
+.band-copy h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(2rem, 4.6vw, 3.3rem);
+  margin: 0;
+  letter-spacing: -0.01em;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.5);
+}
+.band-copy p {
+  margin: 0.5rem auto 0;
+  max-width: 46ch;
+  color: var(--ink-soft);
+  text-shadow: 0 1px 16px rgba(0, 0, 0, 0.65);
+}
+
+/* ============================================================
+   THE LINKS — dense, glassy, sitting in the black
+============================================================ */
+.deck {
+  padding: clamp(2.2rem, 4.5vw, 3.4rem) 0 clamp(2.6rem, 5vw, 4rem);
+}
+.deck.tight { padding-top: 0; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(232px, 1fr));
+  gap: 10px;
+}
+
+/* A quiet rule across the grid. Seventeen games in one undifferentiated block
+   is a wall; grouped, it's a menu. */
+.subhead {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin: 1.1rem 0 0.1rem;
+  font-size: 0.66rem;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.subhead::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.10);
+}
+.subhead:first-child { margin-top: 0; }
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+  padding: 0.9rem 1.05rem 0.95rem;
+  border-radius: var(--radius);
+  background: var(--glass);
+  border: 1px solid var(--glass-edge);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+.card:hover, .card:focus-visible {
+  background: var(--glass-hover);
+  border-color: var(--glass-edge-hi);
+  transform: translateY(-2px);
+  outline: none;
+}
+.card:focus-visible { box-shadow: 0 0 0 2px var(--gold); }
+
+.card h3 {
+  margin: 0;
+  font-size: 0.97rem;
+  font-weight: 600;
+  letter-spacing: -0.003em;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+.card .icon { font-size: 1.02rem; line-height: 1; }
+.card p {
+  margin: 0;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+
+/* Section headings that sit on black, between the frames. */
+.dept {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+.dept h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 1.85rem;
+  margin: 0;
+}
+.dept p {
+  margin: 0;
+  color: var(--ink-faint);
+  font-size: 0.86rem;
+  flex: 1;
+  min-width: 11rem;
+}
+
+/* The three big destinations. Bigger glass, same material. */
+.hubs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 12px;
+}
+.hub {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 1.35rem 1.4rem 1.45rem;
+  border-radius: var(--radius);
+  background: var(--glass);
+  border: 1px solid var(--glass-edge);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+.hub:hover, .hub:focus-visible {
+  background: var(--glass-hover);
+  border-color: var(--glass-edge-hi);
+  transform: translateY(-3px);
+  outline: none;
+}
+.hub h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 1.5rem;
+  margin: 0;
+}
+.hub p { margin: 0; font-size: 0.88rem; color: var(--ink-soft); }
+.hub .go {
+  margin-top: 0.55rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.foot {
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+  padding: 1.5rem 0 3.5rem;
+  font-size: 0.8rem;
+  color: var(--ink-faint);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  justify-content: space-between;
+}
+.foot a { color: var(--gold); text-decoration: none; }
+.foot a:hover { text-decoration: underline; }
+
+.credit {
+  position: absolute;
+  right: clamp(1.1rem, 4vw, 2.25rem);
+  bottom: 1rem;
+  z-index: 3;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Backdrop-filter is not universal; without it the glass must still read.
+   Fall back to a solid-enough tint rather than an unreadable sheet. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .card, .hub { background: rgba(18, 22, 26, 0.82); }
+  .pillbtn { background: rgba(28, 32, 36, 0.85); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
