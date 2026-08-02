@@ -295,6 +295,55 @@ body {
   min-width: 11rem;
 }
 
+/* The intent router: question cards, first person, one tap each. */
+.router-kicker {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.15rem, 2.6vw, 1.45rem);
+  color: var(--ink-soft);
+  margin: 0 0 1.1rem;
+  text-wrap: balance;
+}
+.intents {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 12px;
+}
+.intent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 1.35rem 1.4rem 1.45rem;
+  border-radius: var(--radius);
+  background: var(--glass);
+  border: 1px solid var(--glass-edge);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+.intent:hover, .intent:focus-visible {
+  background: var(--glass-hover);
+  border-color: var(--glass-edge-hi);
+  transform: translateY(-3px);
+  outline: none;
+}
+.intent h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-style: italic;
+  font-size: 1.32rem;
+  margin: 0;
+}
+.intent p { margin: 0; font-size: 0.88rem; color: var(--ink-soft); }
+.router-more {
+  margin: 1.4rem 0 0;
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+}
+.router-more a { color: inherit; }
+
 /* The three big destinations. Bigger glass, same material. */
 .hubs {
   display: grid;
@@ -328,7 +377,7 @@ body {
   margin: 0;
 }
 .hub p { margin: 0; font-size: 0.88rem; color: var(--ink-soft); }
-.hub .go {
+.hub .go, .intent .go {
   margin-top: 0.55rem;
   font-size: 0.68rem;
   letter-spacing: 0.13em;
@@ -363,7 +412,7 @@ body {
 /* Backdrop-filter is not universal; without it the glass must still read.
    Fall back to a solid-enough tint rather than an unreadable sheet. */
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .card, .hub { background: rgba(18, 22, 26, 0.82); }
+  .card, .hub, .intent { background: rgba(18, 22, 26, 0.82); }
   .pillbtn { background: rgba(28, 32, 36, 0.85); }
 }
 
