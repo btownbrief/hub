@@ -111,7 +111,7 @@ body {
 
 /* ---- The opening frame ---- */
 .hero {
-  min-height: clamp(520px, 82vh, 780px);
+  min-height: clamp(420px, 58vh, 620px);
   display: flex;
   align-items: center;
 }
@@ -201,7 +201,7 @@ body {
    THE LINKS — dense, glassy, sitting in the black
 ============================================================ */
 .deck {
-  padding: clamp(2.2rem, 4.5vw, 3.4rem) 0 clamp(2.6rem, 5vw, 4rem);
+  padding: clamp(1.3rem, 2.8vw, 2.1rem) 0 clamp(2.6rem, 5vw, 4rem);
 }
 .deck.tight { padding-top: 0; }
 
@@ -301,9 +301,31 @@ body {
   font-style: italic;
   font-size: clamp(1.15rem, 2.6vw, 1.45rem);
   color: var(--ink-soft);
-  margin: 0 0 1.1rem;
+  margin: 0 0 0.8rem;
   text-wrap: balance;
 }
+
+/* Live conditions pill: the weather page's vitals, one tap from the door. */
+.wx-pill {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 0.7rem;
+  margin-top: 1rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: var(--pill);
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid var(--glass-edge);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 0.86rem;
+  transition: background 0.18s ease;
+}
+.wx-pill:hover, .wx-pill:focus-visible { background: rgba(255, 255, 255, 0.18); outline: none; }
+.wx-pill .wx-sep { color: var(--ink-faint); }
+.wx-pill .wx-go { color: var(--gold); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; }
 .intents {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));

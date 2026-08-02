@@ -42,6 +42,10 @@
     <p class="lede">A newsletter that got out of hand: an arcade, a live city guide,
       and a pile of free things for the people who live here. Start anywhere.</p>
     <a class="pillbtn" href="#start">See all of it ↓</a>
+    <div><a class="wx-pill" id="wx-pill" href="https://guide.btownbrief.com/weather.html">
+      <span id="wx-line">Burlington right now</span>
+      <span class="wx-go">Full forecast →</span>
+    </a></div>
   </div>
   <span class="credit">Burlington Harbor</span>
 </header>
@@ -321,5 +325,27 @@
 </main>
 
 <script src="https://play.btownbrief.com/nav.js" defer></script>
+<script>
+(function () {
+  var line = document.getElementById('wx-line');
+  if (!line || !window.fetch) return;
+  fetch('https://guide.btownbrief.com/data/weather/latest.json')
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function (d) {
+      var bits = [];
+      var now = d.now || {};
+      if (now.temp_f != null) bits.push(Math.round(now.temp_f) + '°' + (now.description ? ' ' + String(now.description).toLowerCase() : ''));
+      var lake = d.lake_gage || {};
+      if (lake.water_temp_f != null) bits.push('lake ' + Math.round(lake.water_temp_f) + '°');
+      var sunset = d.sun && d.sun.sunset;
+      if (sunset) {
+        var t = new Date(sunset);
+        if (!isNaN(t)) bits.push('sunset ' + t.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }).toLowerCase());
+      }
+      if (bits.length) line.innerHTML = bits.join(' <span class="wx-sep">·</span> ');
+    })
+    .catch(function () { /* the static label already says where the link goes */ });
+})();
+</script>
 </body>
 </html>
