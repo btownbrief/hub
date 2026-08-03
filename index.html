@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#06080A">
 <title>Everything the BTown Brief Made — a map of the whole thing</title>
-<meta name="description" content="Every free thing the BTown Brief has built for Burlington, Vermont: 33 arcade games, a live city guide with restaurant hours, events, weather, sunsets and jobs, plus guides and merch. One page, every link.">
+<meta name="description" content="Every free thing the BTown Brief has built for Burlington, Vermont: 30+ arcade games, a live city guide with restaurant hours, events, weather, sunsets and jobs, plus guides and merch. One page, every link.">
 
 <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="assets/favicon-16.png" sizes="16x16" type="image/png">
@@ -16,14 +16,14 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="BTown Brief">
 <meta property="og:title" content="Everything the BTown Brief Made">
-<meta property="og:description" content="33 arcade games, a live Burlington city guide, and a newsletter. Every link, one page.">
+<meta property="og:description" content="30+ arcade games, a live Burlington city guide, and a newsletter. Every link, one page.">
 <meta property="og:url" content="https://hub.btownbrief.com/">
 <meta property="og:image" content="https://hub.btownbrief.com/assets/og-hub.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Everything the BTown Brief Made">
-<meta name="twitter:description" content="33 arcade games, a live Burlington city guide, and a newsletter. Every link, one page.">
+<meta name="twitter:description" content="30+ arcade games, a live Burlington city guide, and a newsletter. Every link, one page.">
 <meta name="twitter:image" content="https://hub.btownbrief.com/assets/og-hub.jpg">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -83,7 +83,7 @@
       </div>
       <div class="intent">
         <h3>“I want to play something.”</h3>
-        <p>Thirty-three free local games, with monthly champions named in the newsletter.</p>
+        <p>More than thirty free local games, with monthly champions named in the newsletter.</p>
         <p class="intent-links"><a class="go" href="https://play.btownbrief.com/">The arcade →</a><a class="go" href="https://play.btownbrief.com/leaderboards/">Leaderboards →</a></p>
       </div>
       <div class="intent">
@@ -113,7 +113,7 @@
 
 <main class="wrap">
   <section class="deck tight">
-    <div class="grid">
+    <div class="grid" id="city-grid">
 
       <p class="subhead">Right now</p>
       <a class="card" href="https://play.btownbrief.com/what-now/">
@@ -257,13 +257,13 @@
   <div class="grain" aria-hidden="true"></div>
   <div class="band-copy">
     <h2>The arcade</h2>
-    <p>Thirty-three free browser games, all set in Burlington. Leaderboards reset monthly.</p>
+    <p>Thirty-plus free browser games, all set in Burlington. Leaderboards reset monthly.</p>
   </div>
 </section>
 
 <main class="wrap">
   <section class="deck tight">
-    <div class="grid">
+    <div class="grid" id="arcade-grid">
 
       <p class="subhead">Reflex</p>
       <a class="card" href="https://play.btownbrief.com/church-street-runner/"><h3><span class="icon">🏃</span> Church Street Runners</h3><p>Run the Marketplace: dodge dogs, grab creemees, catch live headlines.</p></a>
@@ -331,6 +331,7 @@
 </main>
 
 <script src="https://play.btownbrief.com/nav.js" defer></script>
+<script src="grids.js" defer></script>
 <script>
 (function () {
   var line = document.getElementById('wx-line');
