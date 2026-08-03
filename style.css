@@ -368,7 +368,6 @@ body {
 .intent h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-style: italic;
   font-size: 1.32rem;
   margin: 0;
 }
