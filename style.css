@@ -305,25 +305,20 @@ body {
   text-wrap: balance;
 }
 
-/* Live conditions pill: the weather page's vitals, one tap from the door. */
+/* Live conditions: the weather page's vitals, one tap from the door.
+   Bare text on the hero — no chip — so it reads as a line, not a button. */
 .wx-pill {
   display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.45rem 0.7rem;
   margin-top: 1rem;
-  padding: 0.55rem 1.1rem;
-  border-radius: var(--pill);
-  background: rgba(255, 255, 255, 0.10);
-  border: 1px solid var(--glass-edge);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
   color: var(--ink);
   text-decoration: none;
   font-size: 0.86rem;
-  transition: background 0.18s ease;
 }
-.wx-pill:hover, .wx-pill:focus-visible { background: rgba(255, 255, 255, 0.18); outline: none; }
+.wx-pill:hover .wx-go, .wx-pill:focus-visible .wx-go { text-decoration: underline; }
+.wx-pill:focus-visible { outline: none; }
 .wx-pill .wx-sep { color: var(--ink-faint); }
 .wx-pill .wx-go { color: var(--gold); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; }
 .intents {
