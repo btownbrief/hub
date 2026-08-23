@@ -192,6 +192,9 @@ body {
   text-align: center;
 }
 .band-copy { position: relative; z-index: 3; padding: 0 1.5rem; }
+/* The closing frame carries the signup; give it room so the plate never
+   kisses the bottom edge of the photograph on a phone. */
+.closing .band-copy { padding: 2.6rem 1.5rem 3rem; }
 .band-copy h2 {
   font-family: var(--serif);
   font-weight: 400;
@@ -438,6 +441,24 @@ body {
   text-transform: uppercase;
   color: var(--gold);
 }
+
+/* The signup at the foot of the reel. The form is Beehiiv's 52px slim embed;
+   the glass plate behind it is ours, so it sits on the photograph the way the
+   cards do. */
+.subscribe {
+  margin: 1.4rem auto 0;
+  max-width: 440px;
+  padding: 0.9rem 0.9rem 0.8rem;
+  border-radius: var(--radius);
+  background: rgba(6, 8, 10, 0.55);
+  border: 1px solid var(--glass-edge);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+.subscribe iframe { display: block; width: 100%; height: 52px; border: 0; border-radius: 10px; }
+.subscribe .subscribe-proof { margin: 0.7rem 0 0; font-size: 0.76rem; color: var(--ink-soft); text-shadow: none; }
+.subscribe .subscribe-proof a { color: var(--gold); text-decoration: none; }
+.subscribe .subscribe-proof a:hover { text-decoration: underline; }
 
 .foot {
   border-top: 1px solid rgba(255, 255, 255, 0.09);
