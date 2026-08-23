@@ -121,7 +121,9 @@ body {
   max-width: var(--wrap);
   margin: 0 auto;
   width: 100%;
-  padding: 0 clamp(1.1rem, 4vw, 2.25rem);
+  /* Vertical room too: on a phone the copy outgrows the hero's min-height,
+     and without this the conditions line landed on top of the photo credit. */
+  padding: 2.6rem clamp(1.1rem, 4vw, 2.25rem) 3.2rem;
   text-align: center;
 }
 .eyebrow {
@@ -167,12 +169,18 @@ body {
   font-weight: 500;
   transition: background 0.18s ease, transform 0.18s ease;
 }
-/* Two pills sit side by side on the hero; inline-flex leaves no gap of its own. */
-.pillbtn + .pillbtn { margin-left: 0.6rem; }
+/* Two pills sit side by side on the hero and stack cleanly on a phone. */
+.pills { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.6rem; margin-top: 1.6rem; }
+.pills .pillbtn { margin-top: 0; }
 .pillbtn:hover, .pillbtn:focus-visible {
   background: rgba(255, 255, 255, 0.22);
   transform: translateY(-1px);
   outline: none;
+}
+/* Keyboard focus gets the same gold ring the cards have; hover stays quiet. */
+.pillbtn:focus-visible, .wx-pill:focus-visible, .intent-links .go:focus-visible {
+  box-shadow: 0 0 0 2px var(--gold);
+  border-radius: var(--pill);
 }
 
 /* ---- Interstitial frames: a photo carrying a section title ---- */
@@ -301,6 +309,7 @@ body {
 .router-kicker {
   font-family: var(--serif);
   font-style: italic;
+  font-weight: 400;
   font-size: clamp(1.15rem, 2.6vw, 1.45rem);
   color: var(--ink-soft);
   margin: 0 0 0.8rem;
@@ -312,6 +321,7 @@ body {
 .wx-pill {
   display: inline-flex;
   flex-wrap: wrap;
+  justify-content: center; /* when it wraps on a phone it stays centered like the rest of the hero */
   align-items: center;
   gap: 0.45rem 0.7rem;
   margin-top: 1rem;

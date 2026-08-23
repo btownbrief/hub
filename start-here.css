@@ -159,8 +159,10 @@ ol.ranks {
   font-weight: 500;
 }
 .bench p { margin: 0; font-size: 0.88rem; color: var(--ink-soft); line-height: 1.7; }
-.bench a { color: var(--ink); text-decoration: none; border-bottom: 1px solid rgba(255, 255, 255, 0.22); }
-.bench a:hover, .bench a:focus-visible { border-bottom-color: var(--gold); outline: none; }
+/* Inline links, but each one a real thumb target: padded to ~44px tall. */
+.bench a { display: inline-block; padding: 0.55rem 0; color: var(--ink); text-decoration: none; border-bottom: 1px solid rgba(255, 255, 255, 0.22); }
+.bench a:hover { border-bottom-color: var(--gold); }
+.bench a:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 4px; }
 .bench .sep { color: var(--ink-faint); padding: 0 0.3rem; }
 
 /* ---- the "how to use this" note above the first list ---- */
