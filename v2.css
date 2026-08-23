@@ -170,7 +170,8 @@ img { display: block; }
 .trio .go { font-weight: 800; color: var(--lake); }
 
 /* ---------------------------------------------------------------- A–Z */
-.az { margin-top: clamp(2.6rem, 6vw, 4.4rem); border-top: 2px solid var(--ink); padding-top: 1.4rem; }
+.az { margin-top: clamp(2.6rem, 6vw, 4.4rem); border-top: 2px solid var(--ink); padding-top: 1.4rem; scroll-margin-top: 72px; }
+#subscribe, #ask { scroll-margin-top: 72px; }
 .azhead { display: grid; grid-template-columns: auto 1fr; gap: .6rem 2rem; align-items: end; }
 .azhead h2 { margin: 0; font-size: clamp(1.8rem, 4.2vw, 3rem); }
 .azhead p { margin: 0; color: var(--ink2); font-size: .95rem; max-width: 48ch; }
@@ -195,7 +196,7 @@ img { display: block; }
 @media (max-width: 980px) { .azlist { columns: 2; } }
 @media (max-width: 900px) {
   .bento { grid-template-columns: repeat(4, 1fr); }
-  .t.read, .t.pick, .t.play, .t.dark, .t.tv, .t.full { grid-column: span 4; }
+  .t.read, .t.pick, .t.play, .t.dark, .t.tv, .t.full, .t.ol { grid-column: span 4; }
   .t.read { grid-row: span 1; min-height: 220px; }
 }
 @media (max-width: 720px) {
@@ -203,7 +204,8 @@ img { display: block; }
   .bento { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 142px; }
   .t { grid-column: span 1; padding: .9rem .95rem; }
   .t.big { grid-column: span 2; grid-row: span 2; }
-  .t.read, .t.pick, .t.play, .t.dark, .t.tv, .t.full { grid-column: span 2; }
+  .t.read, .t.pick, .t.play, .t.dark, .t.tv, .t.full, .t.ol { grid-column: span 2; }
+  .sbtn { width: 44px; height: 44px; }
   .t.read { grid-row: span 2; }
   .t .num { font-size: 2rem; }
   .trio { grid-template-columns: 1fr 1fr; }

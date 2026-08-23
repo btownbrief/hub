@@ -38,10 +38,10 @@
   function shortClock(iso) { return clock(iso).replace(/ (am|pm)$/, '<small>$1</small>'); }
 
   /* ---------- the date line ---------- */
-  (function () {
-    var now = new Date();
-    txt('date-line', now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: TZ }));
-  })();
+  function dateLine() {
+    txt('date-line', new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: TZ }));
+  }
+  dateLine();
 
   /* ---------- weather: air, sky, lake, sunset, as-of ---------- */
   function weather() {
@@ -120,24 +120,31 @@
   }
 
   /* ---------- events: tonight, today, this weekend, free this weekend ---------- */
+  function ymdPlus(ymd, days) {
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(ymd); if (!m) return ymd;
+    var d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3] + days));
+    return d.toISOString().slice(0, 10);
+  }
   function events() {
     return getJSON(GUIDE + 'data/events/events.json').then(function (d) {
       var evs = d.events || [];
       var nowD = new Date(), nowMs = nowD.getTime(), today = btParts(nowD);
       var todayAll = 0, tonight = 0;
-      // the coming Saturday + Sunday (or the current weekend, if we're in it)
+      // the coming Saturday + Sunday (or the current weekend, if we're in it) — by calendar date, DST-proof
       var dow = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(today.wd);
       var toSat = dow === 0 ? -1 : (6 - dow);            // Sunday counts as still-this-weekend
-      var sat = new Date(nowMs + toSat * 86400000), sun = new Date(sat.getTime() + 86400000);
-      var satKey = btParts(sat).ymd, sunKey = btParts(sun).ymd;
+      var satKey = ymdPlus(today.ymd, toSat), sunKey = ymdPlus(today.ymd, toSat + 1);
       var wk = 0, wkFree = 0;
       evs.forEach(function (e) {
         if (!e.start) return;
-        var p = btParts(new Date(e.start));
+        var startMs = new Date(e.start).getTime(); if (isNaN(startMs)) return;
+        var p = btParts(new Date(startMs));
+        var endMs = e.end ? new Date(e.end).getTime() : startMs + 7200000;
         if (p.ymd === today.ymd) {
           todayAll++;
-          var endMs = e.end ? new Date(e.end).getTime() : new Date(e.start).getTime() + 7200000;
           if (endMs >= nowMs) tonight++;
+        } else if (startMs < nowMs && endMs >= nowMs) {
+          tonight++;                                     // started yesterday, still going (a late show past midnight)
         }
         if (p.ymd === satKey || p.ymd === sunKey) { wk++; if (e.free === true) wkFree++; }
       });
@@ -156,22 +163,28 @@
   /* ---------- tonight's pick (the events rail's top line for today) ---------- */
   function pick() {
     return getJSON(GUIDE + 'data/events/rail.json').then(function (d) {
-      var day = (d.days || [])[0]; if (!day) return;
+      var todayKey = btParts(new Date()).ymd;
+      var days = d.days || [];
+      var day = null;
+      for (var i = 0; i < days.length; i++) if (days[i].date === todayKey) { day = days[i]; break; }
+      if (!day) return;
       var picks = day.picks || [];
-      // prefer a pick that hasn't started yet and is this evening; else the day's headline
       var nowMs = Date.now();
-      var later = picks.filter(function (p) { return p.s && new Date(p.s).getTime() > nowMs; });
-      var evening = later.filter(function (p) { return btParts(new Date(p.s)).h >= 16; });
-      var p = evening[0] || later[0] || null;
+      function isAllDay(s) { return /^\d{4}-\d{2}-\d{2}$/.test(s || ''); }
+      // prefer a timed pick still ahead of us this evening; then any timed pick still ahead; then an all-day one
+      var timed = picks.filter(function (p) { return p.s && !isAllDay(p.s) && new Date(p.s).getTime() > nowMs; });
+      var evening = timed.filter(function (p) { return btParts(new Date(p.s)).h >= 16; });
+      var allday = picks.filter(function (p) { return isAllDay(p.s); });
+      var p = evening[0] || timed[0] || allday[0] || null;
       var a = $('pick'); if (!a) return;
       var pl = document.querySelector('#pick .lab'); if (pl) pl.textContent = btParts(new Date()).h >= 16 ? "Tonight's pick" : "Today's pick";
       if (p) {
         txt('pick-t', p.t);
-        txt('pick-v', (p.v ? p.v + ' · ' : '') + clock(p.s));
+        txt('pick-v', (p.v ? p.v + ' · ' : '') + (isAllDay(p.s) ? 'all day' : clock(p.s)));
         if (p.u) a.href = p.u;
       } else if (day.t) {
         txt('pick-t', day.t);
-        txt('pick-v', day.s ? clock(day.s) + ' · see everything tonight' : 'see everything tonight');
+        txt('pick-v', day.s && !isAllDay(day.s) ? clock(day.s) + ' · see everything tonight' : 'see everything tonight');
       }
     });
   }
@@ -243,7 +256,7 @@
       if (index && index.pages) index.pages.forEach(function (p) { add(p.title, p.url, 'page', p.keywords || ''); });
       if (items.length < 30) return;   // a half-broken feed loses to the static list
       items.sort(function (a, b) {
-        var ka = a.n.toLowerCase().replace(/^(the|a|an|r\/)\s*/, ''), kb = b.n.toLowerCase().replace(/^(the|a|an|r\/)\s*/, '');
+        var ka = a.n.toLowerCase().replace(/^(?:(?:the|a|an)\s+|r\/)/, ''), kb = b.n.toLowerCase().replace(/^(?:(?:the|a|an)\s+|r\/)/, '');
         return ka < kb ? -1 : ka > kb ? 1 : 0;
       });
       AZ = items;
@@ -258,6 +271,7 @@
         ul.appendChild(li);
       });
       txt('az-count', items.length + ' pages and games, A–Z. If it isn’t in a question above, it’s here.');
+      var f = $('find'); if (f && f.value) f.dispatchEvent(new Event('input'));
     });
   }
 
@@ -265,7 +279,7 @@
   (function () {
     var pills = document.querySelectorAll('.pill'), panels = document.querySelectorAll('.qp');
     function show(q) {
-      for (var i = 0; i < pills.length; i++) { var on = pills[i].getAttribute('data-q') === q; pills[i].classList.toggle('on', on); pills[i].setAttribute('aria-selected', on ? 'true' : 'false'); }
+      for (var i = 0; i < pills.length; i++) { var on = pills[i].getAttribute('data-q') === q; pills[i].classList.toggle('on', on); pills[i].setAttribute('aria-pressed', on ? 'true' : 'false'); }
       for (var j = 0; j < panels.length; j++) panels[j].classList.toggle('on', panels[j].getAttribute('data-q') === q);
     }
     for (var i = 0; i < pills.length; i++) {
@@ -321,7 +335,10 @@
       if (++tries < 40) setTimeout(foodWhenReady, 150);
     })();
     // Keep the numbers honest on a tab left open: refetch every 15 minutes.
-    setInterval(function () { weather().catch(noop); events().catch(noop); if (window.BTFood) openNow().catch(noop); }, 15 * 60 * 1000);
+    setInterval(function () {
+      dateLine(); weather().catch(noop); events().catch(noop); pick().catch(noop); tv().catch(noop);
+      if (window.BTFood) { openNow().catch(noop); deals().catch(noop); }
+    }, 15 * 60 * 1000);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 })();
