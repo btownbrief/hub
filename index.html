@@ -3,373 +3,359 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#06080A">
-<title>Everything the BTown Brief Made — a map of the whole thing</title>
-<meta name="description" content="Every free thing the BTown Brief has built for Burlington, Vermont: 30+ arcade games, a live city guide with restaurant hours, events, weather, sunsets and jobs, plus guides and merch. One page, every link.">
+<meta name="theme-color" content="#F6F4EF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B0E12" media="(prefers-color-scheme: dark)">
+<title>Burlington, right now — the BTown Brief</title>
+<meta name="description" content="Burlington, Vermont right now: what's open, what's on tonight, how warm the lake is, tonight's sunset — and everything one local newsletter has made for the people who live here. Free, live, one page.">
 
 <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="assets/favicon-16.png" sizes="16x16" type="image/png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="apple-mobile-web-app-title" content="BTown Hub">
+<meta name="apple-mobile-web-app-title" content="BTown Brief">
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="BTown Brief">
-<meta property="og:title" content="Everything the BTown Brief Made">
-<meta property="og:description" content="30+ arcade games, a live Burlington city guide, and a newsletter. Every link, one page.">
+<meta property="og:title" content="Burlington, right now">
+<meta property="og:description" content="What's open, what's on tonight, how warm the lake is — and everything one local newsletter made for Burlington. Free, live, one page.">
 <meta property="og:url" content="https://hub.btownbrief.com/">
 <meta property="og:image" content="https://hub.btownbrief.com/assets/og-hub.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Everything the BTown Brief Made">
-<meta name="twitter:description" content="30+ arcade games, a live Burlington city guide, and a newsletter. Every link, one page.">
+<meta name="twitter:title" content="Burlington, right now">
+<meta name="twitter:description" content="What's open, what's on tonight, how warm the lake is — and everything one local newsletter made for Burlington.">
 <meta name="twitter:image" content="https://hub.btownbrief.com/assets/og-hub.jpg">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="preconnect" href="https://guide.btownbrief.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..900&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="assets/img/ig/church.jpg">
+<link rel="stylesheet" href="v2.css?v=20260823a">
 </head>
 <body>
 
-<!-- ============ THE OPENING FRAME ============ -->
-<header class="shot hero">
-  <div class="shot-img" style="background-image:url('assets/img/hero.jpg')"></div>
-  <div class="grain" aria-hidden="true"></div>
-  <div class="hero-copy">
-    <p class="eyebrow">The BTown Brief</p>
-    <h1>Everything we made<br>for Burlington</h1>
-    <p class="lede">A newsletter that got out of hand: an arcade, a live city guide,
-      and a pile of free things for the people who live here. Start anywhere.</p>
-    <a class="pillbtn" href="#start">See all of it ↓</a>
-    <a class="pillbtn" href="start-here.html">Start here — the two lists →</a>
-    <div><a class="wx-pill" id="wx-pill" href="https://guide.btownbrief.com/weather.html">
-      <span id="wx-line">Burlington right now</span>
-      <span class="wx-go">Full forecast →</span>
-    </a></div>
+<!-- ============ HEADER: wordmark · what people want · subscribe · search ============ -->
+<header class="top">
+  <div class="wrap bar">
+    <a class="mark" href="/">BTown <i>Brief</i></a>
+    <nav class="verbs" aria-label="BTown Brief">
+      <a href="https://guide.btownbrief.com/restaurants.html">Eat</a>
+      <a href="https://guide.btownbrief.com/events.html">Do</a>
+      <a href="https://play.btownbrief.com/">Play</a>
+      <a href="https://www.btownbrief.com?utm_source=hub&amp;utm_medium=referral&amp;utm_campaign=nav">Read</a>
+    </nav>
+    <a class="subs" href="#subscribe">Subscribe</a>
+    <button class="sbtn" type="button" id="search-open" aria-label="Search everything we made">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.2" y2="16.2"/></svg>
+    </button>
   </div>
-  <span class="credit">Burlington Harbor</span>
 </header>
 
-<!-- ============ THE ROUTER: START WITH WHAT YOU NEED ============ -->
-<main class="wrap" id="start">
-  <section class="deck">
-    <p class="router-kicker">Skip the feed. What are you here for?</p>
-    <div class="intents">
-      <div class="intent">
-        <h3>“I’m bored of scrolling.”</h3>
-        <p>Trade the feed for the town — the twice-weekly read, or the guides that know what’s open.</p>
-        <p class="intent-links"><a class="go" href="https://www.btownbrief.com?utm_source=hub&utm_medium=referral&utm_campaign=site_capture">Read the Brief →</a><a class="go" href="https://guide.btownbrief.com/">City Guide →</a><a class="go" href="https://guide.btownbrief.com/best-of-reddit.html">Best of r/burlington →</a></p>
-      </div>
-      <div class="intent">
-        <h3>“I want something to do.”</h3>
-        <p>One good answer right now, tonight’s events from 25 sources, and the local’s list of 206+.</p>
-        <p class="intent-links"><a class="go" href="https://play.btownbrief.com/what-now/">What Now →</a><a class="go" href="https://guide.btownbrief.com/events.html">Events →</a><a class="go" href="https://guide.btownbrief.com/things-to-do.html">Things To Do →</a></p>
-      </div>
-      <div class="intent">
-        <h3>“I’m hungry.”</h3>
-        <p>Live hours for 281 places, every deal we can verify, and the combined menus near Church Street.</p>
-        <p class="intent-links"><a class="go" href="https://guide.btownbrief.com/restaurants.html">Open right now →</a><a class="go" href="https://guide.btownbrief.com/restaurants.html?view=deals">Deals →</a><a class="go" href="https://guide.btownbrief.com/small-bites.html">Small Bites →</a></p>
-      </div>
-      <div class="intent">
-        <h3>“What’s it like out?”</h3>
-        <p>The lake, the sky, tonight’s sunset odds, and whether the beaches say swim.</p>
-        <p class="intent-links"><a class="go" href="https://guide.btownbrief.com/weather.html">Weather &amp; lake →</a><a class="go" href="https://guide.btownbrief.com/sunset.html">Tonight’s sunset →</a><a class="go" href="https://guide.btownbrief.com/beaches.html">Beaches →</a></p>
-      </div>
-      <div class="intent">
-        <h3>“I’m looking for my people.”</h3>
-        <p>Come to a meetup, join the community chat, or find a club that already exists.</p>
-        <p class="intent-links"><a class="go" href="https://www.meetup.com/burlington-social-activites-group/">The meetup →</a><a class="go" href="https://play.btownbrief.com/whos-playing/">Find a partner →</a><a class="go" href="https://play.btownbrief.com/up-for-it/">Say what you'd go to →</a><a class="go" href="https://guide.btownbrief.com/telegram.html">Community chat →</a><a class="go" href="https://guide.btownbrief.com/clubs.html">Clubs →</a></p>
-      </div>
-      <div class="intent">
-        <h3>“I want to play something.”</h3>
-        <p>More than thirty free local games, with monthly champions named in the newsletter.</p>
-        <p class="intent-links"><a class="go" href="https://play.btownbrief.com/">The arcade →</a><a class="go" href="https://play.btownbrief.com/leaderboards/">Leaderboards →</a></p>
-      </div>
-      <div class="intent">
-        <h3>“We’re hanging out — give us a game.”</h3>
-        <p>Real conversation for the table, one phone passed around a big group, or a board you prop up at the meetup.</p>
-        <p class="intent-links"><a class="go" href="https://guide.btownbrief.com/table.html">Table Talk →</a><a class="go" href="https://play.btownbrief.com/stay-awhile/">Stay Awhile →</a><a class="go" href="https://play.btownbrief.com/maples-to-maples/party.html">Maples Party Mode →</a><a class="go" href="https://play.btownbrief.com/btown-party/">Btown Party →</a></p>
-      </div>
-      <div class="intent">
-        <h3>“What’s the news and gossip?”</h3>
-        <p>What the town is talking about, and what changed since you last looked.</p>
-        <p class="intent-links"><a class="go" href="https://guide.btownbrief.com/chatter.html">Burlington Pulse →</a><a class="go" href="https://guide.btownbrief.com/changes.html">Since You Checked →</a></p>
-      </div>
-    </div>
-    <p class="router-more">Don't know where to start? <a href="start-here.html">Two lists: what to check daily, and what to check once ↗</a></p>
-  </section>
-</main>
-
-<!-- ============ FRAME: USE THE CITY ============ -->
-<section class="shot band" id="usecity">
-  <div class="shot-img" style="background-image:url('assets/img/band-city.jpg')"></div>
-  <div class="grain" aria-hidden="true"></div>
-  <div class="band-copy">
-    <h2>Use the city</h2>
-    <p>Everything that answers a question you actually have today — and every way to join in.</p>
-  </div>
-</section>
-
 <main class="wrap">
-  <section class="deck tight">
-    <div class="grid" id="city-grid">
 
-      <p class="subhead">Right now</p>
-      <a class="card" href="https://play.btownbrief.com/what-now/">
-        <h3><span class="icon">🎲</span> What Now</h3>
-        <p>The anti-feed. One good answer to “what do I want to do today?” — then it tells you to put the phone down.</p>
-      </a>
-      <a class="card" href="https://guide.btownbrief.com/restaurants.html">
-        <h3>Open Right Now</h3>
-        <p>Live hours for 281 places — patios, happy hours, late-night kitchens.</p>
-      </a>
-      <a class="card" href="https://guide.btownbrief.com/events.html">
-        <h3>Events</h3>
-        <p>Tonight, this weekend, and beyond. Pulled from 25 sources so you don't have to check 25.</p>
-      </a>
-      <a class="card" href="https://guide.btownbrief.com/sunset.html">
-        <h3>Tonight's Sunset</h3>
-        <p>Will it actually be good? A scored forecast, and where to watch it from.</p>
-      </a>
-      <a class="card" href="https://guide.btownbrief.com/weather.html">
-        <h3>Burlington Weather &amp; Lake</h3>
-        <p>Weather, lake conditions, can-I-swim beach statuses, life scores.</p>
-      </a>
-      <a class="card" href="https://guide.btownbrief.com/restaurants.html?view=deals">
-        <h3>Food &amp; Drink Deals</h3>
-        <p>Happy hours, daily specials, and the cheap-night standbys.</p>
-      </a>
-      <a class="card" href="https://guide.btownbrief.com/small-bites.html">
-        <h3>Small Bites</h3>
-        <p>Every menu near Church Street, one filterable list — what can I eat, for how much, right here.</p>
-      </a>
-      <a class="card" href="https://guide.btownbrief.com/openings.html">
-        <h3>Openings &amp; Closings</h3>
-        <p>What just opened and what's gone — try the new place while it's still news.</p>
-      </a>
-      <a class="card" href="https://guide.btownbrief.com/changes.html">
-        <h3>Since You Checked</h3>
-        <p>What changed in town since you last looked: beaches, roads, agendas.</p>
-      </a>
-      <a class="card" href="https://guide.btownbrief.com/chatter.html">
-        <h3>Burlington Pulse</h3>
-        <p>What the town is talking about right now, with rise-and-fall arrows.</p>
-      </a>
+  <!-- ============ THE TITLE ============ -->
+  <section class="hero">
+    <h1 class="D">Burlington,<br>right now.</h1>
+    <p class="kick"><span id="date-line">Today</span> · <span id="asof">reading the lake…</span> · everything one local made for the people who live here.</p>
+  </section>
 
-      <p class="subhead">Go and do something</p>
-      <a class="card" href="https://play.btownbrief.com/dibs/">
-        <h3><span class="icon">🔷</span> Dibs</h3>
-        <p>Burlington is 920 blocks. Stand in one, tap, it's yours — until someone takes it back. Hold blocks for points, claim landmarks, rep your neighborhood crew.</p>
-      </a>
-      <a class="card" href="https://guide.btownbrief.com/things-to-do.html">
-        <h3>Things To Do</h3>
-        <p>A local's guide — breweries, beaches, trails, and the definitive top 100.</p>
-      </a>
-      <a class="card" href="https://guide.btownbrief.com/clubs.html">
-        <h3>Clubs &amp; Groups</h3>
-        <p>Run clubs, board games, book clubs, pickup sports. Find your people.</p>
-      </a>
-      <a class="card" href="https://guide.btownbrief.com/beaches.html">
-        <h3>Lake &amp; Beaches</h3>
-        <p>Every official beach and the whole shore — live swim statuses and a scavenger hunt along the water.</p>
-      </a>
-      <a class="card" href="https://guide.btownbrief.com/hobbies.html">
-        <h3>Vermont Hobbies</h3>
-        <p>The hobbies this place is built for, each with a local on-ramp to get you started.</p>
-      </a>
-      <a class="card" href="https://play.btownbrief.com/stay-awhile/">
-        <h3><span class="icon">🎡</span> Stay Awhile</h3>
-        <p>A conversation game for the table you're already at. Spin, land on someone, ask them something real.</p>
-      </a>
-      <a class="card" href="https://guide.btownbrief.com/table.html">
-        <h3><span class="icon">☕</span> Table Talk</h3>
-        <p>Prop a phone up at the meetup — icebreakers, friendly fights, and weekend picks on a slow clock. Synced phones all show the same card.</p>
-      </a>
-      <a class="card" href="https://play.btownbrief.com/archive/">
-        <h3><span class="icon">📚</span> The Archives</h3>
-        <p>Search every Brief ever written. Find the story you half-remember.</p>
-      </a>
+  <!-- ============ THE BENTO: live, photographic ============ -->
+  <section class="bento" aria-label="Right now">
 
-      <p class="subhead">Live here</p>
-      <a class="card" href="https://guide.btownbrief.com/housing.html">
-        <h3>Find an Apartment</h3>
-        <p>Every local property manager — email them instead of refreshing Zillow.</p>
-      </a>
-      <a class="card" href="https://guide.btownbrief.com/jobs.html">
-        <h3>Jobs This Week</h3>
-        <p>The newest postings across the city, the state, UVM, and the hospital.</p>
-      </a>
-      <a class="card" href="https://guide.btownbrief.com/walking-tour.html">
-        <h3>The Walking Tour</h3>
-        <p>A 1.7-mile downtown loop with the history woven in — 14 stops, about 90 minutes.</p>
-      </a>
-      <a class="card" href="https://guide.btownbrief.com/history.html">
-        <h3>Burlington, Briefly</h3>
-        <p>The city's whole story in a five-minute read, with the long version one click deeper.</p>
-      </a>
-      <a class="card" href="https://guide.btownbrief.com/gifts.html">
-        <h3>The Gift Guide</h3>
-        <p>Every gift from a Burlington-area shop or maker — by category, with prices.</p>
-      </a>
-      <a class="card" href="https://guide.btownbrief.com/civic.html">
-        <h3>Civic Meetings</h3>
-        <p>Every public meeting on one calendar — agendas, packets, and video links.</p>
-      </a>
-      <a class="card" href="https://guide.btownbrief.com/goodburlington.html">
-        <h3>r/GoodBurlington</h3>
-        <p>The good-news corner of Burlington Reddit.</p>
-      </a>
-      <a class="card" href="https://guide.btownbrief.com/best-of-reddit.html">
-        <h3>Best of r/burlington</h3>
-        <p>What the subreddit actually recommends, linked straight to the threads.</p>
-      </a>
-      <a class="card" href="https://guide.btownbrief.com/volunteer.html">
-        <h3>Volunteer</h3>
-        <p>Help this week — filtered by the time you've actually got.</p>
-      </a>
+    <a class="t ph big" href="https://guide.btownbrief.com/restaurants.html">
+      <img src="assets/img/ig/church.jpg" alt="Church Street in October — the Unitarian church steeple over the Marketplace" fetchpriority="high">
+      <p class="lab">Open right now</p>
+      <p class="num"><span id="open-n">—</span><small id="open-of"> places</small></p>
+      <p class="sub" id="open-sub">Live hours, patios, late-night kitchens</p>
+    </a>
 
-      <p class="subhead">Join in</p>
-      <a class="card" href="https://play.btownbrief.com/up-for-it/">
-        <h3><span class="icon">🙋</span> Up For It</h3>
-        <p>Say what you'd go to — a quick deck of ideas. Five taps and it tips; a Btown Brief IRL host picks it up and it's on the calendar.</p>
-      </a>
-      <a class="card" href="https://play.btownbrief.com/whos-playing/">
-        <h3><span class="icon">🎾</span> Who's Playing</h3>
-        <p>Find someone to play with — tennis, pickleball, climbing, a run, a ski day — or find the standing pickup game. Burlington only.</p>
-      </a>
-      <a class="card" href="https://guide.btownbrief.com/telegram.html">
-        <h3>Community Chat</h3>
-        <p>The Telegram group — locals swapping finds and what's actually open in a storm.</p>
-      </a>
-      <a class="card" href="https://guide.btownbrief.com/photos.html">
-        <h3>Community Photos</h3>
-        <p>Burlington through your lens. Send one in and it may run in the Brief.</p>
-      </a>
-      <a class="card" href="https://guide.btownbrief.com/playlist.html">
-        <h3>Community Playlist</h3>
-        <p>Share a song, upvote the week's list, find Vermont artists.</p>
-      </a>
-      <a class="card" href="https://guide.btownbrief.com/projects.html">
-        <h3>Local Projects</h3>
-        <p>Other people building things for Burlington. Add yours.</p>
-      </a>
-      <a class="card" href="https://stephenvdavis-jpg.github.io/t-shirts/">
-        <h3><span class="icon">👕</span> Merch</h3>
-        <p>Burlington shirts. Wearing one is the entire marketing budget.</p>
-      </a>
-      <a class="card" href="https://www.btownbrief.com/about-me">
-        <h3>About Me</h3>
-        <p>It really is just one guy behind all of this.</p>
-      </a>
+    <a class="t ph" href="https://guide.btownbrief.com/weather.html">
+      <img src="assets/img/ig/sky.jpg" alt="Sun through a break in storm clouds over Lake Champlain" loading="lazy">
+      <p class="lab">Right now</p>
+      <p class="num" id="temp">—</p>
+      <p class="sub" id="sky">full forecast</p>
+    </a>
 
+    <a class="t ph" href="https://guide.btownbrief.com/beaches.html">
+      <img src="assets/img/ig/beachbike.jpg" alt="A bike parked on the sand at a Lake Champlain beach" loading="lazy">
+      <p class="lab">The lake</p>
+      <p class="num" id="lake">—</p>
+      <p class="sub" id="beaches">beach statuses, live</p>
+    </a>
+
+    <a class="t ph" href="https://guide.btownbrief.com/events.html?when=today&amp;tonight=1">
+      <img src="assets/img/ig/crowd.jpg" alt="A crowd under the string lights on Church Street" loading="lazy">
+      <p class="lab" id="tonight-lab">Tonight</p>
+      <p class="num"><span id="tonight-n">—</span><small> events</small></p>
+      <p class="sub" id="tonight-sub">pulled from 26 sources</p>
+    </a>
+
+    <a class="t ph" href="https://guide.btownbrief.com/sunset.html">
+      <img src="assets/img/ig/sunset.jpg" alt="A red sunset over Lake Champlain" loading="lazy">
+      <p class="lab">Sunset</p>
+      <p class="num" id="sunset">—</p>
+      <p class="sub">scored forecast · where to watch</p>
+    </a>
+
+    <div class="t read">
+      <div class="who"><i>SD</i><span>Steve's read <em id="read-when"></em></span></div>
+      <p id="read-text">The morning read on the day — written, not generated from a number. It lands here once it's approved.</p>
+      <a class="more" href="https://guide.btownbrief.com/weather.html">The full read →</a>
+    </div>
+
+    <a class="t pick" id="pick" href="https://guide.btownbrief.com/events.html?when=today&amp;tonight=1">
+      <p class="lab">Tonight's pick</p>
+      <p class="num" id="pick-t">—</p>
+      <p class="sub" id="pick-v">one thing worth leaving the house for</p>
+    </a>
+
+    <a class="t play" href="https://play.btownbrief.com/">
+      <p class="lab">The arcade</p>
+      <p class="num"><span id="games-n">39</span><small> free games</small></p>
+      <p class="sub">Leaderboards reset monthly · champions named in the Brief</p>
+    </a>
+
+    <a class="t ph tv" href="https://guide.btownbrief.com/tv.html">
+      <img src="assets/img/ig/marina.jpg" alt="Boats at the Burlington marina at dusk" loading="lazy">
+      <p class="lab">Tonight on Btown TV</p>
+      <p class="num small" id="tv-t">Btown TV</p>
+      <p class="sub" id="tv-sub">One human-picked page of video every evening — a Tonight's pick, short shelves, a Vermont shelf — and a playlist that plays the whole edition on your TV.</p>
+    </a>
+
+    <a class="t ph ol" href="https://guide.btownbrief.com/out-loud/">
+      <img src="assets/img/ig/foliage.jpg" alt="Peak foliage on the hills east of Burlington" loading="lazy">
+      <p class="lab">New · walk it</p>
+      <p class="num small">Btown Out Loud</p>
+      <p class="sub">Earbuds in — 49 stories the city tells you when you arrive</p>
+    </a>
+
+    <div class="t dark full" id="subscribe">
+      <p class="lab">Get the Brief, free</p>
+      <p class="sub">All of this exists because of one twice-weekly newsletter. 3,000+ neighbors · 7 in 10 open every issue · Mondays &amp; Fridays.</p>
+      <iframe src="https://embeds.beehiiv.com/a1c106df-f519-4dfc-a892-61261d0f8389?slim=true" data-test-id="beehiiv-embed" height="52" frameborder="0" scrolling="no" title="Subscribe to the BTown Brief" loading="lazy"></iframe>
     </div>
   </section>
-</main>
 
-<!-- ============ FRAME: THE ARCADE ============ -->
-<section class="shot band">
-  <div class="shot-img" style="background-image:url('assets/img/band-play.jpg')"></div>
-  <div class="grain" aria-hidden="true"></div>
-  <div class="band-copy">
-    <h2>The arcade</h2>
-    <p>Thirty-plus free browser games, all set in Burlington. Leaderboards reset monthly.</p>
-  </div>
-</section>
+  <!-- ============ THE QUESTIONS: pills + one open panel ============ -->
+  <section class="ask" id="ask">
+    <h2 class="D">What are you<br>here for?</h2>
+    <div class="pills" role="group" aria-label="What are you here for?">
+      <button class="pill p0 on" aria-pressed="true" data-q="do">I want something to do.</button>
+      <button class="pill p1" aria-pressed="false" data-q="eat">I'm hungry.</button>
+      <button class="pill p2" aria-pressed="false" data-q="out">What's it like out?</button>
+      <button class="pill p0" aria-pressed="false" data-q="news">What's the news?</button>
+      <button class="pill p1" aria-pressed="false" data-q="people">I'm looking for my people.</button>
+      <button class="pill p2" aria-pressed="false" data-q="play">I want to play something.</button>
+      <button class="pill p0" aria-pressed="false" data-q="game">We're hanging out — give us a game.</button>
+      <button class="pill p1" aria-pressed="false" data-q="new">I'm new here — or my visitors are.</button>
+      <button class="pill p2" aria-pressed="false" data-q="live">I need a job or an apartment.</button>
+      <button class="pill p0" aria-pressed="false" data-q="evening">It's evening. Wind me down.</button>
+      <button class="pill p1" aria-pressed="false" data-q="help">I want to pitch in.</button>
+      <button class="pill p2" aria-pressed="false" data-q="call">Who do I call for this?</button>
+    </div>
 
-<main class="wrap">
-  <section class="deck tight">
-    <div class="grid" id="arcade-grid">
-
-      <p class="subhead">Reflex</p>
-      <a class="card" href="https://play.btownbrief.com/church-street-runner/"><h3><span class="icon">🏃</span> Church Street Runners</h3><p>Run the Marketplace: dodge dogs, grab creemees, catch live headlines.</p></a>
-      <a class="card" href="https://play.btownbrief.com/filed/"><h3><span class="icon">🗄️</span> Filed!</h3><p>Two thumbs, one goal: survive the World's Tallest Filing Cabinet.</p></a>
-      <a class="card" href="https://play.btownbrief.com/flappy-champ/"><h3><span class="icon">🐉</span> Flappy Champ</h3><p>Flap Champ, the lake monster, through the schooner sails.</p></a>
-      <a class="card" href="https://play.btownbrief.com/champlain-glider/"><h3><span class="icon">🐦</span> Champlain Glider</h3><p>Dive the hills, ride the sunset, outrun the night.</p></a>
-      <a class="card" href="https://play.btownbrief.com/tap-the-maple/"><h3><span class="icon">🍁</span> Tap the Maple</h3><p>Sugaring season, Knife-Hit style. Don't hit the taps.</p></a>
-      <a class="card" href="https://play.btownbrief.com/creemee-drop/"><h3><span class="icon">🍦</span> Creemee Drop</h3><p>Catch falling swirls and stack soft-serve to the sky.</p></a>
-      <a class="card" href="https://play.btownbrief.com/pothole-patrol/"><h3><span class="icon">🕳️</span> Pothole Patrol</h3><p>Patch the potholes before mud season wins.</p></a>
-      <a class="card" href="https://play.btownbrief.com/snowball-slinger/"><h3><span class="icon">☃️</span> Snowball Slinger</h3><p>Sling snowballs at squirrel forts across 3D Burlington.</p></a>
-
-      <p class="subhead">A new one every day</p>
-      <a class="card" href="https://play.btownbrief.com/btown-wordle/"><h3><span class="icon">🟩</span> BTown Wordle</h3><p>A fresh Burlington-flavoured word puzzle every single day.</p></a>
-      <a class="card" href="https://play.btownbrief.com/trivia-ladder/"><h3><span class="icon">🪜</span> Trivia Ladder</h3><p>Climb the trivia ladder: one wrong rung and you fall.</p></a>
-      <a class="card" href="https://play.btownbrief.com/where-in-btown/"><h3><span class="icon">📍</span> Where in BTown?</h3><p>One local photo, one guess: name the spot.</p></a>
-      <a class="card" href="https://play.btownbrief.com/news-quiz/"><h3><span class="icon">🗞️</span> News Quiz</h3><p>How closely did you actually read this week's Brief?</p></a>
-      <a class="card" href="https://play.btownbrief.com/maple-scramble/"><h3><span class="icon">🔠</span> Maple Scramble</h3><p>Sixteen tiles, one crossword, every day. Fastest time takes the month.</p></a>
-
-      <p class="subhead">Guessing games</p>
-      <a class="card" href="https://play.btownbrief.com/real-or-fake/"><h3><span class="icon">📰</span> Real or Fake</h3><p>Actual Burlington headline, or did we make it up?</p></a>
-      <a class="card" href="https://play.btownbrief.com/earlier-or-later/"><h3><span class="icon">⏳</span> Earlier or Later</h3><p>Two moments in Burlington history. Which came first?</p></a>
-      <a class="card" href="https://play.btownbrief.com/higher-or-lower/"><h3><span class="icon">📊</span> Higher or Lower</h3><p>One local stat, then another. Keep the streak alive.</p></a>
-      <a class="card" href="https://play.btownbrief.com/rank-what-you-know/"><h3><span class="icon">🔢</span> Rank What You Know</h3><p>Put Burlington things in order. Sounds easy. It isn't.</p></a>
-
-      <p class="subhead">Board &amp; card games — solo vs the bot, pass the phone, or play online · bot wins make the leaderboard</p>
-      <a class="card" href="https://play.btownbrief.com/four-in-a-rowboat/"><h3><span class="icon">🚣</span> Four in a Rowboat</h3><p>Four buoys in a row across Lake Champlain. Beat a friend or the Skipper.</p></a>
-      <a class="card" href="https://play.btownbrief.com/queen-city-chess/"><h3><span class="icon">♛</span> Queen City Chess</h3><p>Burlington IS the Queen City. Full chess — a friend online, or the Queen City Club.</p></a>
-      <a class="card" href="https://play.btownbrief.com/front-porch-dominoes/"><h3><span class="icon">🁵</span> Front Porch Dominoes</h3><p>First to 100 under the string lights. Solo vs Porch Swing Pete, or 2–4 players.</p></a>
-      <a class="card" href="https://play.btownbrief.com/north-star-hop/"><h3><span class="icon">⭐</span> North Star Hop</h3><p>Hop your marbles across the star first. Solo vs Polaris, or 2–4 players.</p></a>
-      <a class="card" href="https://play.btownbrief.com/crazy-eights/"><h3><span class="icon">🃏</span> Crazy Eights</h3><p>Eights are wild on the Burlington deck. First empty hand wins.</p></a>
-      <a class="card" href="https://play.btownbrief.com/maple-mancala/"><h3><span class="icon">🌰</span> Maple Mancala</h3><p>Sow maple candies bucket to bucket; capture the sweetest side.</p></a>
-      <a class="card" href="https://play.btownbrief.com/kings-corner/"><h3><span class="icon">👑</span> Kings Corner</h3><p>Kings to the corners: shed your hand around City Hall Park.</p></a>
-      <a class="card" href="https://play.btownbrief.com/btown-cribbage/"><h3><span class="icon">🏔️</span> Btown Cribbage</h3><p>Full cribbage, pegs racing up the Long Trail. The app does the counting.</p></a>
-      <a class="card" href="https://play.btownbrief.com/church-street-checkers/"><h3><span class="icon">🔴</span> Church Street Checkers</h3><p>Checkers on the Marketplace bricks. Captures are mandatory.</p></a>
-      <a class="card" href="https://play.btownbrief.com/battle-on-the-lake/"><h3><span class="icon">⛵</span> Battle on the Lake</h3><p>Hide your fleet on Lake Champlain, then sink theirs.</p></a>
-      <a class="card" href="https://play.btownbrief.com/btown-crossings/"><h3><span class="icon">🔡</span> Btown Crossings</h3><p>Our own word-tile board. Church Street doubles your word.</p></a>
-      <a class="card" href="https://play.btownbrief.com/sugarbush-squares/"><h3><span class="icon">🌳</span> Sugarbush Squares</h3><p>Close a box, plant a maple, go again.</p></a>
-      <a class="card" href="https://play.btownbrief.com/peak-foliage/"><h3><span class="icon">🍂</span> Peak Foliage</h3><p>Flip the forest green or red. First to peak wins the canopy.</p></a>
-
-      <p class="subhead">When you're done playing</p>
-      <a class="card" href="https://play.btownbrief.com/caption-this/"><h3><span class="icon">💬</span> Caption This</h3><p>Swipe on this week's captions. The winner runs in the Brief.</p></a>
-      <a class="card" href="https://play.btownbrief.com/maples-to-maples/"><h3><span class="icon">🗳️</span> Maples to Maples</h3><p>One prompt, your best answer, the town votes.</p></a>
-      <a class="card" href="https://play.btownbrief.com/archive/"><h3><span class="icon">📚</span> The Archives</h3><p>Search every Brief ever written — for when you'd rather read than play.</p></a>
-
+    <div class="panels">
+      <div class="qp on" data-q="do">
+        <img src="assets/img/ig/fools-s.jpg" alt="" loading="lazy">
+        <h3>I want something to do.</h3>
+        <div class="rows">
+          <a href="https://play.btownbrief.com/what-now/"><b>What Now</b><small>one good answer, then put the phone down</small></a>
+          <a href="https://guide.btownbrief.com/events.html"><b>Events</b><em data-live="events">26 sources · one calendar</em></a>
+          <a href="https://guide.btownbrief.com/events.html?when=weekend&amp;quick=free"><b>Free this weekend</b><em data-live="free-weekend">prebuilt filter</em></a>
+          <a href="https://guide.btownbrief.com/things-to-do.html"><b>Things To Do</b><em>206+ · the local's list</em></a>
+        </div>
+      </div>
+      <div class="qp" data-q="eat">
+        <img src="assets/img/ig/food-s.jpg" alt="" loading="lazy">
+        <h3>I'm hungry.</h3>
+        <div class="rows">
+          <a href="https://guide.btownbrief.com/restaurants.html"><b>Open right now</b><em data-live="open">live hours for 281 places</em></a>
+          <a href="https://guide.btownbrief.com/restaurants.html?view=deals"><b>Deals</b><em data-live="deals">happy hours, specials</em></a>
+          <a href="https://guide.btownbrief.com/small-bites.html"><b>Small Bites</b><small>every menu near Church Street</small></a>
+          <a href="https://guide.btownbrief.com/openings.html"><b>Openings &amp; Closings</b><em data-live="openings">every entry sourced</em></a>
+        </div>
+      </div>
+      <div class="qp" data-q="out">
+        <img src="assets/img/ig/sky-s.jpg" alt="" loading="lazy">
+        <h3>What's it like out?</h3>
+        <div class="rows">
+          <a href="https://guide.btownbrief.com/weather.html"><b>Weather &amp; lake</b><em data-live="weather">with Steve's read</em></a>
+          <a href="https://guide.btownbrief.com/sunset.html"><b>Tonight's sunset</b><em data-live="sunset">scored forecast</em></a>
+          <a href="https://guide.btownbrief.com/beaches.html"><b>Beaches</b><em data-live="beaches">swim statuses</em></a>
+        </div>
+      </div>
+      <div class="qp" data-q="news">
+        <img src="assets/img/ig/cityhall-s.jpg" alt="" loading="lazy">
+        <h3>What's the news?</h3>
+        <div class="rows">
+          <a href="https://www.btownbrief.com?utm_source=hub&amp;utm_medium=referral&amp;utm_campaign=site_capture"><b>Read the Brief</b><em>Mon &amp; Fri · the newsletter</em></a>
+          <a href="https://guide.btownbrief.com/pulse.html"><b>Burlington Pulse</b><em>every 20 min · local + national wire</em></a>
+          <a href="https://guide.btownbrief.com/changes.html"><b>Since You Checked</b><small>what changed since your last visit</small></a>
+          <a href="https://guide.btownbrief.com/civic.html"><b>Civic Meetings</b><small>agendas, packets, video</small></a>
+        </div>
+      </div>
+      <div class="qp" data-q="people">
+        <img src="assets/img/ig/crowd-s.jpg" alt="" loading="lazy">
+        <h3>I'm looking for my people.</h3>
+        <div class="rows">
+          <a href="https://www.meetup.com/burlington-social-activites-group/"><b>The meetup</b><em>Btown Brief IRL · 600+ members</em></a>
+          <a href="https://play.btownbrief.com/up-for-it/"><b>Say what you'd go to</b><small>five taps and it tips</small></a>
+          <a href="https://guide.btownbrief.com/telegram.html"><b>Community chat</b><small>the Telegram group</small></a>
+          <a href="https://guide.btownbrief.com/clubs.html"><b>Clubs</b><small>run clubs, board games, pickup</small></a>
+        </div>
+      </div>
+      <div class="qp" data-q="play">
+        <img src="assets/img/ig/soccer-s.jpg" alt="" loading="lazy">
+        <h3>I want to play something.</h3>
+        <div class="rows">
+          <a href="https://play.btownbrief.com/"><b>The arcade</b><em data-live="games">free, no accounts</em></a>
+          <a href="https://play.btownbrief.com/leaderboards/"><b>Leaderboards</b><em>reset monthly · champions in the Brief</em></a>
+          <a href="https://play.btownbrief.com/whos-playing/"><b>Find a partner</b><small>tennis, pickleball, a run, a ski day</small></a>
+        </div>
+      </div>
+      <div class="qp" data-q="game">
+        <img src="assets/img/ig/hope-s.jpg" alt="" loading="lazy">
+        <h3>We're hanging out — give us a game.</h3>
+        <div class="rows">
+          <a href="https://guide.btownbrief.com/table.html"><b>Table Talk</b><small>prop a phone up at the table</small></a>
+          <a href="https://play.btownbrief.com/stay-awhile/"><b>Stay Awhile</b><em data-live="stay">spin, land, ask</em></a>
+          <a href="https://play.btownbrief.com/maples-to-maples/party.html"><b>Maples Party Mode</b><small>3–4 phones</small></a>
+          <a href="https://play.btownbrief.com/btown-party/"><b>Btown Party</b><small>a whole room, one code</small></a>
+        </div>
+      </div>
+      <div class="qp" data-q="new">
+        <img src="assets/img/ig/church-s.jpg" alt="" loading="lazy">
+        <h3>I'm new here — or my visitors are.</h3>
+        <div class="rows">
+          <a href="https://guide.btownbrief.com/walking-tour.html"><b>The Walking Tour</b><em>14 stops · about 90 minutes</em></a>
+          <a href="https://guide.btownbrief.com/out-loud/"><b>Btown Out Loud</b><em>49 stories · earbuds in, walk</em></a>
+          <a href="https://guide.btownbrief.com/history.html"><b>Burlington, Briefly</b><em>a five-minute read</em></a>
+          <a href="https://guide.btownbrief.com/hobbies.html"><b>Vermont Hobbies</b><em>39 on-ramps</em></a>
+        </div>
+      </div>
+      <div class="qp" data-q="live">
+        <img src="assets/img/ig/tower-s.jpg" alt="" loading="lazy">
+        <h3>I need a job or an apartment.</h3>
+        <div class="rows">
+          <a href="https://guide.btownbrief.com/jobs.html"><b>Jobs This Week</b><em data-live="jobs">13 boards, one list</em></a>
+          <a href="https://guide.btownbrief.com/housing.html"><b>Find an apartment</b><small>every property manager's email</small></a>
+        </div>
+      </div>
+      <div class="qp" data-q="evening">
+        <img src="assets/img/ig/marina-s.jpg" alt="" loading="lazy">
+        <h3>It's evening. Wind me down.</h3>
+        <div class="rows">
+          <a href="https://play.btownbrief.com/lake-breath/"><b>Lake Breath</b><em>the 8:02 · two minutes with the lake</em></a>
+          <a href="https://guide.btownbrief.com/tv.html"><b>Btown TV</b><em>nightly · one human-picked page of video</em></a>
+          <a href="https://guide.btownbrief.com/goodburlington.html"><b>r/GoodBurlington</b><small>the good-news corner</small></a>
+          <a href="https://play.btownbrief.com/archive/"><b>The Archives</b><small>every Brief ever written</small></a>
+        </div>
+      </div>
+      <div class="qp" data-q="help">
+        <img src="assets/img/ig/seal-s.jpg" alt="" loading="lazy">
+        <h3>I want to pitch in.</h3>
+        <div class="rows">
+          <a href="https://guide.btownbrief.com/volunteer.html"><b>Volunteer</b><small>help this week, sized to your time</small></a>
+          <a href="https://guide.btownbrief.com/projects.html"><b>Local Projects</b><small>other people's Burlington things</small></a>
+          <a href="https://guide.btownbrief.com/photos.html"><b>Community Photos</b><small>send one, it may run</small></a>
+          <a href="https://guide.btownbrief.com/playlist.html"><b>Community Playlist</b><small>share a song</small></a>
+        </div>
+      </div>
+      <div class="qp" data-q="call">
+        <img src="assets/img/ig/park-s.jpg" alt="" loading="lazy">
+        <h3>Who do I call for this?</h3>
+        <div class="rows">
+          <a href="https://guide.btownbrief.com/best-of-reddit.html#cat-home-practical-services"><b>Home &amp; practical</b><small>what the subreddit swears by</small></a>
+          <a href="https://guide.btownbrief.com/best-of-reddit.html#cat-automotive"><b>Automotive</b><small>mechanics, tires, detailing</small></a>
+          <a href="https://guide.btownbrief.com/best-of-reddit.html#cat-grooming-beauty"><b>Grooming</b><small>barbers, salons, tattoos</small></a>
+          <a href="https://guide.btownbrief.com/best-of-reddit.html"><b>Every other answer</b><em>232 answers · Best of r/burlington</em></a>
+        </div>
+      </div>
     </div>
   </section>
-</main>
 
-<!-- ============ CLOSING FRAME ============ -->
-<section class="shot band closing">
-  <div class="shot-img" style="background-image:url('assets/img/band-join.jpg')"></div>
-  <div class="grain" aria-hidden="true"></div>
-  <div class="band-copy">
-    <h2>All of it is free</h2>
-    <p>And all of it exists because of one twice-weekly newsletter about Burlington.</p>
-    <a class="pillbtn" href="https://www.btownbrief.com?utm_source=hub&utm_medium=referral&utm_campaign=site_capture">Get the Brief, free →</a>
-  </div>
-</section>
+  <!-- ============ THREE SHAPES: this weekend · the meetup · walk it ============ -->
+  <section class="trio" aria-label="Three more">
+    <a href="https://guide.btownbrief.com/events.html?when=weekend">
+      <div class="im im1"><img src="assets/img/ig/fools.jpg" alt="The Festival of Fools banner strung across Church Street at dusk" loading="lazy"></div>
+      <h3 class="D">This weekend</h3>
+      <p id="weekend-line">Everything on Saturday and Sunday, from 26 sources — and the free ones as a filter.</p>
+      <span class="go">The weekend →</span>
+    </a>
+    <a href="https://www.meetup.com/burlington-social-activites-group/">
+      <div class="im im2"><img src="assets/img/ig/crowd.jpg" alt="A crowd under the string lights on Church Street" loading="lazy"></div>
+      <h3 class="D">The meetup</h3>
+      <p>Btown Brief IRL — coffee Saturdays, mixers, games nights. Showing up alone is normal here.</p>
+      <span class="go">See what's next →</span>
+    </a>
+    <a href="https://guide.btownbrief.com/out-loud/">
+      <div class="im im3"><img src="assets/img/ig/tower.jpg" alt="The brick tower of the old church on Pearl Street against a bright sky" loading="lazy"></div>
+      <h3 class="D">Walk it</h3>
+      <p>The 1.7-mile walking tour, or Btown Out Loud: earbuds in, and the city tells its own stories when you reach them.</p>
+      <span class="go">Start walking →</span>
+    </a>
+  </section>
 
-<main class="wrap">
+  <!-- ============ EVERYTHING, A–Z — generated from the catalogs; the guarantee ============ -->
+  <section class="az" id="everything">
+    <div class="azhead">
+      <h2 class="D">Everything<br>we made</h2>
+      <p id="az-count">Every page and every game, A–Z. If it isn't in a question above, it's here.</p>
+      <label class="find"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.2" y2="16.2"/></svg><input type="search" id="find" placeholder="Find anything — a page, a game, a place" autocomplete="off"></label>
+    </div>
+    <ul id="az-list" class="azlist">
+      <!-- Filled from guide catalog.json + arcade games.json. Static fallback below covers a fetch failure. -->
+      <li><a href="https://play.btownbrief.com/archive/">The Archives</a></li>
+      <li><a href="https://guide.btownbrief.com/best-of-reddit.html">Best of r/burlington</a></li>
+      <li><a href="https://guide.btownbrief.com/out-loud/">Btown Out Loud</a></li>
+      <li><a href="https://play.btownbrief.com/btown-party/">Btown Party</a></li>
+      <li><a href="https://guide.btownbrief.com/tv.html">Btown TV</a></li>
+      <li><a href="https://guide.btownbrief.com/pulse.html">Burlington Pulse</a></li>
+      <li><a href="https://guide.btownbrief.com/weather.html">Burlington Weather &amp; Lake</a></li>
+      <li><a href="https://guide.btownbrief.com/history.html">Burlington, Briefly</a></li>
+      <li><a href="https://guide.btownbrief.com/civic.html">Civic Meetings</a></li>
+      <li><a href="https://guide.btownbrief.com/clubs.html">Clubs &amp; Groups</a></li>
+      <li><a href="https://guide.btownbrief.com/telegram.html">Community Chat</a></li>
+      <li><a href="https://guide.btownbrief.com/photos.html">Community Photos</a></li>
+      <li><a href="https://guide.btownbrief.com/playlist.html">Community Playlist</a></li>
+      <li><a href="https://guide.btownbrief.com/events.html">Events</a></li>
+      <li><a href="https://guide.btownbrief.com/housing.html">Find an Apartment</a></li>
+      <li><a href="https://guide.btownbrief.com/restaurants.html?view=deals">Food &amp; Drink Deals</a></li>
+      <li><a href="https://guide.btownbrief.com/gifts.html">The Gift Guide</a></li>
+      <li><a href="https://guide.btownbrief.com/goodburlington.html">r/GoodBurlington</a></li>
+      <li><a href="https://guide.btownbrief.com/jobs.html">Jobs This Week</a></li>
+      <li><a href="https://guide.btownbrief.com/beaches.html">Lake &amp; Beaches</a></li>
+      <li><a href="https://play.btownbrief.com/lake-breath/">Lake Breath</a></li>
+      <li><a href="https://guide.btownbrief.com/projects.html">Local Projects</a></li>
+      <li><a href="https://stephenvdavis-jpg.github.io/t-shirts/">Merch</a></li>
+      <li><a href="https://guide.btownbrief.com/restaurants.html">Open Right Now</a></li>
+      <li><a href="https://guide.btownbrief.com/openings.html">Openings &amp; Closings</a></li>
+      <li><a href="https://guide.btownbrief.com/changes.html">Since You Checked</a></li>
+      <li><a href="https://guide.btownbrief.com/small-bites.html">Small Bites</a></li>
+      <li><a href="https://play.btownbrief.com/stay-awhile/">Stay Awhile</a></li>
+      <li><a href="https://guide.btownbrief.com/table.html">Table Talk</a></li>
+      <li><a href="https://guide.btownbrief.com/things-to-do.html">Things To Do</a></li>
+      <li><a href="https://guide.btownbrief.com/sunset.html">Tonight's Sunset</a></li>
+      <li><a href="https://play.btownbrief.com/up-for-it/">Up For It</a></li>
+      <li><a href="https://guide.btownbrief.com/hobbies.html">Vermont Hobbies</a></li>
+      <li><a href="https://guide.btownbrief.com/volunteer.html">Volunteer</a></li>
+      <li><a href="https://guide.btownbrief.com/walking-tour.html">The Walking Tour</a></li>
+      <li><a href="https://play.btownbrief.com/what-now/">What Now</a></li>
+      <li><a href="https://play.btownbrief.com/whos-playing/">Who's Playing</a></li>
+      <li><a href="https://play.btownbrief.com/">The arcade — every game</a></li>
+    </ul>
+    <p class="azmore"><a href="start-here.html">Don't know where to start? Two lists: what to check daily, and what to check once →</a></p>
+  </section>
+
   <footer class="foot">
-    <span>Made in Burlington, Vermont · <a href="https://www.btownbrief.com">btownbrief.com</a></span>
-    <span>Photographs by Steve Davis</span>
+    <span>Made in Burlington, Vermont · one guy, a laptop, a dog · <a href="https://www.btownbrief.com/about-me">about</a> · <a href="start-here.html">start here</a> · <a href="https://guide.btownbrief.com/gifts.html">gift guide</a> · <a href="https://stephenvdavis-jpg.github.io/t-shirts/">merch</a></span>
+    <span>Photographs © Steve Davis · <a href="https://www.instagram.com/btownbrief/">@btownbrief</a></span>
   </footer>
 </main>
 
-<script src="https://play.btownbrief.com/nav.js" defer></script>
-<script src="grids.js" defer></script>
-<script>
-(function () {
-  var line = document.getElementById('wx-line');
-  if (!line || !window.fetch) return;
-  fetch('https://guide.btownbrief.com/data/weather/latest.json')
-    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
-    .then(function (d) {
-      var bits = [];
-      var now = d.now || {};
-      if (now.temp_f != null) bits.push(Math.round(now.temp_f) + '°' + (now.description ? ' ' + String(now.description).toLowerCase() : ''));
-      var lake = d.lake_gage || {};
-      if (lake.water_temp_f != null) bits.push('lake ' + Math.round(lake.water_temp_f) + '°');
-      var sunset = d.sun && d.sun.sunset;
-      if (sunset) {
-        var t = new Date(sunset);
-        if (!isNaN(t)) bits.push('sunset ' + t.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }).toLowerCase());
-      }
-      if (bits.length) line.innerHTML = bits.join(' <span class="wx-sep">·</span> ');
-    })
-    .catch(function () { /* the static label already says where the link goes */ });
-})();
-</script>
+<script src="https://guide.btownbrief.com/js/food-lib.js" defer></script>
+<script src="v2.js?v=20260823a" defer></script>
 </body>
 </html>
