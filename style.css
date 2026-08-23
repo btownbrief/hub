@@ -360,7 +360,10 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 0 1.1rem;
-  margin: 0.35rem 0 0;
+  /* Pinned to the card's foot, so a row of cards with two, three or four
+     links still reads as one row: the links line up across the grid. */
+  margin: auto 0 0;
+  padding-top: 0.35rem;
 }
 .intent-links .go {
   display: inline-flex;
@@ -379,6 +382,15 @@ body {
   margin: 0;
 }
 .intent p { margin: 0; font-size: 0.88rem; color: var(--ink-soft); }
+/* On a phone the question is the description: twelve cards of blurb plus
+   links ran to six screens. Keep the question and the links; the numbers
+   live on in the cards below. */
+@media (max-width: 560px) {
+  .intent { padding: 1.05rem 1.1rem 1.1rem; }
+  .intent p:not(.intent-links) { display: none; }
+  .intent-links { gap: 0 0.9rem; }
+  .intent-links .go { min-height: 40px; }
+}
 .router-more {
   margin: 1.4rem 0 0;
   font-size: 0.92rem;
