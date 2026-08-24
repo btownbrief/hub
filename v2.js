@@ -37,11 +37,13 @@
   }
   function shortClock(iso) { return clock(iso).replace(/ (am|pm)$/, '<small>$1</small>'); }
 
-  /* ---------- the date line ---------- */
+  /* ---------- the date line + live clock on the cover ---------- */
   function dateLine() {
     txt('date-line', new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: TZ }));
+    txt('now-clock', new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: TZ }).toLowerCase());
   }
   dateLine();
+  setInterval(dateLine, 30 * 1000);
 
   /* ---------- weather: air, sky, lake, sunset, as-of ---------- */
   function weather() {
@@ -60,7 +62,6 @@
         var el = $('sunset'); if (el) el.innerHTML = shortClock(sunset);
         live('sunset', clock(sunset) + (sunset === sun.sunset_tomorrow ? ' tomorrow' : ''));
       }
-      if (d.updated) txt('asof', 'as of ' + clock(d.updated));
     });
   }
 
@@ -325,25 +326,76 @@
     var deep = !!(h && document.querySelector('.qp[data-q="' + h + '"]'));
     if (deep) show(h);
 
-    /* auto-tour: step to the next question every 7s so the panels answer
-       themselves — until the visitor touches the section, which ends it */
+    /* auto-tour: once the section is actually on screen, step to the next
+       question every 5s so the panels answer themselves. The clock only runs
+       while the section is visible (and starts fresh each time it enters),
+       and the visitor's first touch or focus ends the tour for good. */
     var ask = document.querySelector('.ask');
     var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (ask && !deep && !reduce && pills.length > 1) {
-      var idx = 0, visible = true;
+      var idx = 0, timer = null, dead = false;
       for (var k = 0; k < pills.length; k++) if (pills[k].classList.contains('on')) idx = k;
-      var timer = setInterval(function () {
-        if (!visible || document.hidden) return;
+      function tick() {
+        if (document.hidden) return;
         idx = (idx + 1) % pills.length;
         show(pills[idx].getAttribute('data-q'));
-      }, 7000);
-      function stop() { clearInterval(timer); }
+      }
+      function halt() { if (timer) { clearInterval(timer); timer = null; } }
+      function stop() { dead = true; halt(); }
       ask.addEventListener('pointerdown', stop, { once: true });
       ask.addEventListener('focusin', stop, { once: true });
       if ('IntersectionObserver' in window) {
-        new IntersectionObserver(function (es) { visible = es[0].isIntersecting; }, { threshold: 0.25 }).observe(ask);
+        new IntersectionObserver(function (es) {
+          if (dead) return;
+          if (es[0].isIntersecting) { if (!timer) timer = setInterval(tick, 5000); }
+          else halt();
+        }, { threshold: 0.25 }).observe(ask);
+      } else {
+        timer = setInterval(tick, 5000);
       }
     }
+  })();
+
+  /* ---------- light / dark toggle ---------- */
+  (function () {
+    var btn = document.getElementById('theme-toggle');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      var root = document.documentElement;
+      var dark = root.getAttribute('data-theme') === 'dark' ||
+        (!root.getAttribute('data-theme') && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
+      var next = dark ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('btown-theme', next); } catch (e) {}
+    });
+  })();
+
+  /* ---------- favorites shelf: IG-style page dots ---------- */
+  (function () {
+    var shelf = document.getElementById('favshelf'), dots = document.getElementById('favdots');
+    if (!shelf || !dots) return;
+    function pages() { return Math.max(1, Math.ceil(shelf.scrollWidth / shelf.clientWidth)); }
+    function mark() {
+      var i = Math.min(dots.childElementCount - 1, Math.round(shelf.scrollLeft / shelf.clientWidth));
+      for (var k = 0; k < dots.childElementCount; k++) dots.children[k].classList.toggle('on', k === i);
+    }
+    function build() {
+      var n = pages();
+      if (dots.childElementCount !== n) {
+        dots.innerHTML = '';
+        for (var i = 0; i < n; i++) (function (i) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.setAttribute('aria-label', 'Favorites page ' + (i + 1));
+          b.addEventListener('click', function () { shelf.scrollTo({ left: i * shelf.clientWidth, behavior: 'smooth' }); });
+          dots.appendChild(b);
+        })(i);
+      }
+      mark();
+    }
+    build();
+    shelf.addEventListener('scroll', mark, { passive: true });
+    window.addEventListener('resize', build);
   })();
 
   /* ---------- search + shelf chips: filter the shelves in place ---------- */
