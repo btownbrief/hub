@@ -262,16 +262,34 @@
         t.setAttribute('data-n', (n + ' ' + ((name || '') + ' ' + (kw || '')).toLowerCase()).replace(/\s+/g, ' ').trim());
         return true;
       }
+      // Photographs for the tiles this merge appends at runtime (the More
+      // shelf and friends), keyed by azKey. Unmapped tiles keep emoji / ↗ —
+      // the city histories stay that way on purpose.
+      var APPEND_THUMBS = {};
+      [['https://www.btownbrief.com/subscribe', 'calmlake'],
+       ['https://www.btownbrief.com/community', 'shorefolk'],
+       ['https://www.btownbrief.com/upgrade', 'dogtreat'],
+       ['https://hub.btownbrief.com/start-here.html', 'brickpath'],
+       ['https://play.btownbrief.com/', 'stadium'],
+       ['https://guide.btownbrief.com/', 'brickrow'],
+       ['https://guide.btownbrief.com/history-full.html', 'lighthouse']
+      ].forEach(function (p) { APPEND_THUMBS[azKey(p[0])] = 'assets/img/ig/thumb/' + p[1] + '.jpg'; });
       function append(shelfId, name, url, emoji) {
         var grp = wrap.querySelector('.grp[data-shelf="' + shelfId + '"]') || wrap.querySelector('.grp[data-shelf="more"]');
         if (!grp) return;
         grp.hidden = false;
         var a = document.createElement('a');
         a.className = 'tile'; a.href = url;
-        var mo = document.createElement('i'); mo.className = 'mo'; mo.textContent = emoji || '↗';
+        var icon, th = APPEND_THUMBS[azKey(url)];
+        if (th) {
+          icon = document.createElement('img');
+          icon.src = th; icon.alt = ''; icon.loading = 'lazy';
+        } else {
+          icon = document.createElement('i'); icon.className = 'mo'; icon.textContent = emoji || '↗';
+        }
         var tt = document.createElement('span'); tt.className = 'tt';
         var b = document.createElement('b'); b.textContent = name;
-        tt.appendChild(b); a.appendChild(mo); a.appendChild(tt);
+        tt.appendChild(b); a.appendChild(icon); a.appendChild(tt);
         a.setAttribute('data-n', String(name).toLowerCase());
         grp.appendChild(a);
         tiles[azKey(url)] = a;
