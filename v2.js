@@ -254,7 +254,10 @@
       for (var i = 0; i < existing.length; i++) {
         var el = existing[i];
         tiles[azKey(el.href)] = el;
-        if (!el.getAttribute('data-n')) el.setAttribute('data-n', el.textContent.toLowerCase().replace(/\s+/g, ' ').trim());
+        // data-kw holds extra search words a tile's visible text doesn't
+        // contain (e.g. "groupchat" on Community Chat).
+        if (!el.getAttribute('data-n')) el.setAttribute('data-n',
+          (el.textContent + ' ' + (el.getAttribute('data-kw') || '')).toLowerCase().replace(/\s+/g, ' ').trim());
       }
       function fold(key, name, kw) {
         var t = tiles[key]; if (!t) return false;
