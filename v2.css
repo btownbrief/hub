@@ -87,11 +87,15 @@ img { display: block; }
 .sbtn:hover { color: var(--ink); border-color: var(--ink); }
 
 /* ------------------------------------------- the opening frame (the cover) */
-.cover { position: relative; min-height: clamp(360px, 54vh, 580px); display: grid; place-items: center; overflow: hidden; background: #0B0E14; }
+.cover { position: relative; min-height: clamp(360px, 54vh, 580px); display: grid; place-items: center; overflow: hidden; background: var(--paper); }
 .cover > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-/* The bottom of the photo dissolves into the page, so the cover flows straight
-   into the Open Right Now tile instead of ending at a hard edge. */
-.cover::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,12,20,.42), rgba(8,12,20,.16) 40%, rgba(8,12,20,.12) 62%, var(--paper) 96%); }
+/* Two layers: a dark tint up top so the headline stays readable, and a pure
+   fade to the page color below it — the photo dissolves into the bento with
+   no gray band and no hard edge. Cover background is paper too, so there's
+   never a black sliver under the image. */
+.cover::after { content: ""; position: absolute; inset: 0; background:
+  linear-gradient(180deg, rgba(8,12,20,0) 50%, var(--paper) 97%),
+  linear-gradient(180deg, rgba(8,12,20,.42), rgba(8,12,20,.16) 42%, rgba(8,12,20,0) 72%); }
 .cover-date { position: absolute; top: 10px; left: 0; right: 0; z-index: 1; margin: 0; text-align: center;
   color: rgba(246,244,239,.88); font-size: .82rem; font-weight: 700; letter-spacing: .05em;
   font-variant-numeric: tabular-nums; text-shadow: 0 1px 8px rgba(8,12,20,.5); }
