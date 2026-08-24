@@ -322,7 +322,28 @@
       });
     }
     var h = (location.hash || '').slice(1);
-    if (h && document.querySelector('.qp[data-q="' + h + '"]')) show(h);
+    var deep = !!(h && document.querySelector('.qp[data-q="' + h + '"]'));
+    if (deep) show(h);
+
+    /* auto-tour: step to the next question every 7s so the panels answer
+       themselves — until the visitor touches the section, which ends it */
+    var ask = document.querySelector('.ask');
+    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (ask && !deep && !reduce && pills.length > 1) {
+      var idx = 0, visible = true;
+      for (var k = 0; k < pills.length; k++) if (pills[k].classList.contains('on')) idx = k;
+      var timer = setInterval(function () {
+        if (!visible || document.hidden) return;
+        idx = (idx + 1) % pills.length;
+        show(pills[idx].getAttribute('data-q'));
+      }, 7000);
+      function stop() { clearInterval(timer); }
+      ask.addEventListener('pointerdown', stop, { once: true });
+      ask.addEventListener('focusin', stop, { once: true });
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (es) { visible = es[0].isIntersecting; }, { threshold: 0.25 }).observe(ask);
+      }
+    }
   })();
 
   /* ---------- search + shelf chips: filter the shelves in place ---------- */
