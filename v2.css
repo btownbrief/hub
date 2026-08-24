@@ -289,9 +289,11 @@ img { display: block; }
   .tile > img, .tile .mo { flex-basis: 64px; }
   .qp > img { width: 52px; height: 52px; right: 12px; top: 12px; }
   .qp h3 { padding-right: 64px; font-size: 1.2rem; }
-  /* Pills two-up on phones — half the vertical run of the question list. */
+  /* Pills two-up on phones — half the vertical run of the question list.
+     The daily pill leads at full width; the other twelve pair up evenly. */
   .pills { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .pill { font-size: .82rem; padding: .55rem .55rem; text-align: center; letter-spacing: 0; }
+  .pill[data-q="daily"] { grid-column: 1 / -1; font-size: .95rem; padding: .65rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
