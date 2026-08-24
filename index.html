@@ -120,7 +120,8 @@
   <section class="ask" id="ask">
     <h2 class="D">What are you<br>here for?</h2>
     <div class="pills" role="group" aria-label="What are you here for?">
-      <button class="pill on" aria-pressed="true" data-q="do">I want something to do.</button>
+      <button class="pill on" aria-pressed="true" data-q="daily">What am I checking every day?</button>
+      <button class="pill" aria-pressed="false" data-q="do">I want something to do.</button>
       <button class="pill" aria-pressed="false" data-q="eat">I'm hungry.</button>
       <button class="pill" aria-pressed="false" data-q="out">What's it like out?</button>
       <button class="pill" aria-pressed="false" data-q="news">What's the news?</button>
@@ -135,7 +136,7 @@
     </div>
 
     <div class="panels">
-      <div class="qp on" data-q="do">
+      <div class="qp" data-q="do">
         <img src="assets/img/ig/fools-s.jpg" alt="" loading="lazy">
         <h3>I want something to do.</h3>
         <div class="rows">
@@ -174,6 +175,30 @@
           <a href="https://guide.btownbrief.com/civic.html"><b>Civic Meetings</b><small>agendas, packets, video</small></a>
           <a href="https://play.btownbrief.com/news-quiz/"><b>News Quiz</b><small>did you actually read this week's Brief?</small></a>
           <a href="https://play.btownbrief.com/archive/"><b>The Archives</b><small>find the story you half-remember</small></a>
+        </div>
+      </div>
+      <div class="qp on" data-q="daily">
+        <img src="assets/img/ig/docksunset-s.jpg" alt="" loading="lazy">
+        <h3>What am I checking every day?</h3>
+        <p class="split">Morning</p>
+        <div class="rows">
+          <a href="https://guide.btownbrief.com/weather.html"><b>Weather</b><em data-live="weather">with Steve's read</em></a>
+          <a href="https://www.btownbrief.com?utm_source=hub&amp;utm_medium=referral&amp;utm_campaign=daily_panel"><b>The Brief</b><small>Mon &amp; Fri — start with the newsletter</small></a>
+          <a href="https://guide.btownbrief.com/events.html"><b>Events</b><em data-live="events">what's on today</em></a>
+        </div>
+        <p class="split">Through the day</p>
+        <div class="rows">
+          <a href="https://guide.btownbrief.com/pulse.html"><b>Burlington Pulse</b><small>every 20 min · local + national wire</small></a>
+          <a href="https://www.reddit.com/r/burlington/new/"><b>r/burlington</b><small>sorted by new — what the town's saying</small></a>
+          <a href="https://play.btownbrief.com/what-now/"><b>What Now</b><small>one good answer, then put the phone down</small></a>
+          <a href="https://play.btownbrief.com/"><b>The arcade</b><em data-live="games">a daily game or two</em></a>
+          <a href="https://play.btownbrief.com/dibs/"><b>Dibs</b><small>hold your block of the city</small></a>
+        </div>
+        <p class="split">Evening</p>
+        <div class="rows">
+          <a href="https://guide.btownbrief.com/tv.html"><b>BTown TV</b><em>nightly · one curated page of video</em></a>
+          <a href="https://guide.btownbrief.com/live.html"><b>Pulse LIVE</b><em>headlines rolling on their own — lean back</em></a>
+          <a href="https://play.btownbrief.com/lake-breath/"><b>Lake Breath</b><em>the 8:02 · two minutes with the lake</em></a>
         </div>
       </div>
       <div class="qp" data-q="people">
@@ -272,6 +297,10 @@
       <p>The ones I'd send you first. Keep scrolling right — there are more.</p>
     </div>
     <div class="favshelf" tabindex="0" aria-label="Favorites, scrolls sideways">
+      <a class="fav" href="https://www.btownbrief.com?utm_source=hub&amp;utm_medium=referral&amp;utm_campaign=favorites">
+        <img src="assets/img/ig/fav/steve.jpg" alt="" loading="lazy">
+        <span class="tx"><b>The Brief</b><small>The newsletter that started all of this — Burlington in five minutes.</small><i>Mon &amp; Fri</i></span>
+      </a>
       <a class="fav" href="https://play.btownbrief.com/what-now/">
         <img src="assets/img/ig/fav/hope.jpg" alt="" loading="lazy">
         <span class="tx"><b>What Now</b><small>One good answer to “what do I do today?” — then put the phone down.</small><i>new every ask</i></span>
@@ -282,7 +311,15 @@
       </a>
       <a class="fav" href="https://guide.btownbrief.com/pulse.html">
         <img src="assets/img/ig/fav/cityhall.jpg" alt="" loading="lazy">
-        <span class="tx"><b>Burlington Pulse</b><small>Every local headline next to the national wire — and LIVE.</small><i>every 20 min</i></span>
+        <span class="tx"><b>Burlington Pulse</b><small>Every local headline next to the national wire.</small><i>every 20 min</i></span>
+      </a>
+      <a class="fav" href="https://guide.btownbrief.com/live.html">
+        <img src="assets/img/ig/fav/band.jpg" alt="" loading="lazy">
+        <span class="tx"><b>Pulse LIVE</b><small>Headlines rolling on their own — put it on and lean back.</small><i>always on</i></span>
+      </a>
+      <a class="fav" href="https://www.reddit.com/r/burlington/new/">
+        <img src="assets/img/ig/fav/overlook.jpg" alt="" loading="lazy">
+        <span class="tx"><b>r/burlington</b><small>The town's group chat, sorted by new.</small><i>all day</i></span>
       </a>
       <a class="fav" href="https://play.btownbrief.com/church-street-skate/">
         <img src="assets/img/ig/fav/church.jpg" alt="" loading="lazy">
@@ -291,6 +328,10 @@
       <a class="fav" href="https://play.btownbrief.com/dibs/">
         <img src="assets/img/ig/fav/tower.jpg" alt="" loading="lazy">
         <span class="tx"><b>Dibs</b><small>920 blocks. Stand in one, tap, it's yours — until someone takes it.</small><i>new</i></span>
+      </a>
+      <a class="fav" href="https://play.btownbrief.com/">
+        <img src="assets/img/ig/fav/hoops.jpg" alt="" loading="lazy">
+        <span class="tx"><b>The arcade</b><small>Games made for Burlington — free, no accounts, no ads.</small><i>always open</i></span>
       </a>
       <a class="fav" href="https://guide.btownbrief.com/weather.html">
         <img src="assets/img/ig/fav/sky.jpg" alt="" loading="lazy">
