@@ -130,22 +130,23 @@ img { display: block; }
 .ask { margin-top: clamp(2.4rem, 6vw, 4rem); }
 .ask h2 { margin: 0 0 1rem; font-size: clamp(2rem, 5vw, 3.8rem); }
 .pills { display: flex; flex-wrap: wrap; gap: 10px; }
+/* One quiet style for every pill; the chosen one goes maple red. */
 .pill {
   border: 0; cursor: pointer; font: inherit; font-weight: 800;
   font-size: clamp(.98rem, 1.5vw, 1.2rem); letter-spacing: -.01em;
   padding: .78rem 1.15rem; border-radius: 999px;
-  color: var(--ink); background: var(--card); box-shadow: inset 0 0 0 2px var(--ink);
+  color: var(--ink); background: var(--card); box-shadow: inset 0 0 0 1.5px var(--line);
   transition: transform .15s ease;
 }
-.pill.p0 { background: var(--sap); color: #1B1500; box-shadow: none; }
-.pill.p1 { background: var(--mint); box-shadow: none; }
-.pill:hover { transform: rotate(-1.1deg) scale(1.02); }
-.pill.on, .pill.on:hover { background: var(--ink); color: var(--paper); box-shadow: none; transform: none; }
+.pill:hover { transform: rotate(-1.1deg) scale(1.02); box-shadow: inset 0 0 0 1.5px var(--ink); }
+.pill.on, .pill.on:hover { background: var(--maple); color: #fff; box-shadow: none; transform: none; }
 .panels { margin-top: 12px; }
 .qp { display: none; position: relative; background: var(--card); border: 2px solid var(--ink); border-radius: var(--r); padding: 1.25rem 1.3rem 1.15rem; }
 .qp.on { display: block; }
 .qp > img { position: absolute; right: 16px; top: 16px; width: 64px; height: 64px; border-radius: 18px; object-fit: cover; }
 .qp h3 { margin: 0 0 .9rem; padding-right: 84px; font-size: 1.35rem; font-weight: 900; letter-spacing: -.02em; min-height: 40px; display: flex; align-items: center; }
+.qp .split { margin: 1rem 0 .5rem; font-size: .72rem; font-weight: 900; letter-spacing: .09em; text-transform: uppercase; color: var(--mute); }
+.qp h3 + .split { margin-top: 0; }
 .rows { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
 .rows a { display: flex; flex-direction: column; gap: .12rem; padding: .9rem 1rem; border-radius: 16px; background: var(--paper); border: 1.5px solid var(--line); min-height: 66px; }
 .rows a:hover { border-color: var(--ink); background: var(--sap); color: #1B1500; }
