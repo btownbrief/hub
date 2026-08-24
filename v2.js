@@ -232,7 +232,7 @@
   /* Canonical link key: drop the fragment and utm_* noise, keep meaningful queries
      (restaurants.html?view=deals is its own tile). A couple of known second names
      for the same destination map onto the tile we shelve. */
-  var AZ_ALIAS = { 'https://guide.btownbrief.com/deals.html': 'https://guide.btownbrief.com/restaurants.html?view=deals' };
+  var AZ_ALIAS = { 'https://guide.btownbrief.com/restaurants.html?view=deals': 'https://guide.btownbrief.com/deals.html' };
   function azKey(u) {
     var s = String(u).split('#')[0];
     var q = s.split('?'), path = q[0].replace(/\/$/, '');
