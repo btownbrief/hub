@@ -37,6 +37,18 @@
   --line: #232A38; --lake: #7FA0F0; --lake-soft: #162138; --mint: #2A4A3A;
 }
 
+/* The theme toggle shows the mode you'd switch TO: moon in light, sun in dark. */
+#theme-toggle .icon-sun { display: none; }
+#theme-toggle .icon-moon { display: block; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) #theme-toggle .icon-sun { display: block; }
+  :root:not([data-theme="light"]) #theme-toggle .icon-moon { display: none; }
+}
+:root[data-theme="dark"] #theme-toggle .icon-sun { display: block; }
+:root[data-theme="dark"] #theme-toggle .icon-moon { display: none; }
+:root[data-theme="light"] #theme-toggle .icon-sun { display: none; }
+:root[data-theme="light"] #theme-toggle .icon-moon { display: block; }
+
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body {
@@ -75,9 +87,14 @@ img { display: block; }
 .sbtn:hover { color: var(--ink); border-color: var(--ink); }
 
 /* ------------------------------------------- the opening frame (the cover) */
-.cover { position: relative; min-height: clamp(440px, 66vh, 680px); display: grid; place-items: center; overflow: hidden; background: #0B0E14; }
+.cover { position: relative; min-height: clamp(360px, 54vh, 580px); display: grid; place-items: center; overflow: hidden; background: #0B0E14; }
 .cover > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.cover::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,12,20,.42), rgba(8,12,20,.18) 42%, rgba(8,12,20,.55)); }
+/* The bottom of the photo dissolves into the page, so the cover flows straight
+   into the Open Right Now tile instead of ending at a hard edge. */
+.cover::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,12,20,.42), rgba(8,12,20,.16) 40%, rgba(8,12,20,.12) 62%, var(--paper) 96%); }
+.cover-date { position: absolute; top: 10px; left: 0; right: 0; z-index: 1; margin: 0; text-align: center;
+  color: rgba(246,244,239,.88); font-size: .82rem; font-weight: 700; letter-spacing: .05em;
+  font-variant-numeric: tabular-nums; text-shadow: 0 1px 8px rgba(8,12,20,.5); }
 .cover-copy { position: relative; z-index: 1; text-align: center; color: #F6F4EF; padding: 3.4rem 1rem; max-width: 60rem; }
 .cover .eyebrow { margin: 0; font-size: .78rem; font-weight: 800; letter-spacing: .35em; text-transform: uppercase; opacity: .85; }
 .cover h1 { margin: .7rem 0 0; font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: clamp(2.7rem, 7vw, 5.4rem); line-height: 1.02; letter-spacing: -.01em; }
@@ -88,9 +105,7 @@ img { display: block; }
 .cover .credit { position: absolute; right: 14px; bottom: 10px; z-index: 1; font-size: .68rem; color: rgba(246,244,239,.6); }
 
 /* ---------------------------------------------------------------- kicker */
-.hero { padding: clamp(1.2rem, 3vw, 1.8rem) 0 .6rem; }
-.kick { margin: 0; color: var(--ink2); font-weight: 500; font-size: 1rem; max-width: 70ch; }
-.kick #asof { font-variant-numeric: tabular-nums; }
+.bento { padding-top: clamp(1rem, 2.5vw, 1.5rem); }
 
 /* ---------------------------------------------------------------- bento */
 .bento { display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: 152px; gap: 12px; margin-top: .6rem; }
@@ -176,6 +191,12 @@ img { display: block; }
 .favshelf::-webkit-scrollbar { height: 6px; }
 .favshelf::-webkit-scrollbar-track { background: var(--line); border-radius: 999px; }
 .favshelf::-webkit-scrollbar-thumb { background: var(--mute); border-radius: 999px; }
+/* IG-style page dots under the shelf — the swipe-right affordance the
+   scrollbar alone wasn't. Built by v2.js from the shelf's real width. */
+.favdots { display: flex; justify-content: center; gap: 7px; margin-top: 10px; }
+.favdots button { width: 8px; height: 8px; padding: 0; border: 0; border-radius: 50%;
+  background: var(--line); cursor: pointer; transition: background .2s ease, transform .2s ease; }
+.favdots button.on { background: var(--maple); transform: scale(1.25); }
 .fav {
   flex: 0 0 236px; scroll-snap-align: start;
   background: var(--card); border: 1.5px solid var(--line); border-radius: 20px;
@@ -256,6 +277,9 @@ img { display: block; }
   .tile > img, .tile .mo { flex-basis: 64px; }
   .qp > img { width: 52px; height: 52px; right: 12px; top: 12px; }
   .qp h3 { padding-right: 64px; font-size: 1.2rem; }
+  /* Pills two-up on phones — half the vertical run of the question list. */
+  .pills { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .pill { font-size: .82rem; padding: .55rem .55rem; text-align: center; letter-spacing: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

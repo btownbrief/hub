@@ -33,6 +33,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="assets/img/hero.jpg">
 <link rel="stylesheet" href="v2.css?v=20260824c">
+<script>
+  /* Saved theme before first paint — no flash. System preference stays the
+     default until the visitor picks a side with the header toggle. */
+  try {
+    var t = localStorage.getItem('btown-theme');
+    if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+</script>
 </head>
 <body>
 
@@ -47,6 +55,10 @@
       <a href="https://www.btownbrief.com?utm_source=hub&amp;utm_medium=referral&amp;utm_campaign=nav">Read</a>
     </nav>
     <a class="subs" href="#subscribe">Subscribe</a>
+    <button class="sbtn" type="button" id="theme-toggle" aria-label="Toggle light or dark mode" title="Light / dark">
+      <svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.6"/><line x1="12" y1="2" x2="12" y2="4.6"/><line x1="12" y1="19.4" x2="12" y2="22"/><line x1="2" y1="12" x2="4.6" y2="12"/><line x1="19.4" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="6.7" y2="6.7"/><line x1="17.3" y1="17.3" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="6.7" y2="17.3"/><line x1="17.3" y1="6.7" x2="19.1" y2="4.9"/></svg>
+      <svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
     <button class="sbtn" type="button" id="search-open" aria-label="Search everything we made">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.2" y2="16.2"/></svg>
     </button>
@@ -56,25 +68,16 @@
 <!-- ============ THE OPENING FRAME: everything we made ============ -->
 <section class="cover">
   <img src="assets/img/hero.jpg" alt="Sunset over Burlington Harbor" fetchpriority="high">
+  <p class="cover-date"><span id="date-line">Today</span> · <span id="now-clock"></span></p>
   <div class="cover-copy">
     <p class="eyebrow">The BTown Brief</p>
     <h1>Everything we made<br>for Burlington</h1>
     <p class="lede">A newsletter that got out of hand: an arcade, a live city guide,
       and a pile of free things for the people who live here. Start anywhere.</p>
-    <div class="cover-btns">
-      <a class="pillbtn" href="#everything">See all of it ↓</a>
-      <a class="pillbtn" href="start-here.html">Start here — the two lists →</a>
-    </div>
   </div>
-  <span class="credit">Burlington Harbor</span>
 </section>
 
 <main class="wrap">
-
-  <!-- ============ THE KICKER ============ -->
-  <section class="hero">
-    <p class="kick"><span id="date-line">Today</span> · <span id="asof">reading the lake…</span> · everything one local made for the people who live here.</p>
-  </section>
 
   <!-- ============ THE BENTO: live, photographic ============ -->
   <section class="bento" aria-label="Right now">
@@ -127,8 +130,8 @@
       <button class="pill" aria-pressed="false" data-q="news">What's the news?</button>
       <button class="pill" aria-pressed="false" data-q="people">I'm looking for my people.</button>
       <button class="pill" aria-pressed="false" data-q="play">I want to play something.</button>
-      <button class="pill" aria-pressed="false" data-q="game">We're hanging out — give us a game.</button>
-      <button class="pill" aria-pressed="false" data-q="new">I'm new here — or my visitors are.</button>
+      <button class="pill" aria-pressed="false" data-q="game">Give us a game.</button>
+      <button class="pill" aria-pressed="false" data-q="new">I'm new here.</button>
       <button class="pill" aria-pressed="false" data-q="live">I need a job or an apartment.</button>
       <button class="pill" aria-pressed="false" data-q="evening">It's evening. Wind me down.</button>
       <button class="pill" aria-pressed="false" data-q="help">I want to pitch in.</button>
@@ -194,6 +197,7 @@
           <a href="https://play.btownbrief.com/what-now/"><b>What Now</b><small>one good answer, then put the phone down</small></a>
           <a href="https://play.btownbrief.com/"><b>The arcade</b><em data-live="games">a daily game or two</em></a>
           <a href="https://play.btownbrief.com/dibs/"><b>Dibs</b><small>hold your block of the city</small></a>
+          <a href="https://play.btownbrief.com/church-street-skate/"><b>Church Street Skate</b><small>real downtown Burlington, in 3D</small></a>
         </div>
         <p class="split">Evening</p>
         <div class="rows">
@@ -298,7 +302,7 @@
       <h2 class="D">A few of my<br>favorites:</h2>
       <p>The ones I'd send you first. Keep scrolling right — there are more.</p>
     </div>
-    <div class="favshelf" tabindex="0" aria-label="Favorites, scrolls sideways">
+    <div class="favshelf" id="favshelf" tabindex="0" aria-label="Favorites, scrolls sideways">
       <a class="fav" href="https://www.btownbrief.com?utm_source=hub&amp;utm_medium=referral&amp;utm_campaign=favorites">
         <img src="assets/img/ig/fav/steve.jpg" alt="" loading="lazy">
         <span class="tx"><b>The Brief</b><small>The newsletter that started all of this — Burlington in five minutes.</small><i>Mon &amp; Fri</i></span>
@@ -360,9 +364,8 @@
         <span class="tx"><b>Tonight's Sunset</b><small>Will it actually be good? A scored forecast, and where to watch.</small><i>nightly</i></span>
       </a>
     </div>
+    <div class="favdots" id="favdots"></div>
   </section>
-
-  <p class="azmore start"><a href="start-here.html">Don't know where to start? Two lists: what to check daily, and what to check once →</a></p>
 
   <!-- ============ EVERYTHING, A–Z — generated from the catalogs; the guarantee ============ -->
   <section class="az" id="everything">
