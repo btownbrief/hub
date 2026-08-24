@@ -268,13 +268,17 @@ img { display: block; }
   .bento { grid-template-columns: repeat(4, 1fr); }
 }
 @media (max-width: 720px) {
-  /* Phones keep the tabs — everything shrinks to hold one row on a 390px
-     screen, and the bar may wrap gracefully on the narrowest phones. */
-  .bar { gap: .5rem; height: auto; min-height: 52px; flex-wrap: wrap; padding-top: .3rem; padding-bottom: .3rem; }
-  .mark { font-size: .9rem; }
-  .verbs { gap: .55rem; margin-left: .1rem; font-size: .82rem; }
-  .subs { padding: .38rem .7rem; font-size: .78rem; }
-  #theme-toggle { margin-left: auto; }
+  /* Phones: two deliberate header rows, nothing squished.
+     Row 1 — wordmark left, Subscribe right.
+     Row 2 — Eat Do Play Read left, theme + search icons right.
+     The ordered ::before is a full-width flex break between the rows. */
+  .bar { gap: .5rem .6rem; height: auto; flex-wrap: wrap; padding-top: .55rem; padding-bottom: .55rem; }
+  .bar::before { content: ""; flex-basis: 100%; height: 0; order: 3; }
+  .mark { order: 1; font-size: 1rem; }
+  .subs { order: 2; margin-left: auto; padding: .42rem .85rem; font-size: .82rem; }
+  .verbs { order: 4; gap: 1rem; margin-left: 0; font-size: .92rem; }
+  #theme-toggle { order: 5; margin-left: auto; }
+  #search-open { order: 6; }
   .bento { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 142px; }
   .t { grid-column: span 1; padding: .9rem .95rem; }
   .t.big { grid-column: span 2; grid-row: span 2; }
