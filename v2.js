@@ -374,9 +374,12 @@
   (function () {
     var shelf = document.getElementById('favshelf'), dots = document.getElementById('favdots');
     if (!shelf || !dots) return;
-    function pages() { return Math.max(1, Math.ceil(shelf.scrollWidth / shelf.clientWidth)); }
+    /* One dot per ~two screenfuls — a flick with momentum covers about that
+       much, and it keeps the dot row IG-short instead of one-per-card-page. */
+    function unit() { return shelf.clientWidth * 2; }
+    function pages() { return Math.max(1, Math.ceil(shelf.scrollWidth / unit())); }
     function mark() {
-      var i = Math.min(dots.childElementCount - 1, Math.round(shelf.scrollLeft / shelf.clientWidth));
+      var i = Math.min(dots.childElementCount - 1, Math.round(shelf.scrollLeft / unit()));
       for (var k = 0; k < dots.childElementCount; k++) dots.children[k].classList.toggle('on', k === i);
     }
     function build() {
@@ -387,7 +390,7 @@
           var b = document.createElement('button');
           b.type = 'button';
           b.setAttribute('aria-label', 'Favorites page ' + (i + 1));
-          b.addEventListener('click', function () { shelf.scrollTo({ left: i * shelf.clientWidth, behavior: 'smooth' }); });
+          b.addEventListener('click', function () { shelf.scrollTo({ left: i * unit(), behavior: 'smooth' }); });
           dots.appendChild(b);
         })(i);
       }
