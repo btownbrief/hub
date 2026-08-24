@@ -219,58 +219,91 @@
     });
   }
 
-  /* ---------- Everything, A–Z: catalog.json + games.json + search-index.json ----------
-     Three feeds, one list. The guide's catalog.json is the city-guide shelf, the
-     arcade's games.json is every live game, and the arcade's search-index.json is
-     the whole network — newsletter, community, leaderboards, the histories. Launch
-     something new by adding it to one of those three files; this site needs no edit.
-     Same destination under two names keeps the catalog/games name and folds the
-     other name (and its keywords) into what the search will match. */
-  var AZ = [];
+  /* ---------- Everything, by shelf: catalog.json + games.json + search-index.json ----------
+     The shelves and their tiles are curated in the HTML (grouping, photos, the
+     "(Battleship)" names). The three feeds still guarantee completeness: a feed
+     item whose link already has a tile folds its name + keywords into that tile's
+     search terms; one we've never shelved is appended to the right shelf — games
+     by their arcade section, guide cards by their catalog group, everything else
+     under More. Launch something new by adding it to one of those three files;
+     this page still needs no edit. */
+  var AZ_SHELF_FOR_SECTION = { 'arcade-action': 'arcade', 'daily-puzzles': 'daily', 'board-card': 'board', 'party-community': 'table', 'party-night': 'table', 'local-more': 'go' };
+  var AZ_SHELF_FOR_GROUP = { 'Right now': 'now', 'Go and do something': 'go', 'Live here': 'live', 'Join in': 'people' };
+  /* Canonical link key: drop the fragment and utm_* noise, keep meaningful queries
+     (restaurants.html?view=deals is its own tile). A couple of known second names
+     for the same destination map onto the tile we shelve. */
+  var AZ_ALIAS = { 'https://guide.btownbrief.com/deals.html': 'https://guide.btownbrief.com/restaurants.html?view=deals' };
+  function azKey(u) {
+    var s = String(u).split('#')[0];
+    var q = s.split('?'), path = q[0].replace(/\/$/, '');
+    var keep = (q[1] || '').split('&').filter(function (p) { return p && p.slice(0, 4) !== 'utm_'; }).join('&');
+    var k = keep ? path + '?' + keep : path;
+    return AZ_ALIAS[k] || k;
+  }
   function az() {
     return Promise.all([
       getJSON(GUIDE + 'data/catalog.json').catch(function () { return null; }),
       getJSON(PLAY + 'games.json').catch(function () { return null; }),
       getJSON(PLAY + 'search-index.json').catch(function () { return null; })
     ]).then(function (res) {
-      var cat = res[0], games = res[1], index = res[2], items = [], seen = {};
-      function add(n, u, kind, kw) {
-        if (!n || !u) return;
-        var k = u.split('?')[0].split('#')[0].replace(/\/$/, '');
-        var had = seen[k];
-        if (had) {
-          if (kw) had.kw += ' ' + kw;
-          if (n.toLowerCase() !== had.n.toLowerCase()) had.kw += ' ' + n;
-          return;
-        }
-        var it = { n: n, u: u, k: kind, kw: kw || '' };
-        seen[k] = it; items.push(it);
+      var cat = res[0], games = res[1], index = res[2];
+      var wrap = $('az-shelves'); if (!wrap) return;
+      var tiles = {};
+      var existing = wrap.querySelectorAll('.tile');
+      for (var i = 0; i < existing.length; i++) {
+        var el = existing[i];
+        tiles[azKey(el.href)] = el;
+        if (!el.getAttribute('data-n')) el.setAttribute('data-n', el.textContent.toLowerCase().replace(/\s+/g, ' ').trim());
       }
-      if (cat && cat.groups) cat.groups.forEach(function (g) { (g.cards || []).forEach(function (c) { add(c.title, c.href, 'page', ''); }); });
+      function fold(key, name, kw) {
+        var t = tiles[key]; if (!t) return false;
+        var n = t.getAttribute('data-n') || '';
+        t.setAttribute('data-n', (n + ' ' + ((name || '') + ' ' + (kw || '')).toLowerCase()).replace(/\s+/g, ' ').trim());
+        return true;
+      }
+      function append(shelfId, name, url, emoji) {
+        var grp = wrap.querySelector('.grp[data-shelf="' + shelfId + '"]') || wrap.querySelector('.grp[data-shelf="more"]');
+        if (!grp) return;
+        grp.hidden = false;
+        var a = document.createElement('a');
+        a.className = 'tile'; a.href = url;
+        var mo = document.createElement('i'); mo.className = 'mo'; mo.textContent = emoji || '↗';
+        var tt = document.createElement('span'); tt.className = 'tt';
+        var b = document.createElement('b'); b.textContent = name;
+        tt.appendChild(b); a.appendChild(mo); a.appendChild(tt);
+        a.setAttribute('data-n', String(name).toLowerCase());
+        grp.appendChild(a);
+        tiles[azKey(url)] = a;
+      }
+      if (cat && cat.groups) cat.groups.forEach(function (g) {
+        (g.cards || []).forEach(function (c) {
+          if (!c.title || !c.href) return;
+          if (!fold(azKey(c.href), c.title, '')) append(AZ_SHELF_FOR_GROUP[g.title] || 'more', c.title, c.href, c.emoji);
+        });
+      });
       if (games && games.games) {
         var liveGames = games.games.filter(function (g) { return g.live && g.slug && g.name; });
-        liveGames.forEach(function (g) { add(g.name, PLAY + encodeURIComponent(g.slug) + '/', 'game', ''); });
+        liveGames.forEach(function (g) {
+          var u = PLAY + encodeURIComponent(g.slug) + '/';
+          if (!fold(azKey(u), g.name, g.pitch || '')) append(AZ_SHELF_FOR_SECTION[g.section] || 'more', g.name, u, g.emoji);
+        });
         txt('games-n', String(liveGames.length));
         live('games', liveGames.length + ' games · free, no accounts');
       }
-      if (index && index.pages) index.pages.forEach(function (p) { add(p.title, p.url, 'page', p.keywords || ''); });
-      if (items.length < 30) return;   // a half-broken feed loses to the static list
-      items.sort(function (a, b) {
-        var ka = a.n.toLowerCase().replace(/^(?:(?:the|a|an)\s+|r\/)/, ''), kb = b.n.toLowerCase().replace(/^(?:(?:the|a|an)\s+|r\/)/, '');
-        return ka < kb ? -1 : ka > kb ? 1 : 0;
+      if (index && index.pages) index.pages.forEach(function (p) {
+        if (!p.title || !p.url) return;
+        var k = azKey(p.url);
+        if (k === 'https://hub.btownbrief.com') return;   // this page itself
+        if (!fold(k, p.title, p.keywords || '')) append('more', p.title, p.url, '');
       });
-      AZ = items;
-      var ul = $('az-list'); if (!ul) return;
-      ul.innerHTML = '';
-      items.forEach(function (it) {
-        var li = document.createElement('li'), a = document.createElement('a');
-        a.href = it.u; a.textContent = it.n;
-        if (it.k === 'game') { var s = document.createElement('small'); s.textContent = 'game'; a.appendChild(s); }
-        li.appendChild(a);
-        li.setAttribute('data-n', (it.n + ' ' + it.kw).toLowerCase().replace(/\s+/g, ' ').trim());
-        ul.appendChild(li);
-      });
-      txt('az-count', items.length + ' pages and games, A–Z. If it isn’t in a question above, it’s here.');
+      var total = 0, grps = wrap.querySelectorAll('.grp');
+      for (var j = 0; j < grps.length; j++) {
+        var n = grps[j].querySelectorAll('.tile').length;
+        total += n;
+        var s = grps[j].querySelector('.gh small'); if (s) s.textContent = String(n);
+        if (!n) grps[j].hidden = true;
+      }
+      txt('az-count', total + ' pages and games, by shelf. If it isn’t in a question above, it’s here.');
       var f = $('find'); if (f && f.value) f.dispatchEvent(new Event('input'));
     });
   }
@@ -292,18 +325,32 @@
     if (h && document.querySelector('.qp[data-q="' + h + '"]')) show(h);
   })();
 
-  /* ---------- search: filters the A–Z in place ---------- */
+  /* ---------- search + shelf chips: filter the shelves in place ---------- */
   (function () {
-    var input = $('find'), ul = $('az-list'), open = $('search-open');
-    if (!input || !ul) return;
+    var input = $('find'), wrap = $('az-shelves'), open = $('search-open');
+    if (!input || !wrap) return;
+    var shelf = '';
+    var chips = document.querySelectorAll('.azchip');
     function filter() {
       var q = input.value.trim().toLowerCase();
-      var lis = ul.children, shown = 0;
-      for (var i = 0; i < lis.length; i++) {
-        var n = (lis[i].getAttribute('data-n') || lis[i].textContent).toLowerCase();
-        var hit = !q || n.indexOf(q) !== -1;
-        lis[i].classList.toggle('hide', !hit); if (hit) shown++;
+      var grps = wrap.querySelectorAll('.grp');
+      for (var i = 0; i < grps.length; i++) {
+        var g = grps[i], off = shelf && g.getAttribute('data-shelf') !== shelf;
+        var ts = g.querySelectorAll('.tile'), shown = 0;
+        for (var j = 0; j < ts.length; j++) {
+          var n = (ts[j].getAttribute('data-n') || ts[j].textContent).toLowerCase();
+          var hit = !off && (!q || n.indexOf(q) !== -1);
+          ts[j].classList.toggle('hide', !hit); if (hit) shown++;
+        }
+        g.hidden = !shown;
       }
+    }
+    for (var c = 0; c < chips.length; c++) {
+      chips[c].addEventListener('click', function () {
+        shelf = this.getAttribute('data-shelf') || '';
+        for (var k = 0; k < chips.length; k++) chips[k].classList.toggle('on', chips[k] === this);
+        filter();
+      });
     }
     input.addEventListener('input', filter);
     if (open) open.addEventListener('click', function () {
