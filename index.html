@@ -30,9 +30,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://guide.btownbrief.com">
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..900&display=swap" rel="stylesheet">
-<link rel="preload" as="image" href="assets/img/ig/fools-night.jpg">
-<link rel="stylesheet" href="v2.css?v=20260824a">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="assets/img/hero.jpg">
+<link rel="stylesheet" href="v2.css?v=20260824b">
 </head>
 <body>
 
@@ -53,11 +53,26 @@
   </div>
 </header>
 
+<!-- ============ THE OPENING FRAME: everything we made ============ -->
+<section class="cover">
+  <img src="assets/img/hero.jpg" alt="Sunset over Burlington Harbor" fetchpriority="high">
+  <div class="cover-copy">
+    <p class="eyebrow">The BTown Brief</p>
+    <h1>Everything we made<br>for Burlington</h1>
+    <p class="lede">A newsletter that got out of hand: an arcade, a live city guide,
+      and a pile of free things for the people who live here. Start anywhere.</p>
+    <div class="cover-btns">
+      <a class="pillbtn" href="#everything">See all of it ↓</a>
+      <a class="pillbtn" href="start-here.html">Start here — the two lists →</a>
+    </div>
+  </div>
+  <span class="credit">Burlington Harbor</span>
+</section>
+
 <main class="wrap">
 
-  <!-- ============ THE TITLE ============ -->
+  <!-- ============ THE KICKER ============ -->
   <section class="hero">
-    <h1 class="D">Burlington,<br>right now.</h1>
     <p class="kick"><span id="date-line">Today</span> · <span id="asof">reading the lake…</span> · everything one local made for the people who live here.</p>
   </section>
 
@@ -99,43 +114,6 @@
       <p class="sub">scored forecast · where to watch</p>
     </a>
 
-    <div class="t read">
-      <div class="who"><i>SD</i><span>Steve's read <em id="read-when"></em></span></div>
-      <p id="read-text">The morning read on the day — written, not generated from a number. It lands here once it's approved.</p>
-      <a class="more" href="https://guide.btownbrief.com/weather.html">The full read →</a>
-    </div>
-
-    <a class="t pick" id="pick" href="https://guide.btownbrief.com/events.html?when=today&amp;tonight=1">
-      <p class="lab">Tonight's pick</p>
-      <p class="num" id="pick-t">—</p>
-      <p class="sub" id="pick-v">one thing worth leaving the house for</p>
-    </a>
-
-    <a class="t play" href="https://play.btownbrief.com/">
-      <p class="lab">The arcade</p>
-      <p class="num"><span id="games-n">39</span><small> free games</small></p>
-      <p class="sub">Leaderboards reset monthly · champions named in the Brief</p>
-    </a>
-
-    <a class="t ph tv" href="https://guide.btownbrief.com/tv.html">
-      <img src="assets/img/ig/marina.jpg" alt="Boats at the Burlington marina at dusk" loading="lazy">
-      <p class="lab">Tonight on Btown TV</p>
-      <p class="num small" id="tv-t">Btown TV</p>
-      <p class="sub" id="tv-sub">One human-picked page of video every evening — a Tonight's pick, short shelves, a Vermont shelf — and a playlist that plays the whole edition on your TV.</p>
-    </a>
-
-    <a class="t ph ol" href="https://guide.btownbrief.com/out-loud/">
-      <img src="assets/img/ig/foliage.jpg" alt="Peak foliage on the hills east of Burlington" loading="lazy">
-      <p class="lab">New · walk it</p>
-      <p class="num small">Btown Out Loud</p>
-      <p class="sub">Earbuds in — 49 stories the city tells you when you arrive</p>
-    </a>
-
-    <div class="t dark full" id="subscribe">
-      <p class="lab">Get the Brief, free</p>
-      <p class="sub">All of this exists because of one twice-weekly newsletter. 3,000+ neighbors · 7 in 10 open every issue · Mondays &amp; Fridays.</p>
-      <iframe src="https://embeds.beehiiv.com/a1c106df-f519-4dfc-a892-61261d0f8389?slim=true" data-test-id="beehiiv-embed" height="52" frameborder="0" scrolling="no" title="Subscribe to the BTown Brief" loading="lazy"></iframe>
-    </div>
   </section>
 
   <!-- ============ THE QUESTIONS: pills + one open panel ============ -->
@@ -212,6 +190,7 @@
         <div class="rows">
           <a href="https://play.btownbrief.com/"><b>The arcade</b><em data-live="games">free, no accounts</em></a>
           <a href="https://play.btownbrief.com/leaderboards/"><b>Leaderboards</b><em>reset monthly · champions in the Brief</em></a>
+          <a href="https://play.btownbrief.com/dibs/"><b>Dibs</b><small>claim a block of the real city</small></a>
           <a href="https://play.btownbrief.com/whos-playing/"><b>Find a partner</b><small>tennis, pickleball, a run, a ski day</small></a>
         </div>
       </div>
@@ -330,6 +309,8 @@
     </div>
   </section>
 
+  <p class="azmore start"><a href="start-here.html">Don't know where to start? Two lists: what to check daily, and what to check once →</a></p>
+
   <!-- ============ EVERYTHING, A–Z — generated from the catalogs; the guarantee ============ -->
   <section class="az" id="everything">
     <div class="azhead">
@@ -365,8 +346,8 @@
         <a class="tile" href="https://guide.btownbrief.com/weather.html"><img src="assets/img/ig/thumb/sky.jpg" alt="" loading="lazy"><span class="tt"><b>Burlington Weather &amp; Lake</b><small data-live="weather">Conditions, lake temps, can-I-swim — and Steve's read.</small></span></a>
         <a class="tile" href="https://guide.btownbrief.com/restaurants.html?view=deals"><img src="assets/img/ig/thumb/fools.jpg" alt="" loading="lazy"><span class="tt"><b>Food &amp; Drink Deals</b><small data-live="deals">Happy hours, specials, the cheap-night standbys.</small></span></a>
         <a class="tile" href="https://guide.btownbrief.com/small-bites.html"><img src="assets/img/ig/thumb/berries.jpg" alt="" loading="lazy"><span class="tt"><b>Small Bites</b><small>Every menu near Church Street, one filterable list.</small></span></a>
-        <a class="tile" href="https://guide.btownbrief.com/openings.html"><i class="mo">🚪</i><span class="tt"><b>Openings &amp; Closings</b><small data-live="openings">What just opened, what's gone — every entry sourced.</small></span></a>
-        <a class="tile" href="https://guide.btownbrief.com/changes.html"><i class="mo">⏱️</i><span class="tt"><b>Since You Checked</b><small>What changed since your last look: beaches, roads, agendas.</small></span></a>
+        <a class="tile" href="https://guide.btownbrief.com/openings.html"><img src="assets/img/ig/thumb/harbor.jpg" alt="" loading="lazy"><span class="tt"><b>Openings &amp; Closings</b><small data-live="openings">What just opened, what's gone — every entry sourced.</small></span></a>
+        <a class="tile" href="https://guide.btownbrief.com/changes.html"><img src="assets/img/ig/thumb/winterdawn.jpg" alt="" loading="lazy"><span class="tt"><b>Since You Checked</b><small>What changed since your last look: beaches, roads, agendas.</small></span></a>
         <a class="tile" href="https://guide.btownbrief.com/pulse.html"><img src="assets/img/ig/thumb/cityhall.jpg" alt="" loading="lazy"><span class="tt"><b>Burlington Pulse</b><small>Local headlines next to the national wire — and LIVE.</small></span></a>
       </div>
 
@@ -399,8 +380,8 @@
         <div class="gh"><i class="c-mint"></i><h3>People</h3><small>9</small></div>
         <a class="tile" href="https://www.meetup.com/burlington-social-activites-group/"><img src="assets/img/ig/thumb/crowd.jpg" alt="" loading="lazy"><span class="tt"><b>The Meetup</b><small>Btown Brief IRL — showing up alone is normal here.</small></span></a>
         <a class="tile" href="https://play.btownbrief.com/whos-playing/"><img src="assets/img/ig/thumb/hoops.jpg" alt="" loading="lazy"><span class="tt"><b>Who's Playing</b><small>Find a partner, or the standing pickup game.</small></span></a>
-        <a class="tile" href="https://play.btownbrief.com/up-for-it/"><i class="mo">🙋</i><span class="tt"><b>Up For It</b><small>Say what you'd go to — five taps and it tips.</small></span></a>
-        <a class="tile" href="https://guide.btownbrief.com/telegram.html"><i class="mo">📨</i><span class="tt"><b>Community Chat</b><small>The Telegram group — there when you need it.</small></span></a>
+        <a class="tile" href="https://play.btownbrief.com/up-for-it/"><img src="assets/img/ig/thumb/nightsoccer.jpg" alt="" loading="lazy"><span class="tt"><b>Up For It</b><small>Say what you'd go to — five taps and it tips.</small></span></a>
+        <a class="tile" href="https://guide.btownbrief.com/telegram.html"><img src="assets/img/ig/thumb/pinkbeach.jpg" alt="" loading="lazy"><span class="tt"><b>Community Chat</b><small>The Telegram group — there when you need it.</small></span></a>
         <a class="tile" href="https://guide.btownbrief.com/clubs.html"><img src="assets/img/ig/thumb/streetfest.jpg" alt="" loading="lazy"><span class="tt"><b>Clubs &amp; Groups</b><small>Run clubs, board games, book clubs, pickup.</small></span></a>
         <a class="tile" href="https://guide.btownbrief.com/photos.html"><img src="assets/img/ig/thumb/pinksky.jpg" alt="" loading="lazy"><span class="tt"><b>Community Photos</b><small>Send one in — it may run in the Brief.</small></span></a>
         <a class="tile" href="https://guide.btownbrief.com/playlist.html"><i class="mo">🎶</i><span class="tt"><b>Community Playlist</b><small>Share a song, find Vermont artists.</small></span></a>
@@ -411,9 +392,9 @@
       <div class="grp" data-shelf="live">
         <div class="gh"><i class="c-maple"></i><h3>Live here</h3><small>7</small></div>
         <a class="tile" href="https://guide.btownbrief.com/jobs.html"><img src="assets/img/ig/thumb/cityplace.jpg" alt="" loading="lazy"><span class="tt"><b>Jobs This Week</b><small data-live="jobs">13 boards, one list — Mon · Wed · Fri.</small></span></a>
-        <a class="tile" href="https://guide.btownbrief.com/housing.html"><i class="mo">🏠</i><span class="tt"><b>Find an Apartment</b><small>Every property manager, contacts included.</small></span></a>
+        <a class="tile" href="https://guide.btownbrief.com/housing.html"><img src="assets/img/ig/thumb/fallstreet.jpg" alt="" loading="lazy"><span class="tt"><b>Find an Apartment</b><small>Every property manager, contacts included.</small></span></a>
         <a class="tile" href="https://guide.btownbrief.com/civic.html"><img src="assets/img/ig/thumb/park.jpg" alt="" loading="lazy"><span class="tt"><b>Civic Meetings</b><small>Every public meeting — agendas, packets, video.</small></span></a>
-        <a class="tile" href="https://guide.btownbrief.com/best-of-reddit.html"><i class="mo">🏅</i><span class="tt"><b>Best of r/burlington</b><small>232 settled arguments, linked to the threads.</small></span></a>
+        <a class="tile" href="https://guide.btownbrief.com/best-of-reddit.html"><img src="assets/img/ig/thumb/sailboat.jpg" alt="" loading="lazy"><span class="tt"><b>Best of r/burlington</b><small>232 settled arguments, linked to the threads.</small></span></a>
         <a class="tile" href="https://guide.btownbrief.com/volunteer.html"><img src="assets/img/ig/thumb/seal.jpg" alt="" loading="lazy"><span class="tt"><b>Volunteer</b><small>Help this week, sized to the time you've got.</small></span></a>
         <a class="tile" href="https://guide.btownbrief.com/gifts.html"><i class="mo">🎁</i><span class="tt"><b>The Gift Guide</b><small>Every gift from a local shop or maker.</small></span></a>
         <a class="tile" href="https://stephenvdavis-jpg.github.io/t-shirts/"><i class="mo">👕</i><span class="tt"><b>Merch</b><small>Burlington shirts — the entire marketing budget.</small></span></a>
@@ -423,7 +404,7 @@
         <div class="gh"><i class="c-lake"></i><h3>Reading</h3><small>5</small></div>
         <a class="tile" href="https://www.btownbrief.com?utm_source=hub&amp;utm_medium=referral&amp;utm_campaign=az"><i class="mo">📬</i><span class="tt"><b>The Brief</b><small>The newsletter itself — Mondays &amp; Fridays, free.</small></span></a>
         <a class="tile" href="https://play.btownbrief.com/archive/"><i class="mo">📰</i><span class="tt"><b>The Archives</b><small>Every issue ever written, searchable.</small></span></a>
-        <a class="tile" href="https://guide.btownbrief.com/history.html"><i class="mo">📖</i><span class="tt"><b>Burlington, Briefly</b><small>The city's whole story in five minutes.</small></span></a>
+        <a class="tile" href="https://guide.btownbrief.com/history.html"><img src="assets/img/ig/thumb/bluehour.jpg" alt="" loading="lazy"><span class="tt"><b>Burlington, Briefly</b><small>The city's whole story in five minutes.</small></span></a>
         <a class="tile" href="https://guide.btownbrief.com/goodburlington.html"><img src="assets/img/ig/thumb/overlook.jpg" alt="" loading="lazy"><span class="tt"><b>r/GoodBurlington</b><small>The good-news corner of Burlington Reddit.</small></span></a>
         <a class="tile" href="https://www.btownbrief.com/about-me"><img src="assets/img/ig/thumb/steve.jpg" alt="" loading="lazy"><span class="tt"><b>About Me</b><small>It really is just one guy. And the dog.</small></span></a>
       </div>
@@ -478,7 +459,15 @@
       </div>
 
     </div>
-    <p class="azmore"><a href="start-here.html">Don't know where to start? Two lists: what to check daily, and what to check once →</a></p>
+  </section>
+
+  <!-- ============ THE SIGNUP: the last thing on the page ============ -->
+  <section class="band">
+    <div class="t dark full" id="subscribe">
+      <p class="lab">Get the Brief, free</p>
+      <p class="sub">All of this exists because of one twice-weekly newsletter. 3,000+ neighbors · 7 in 10 open every issue · Mondays &amp; Fridays.</p>
+      <iframe src="https://embeds.beehiiv.com/a1c106df-f519-4dfc-a892-61261d0f8389?slim=true" data-test-id="beehiiv-embed" height="52" frameborder="0" scrolling="no" title="Subscribe to the BTown Brief" loading="lazy"></iframe>
+    </div>
   </section>
 
   <footer class="foot">
