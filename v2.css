@@ -79,11 +79,13 @@ img { display: block; }
 .bar { display: flex; align-items: center; gap: 1rem; height: 60px; }
 .mark { font-variation-settings: "wdth" 112, "wght" 900; text-transform: uppercase; letter-spacing: .01em; font-size: 1.05rem; white-space: nowrap; }
 .mark i { font-style: normal; color: var(--maple); }
-.verbs { display: flex; gap: 1.25rem; margin-left: .5rem; font-weight: 700; color: var(--ink2); }
+/* The verbs stretch across the open middle instead of huddling by the
+   wordmark; the Read/Subscribe pills carry the right edge. */
+.verbs { display: flex; flex: 1; justify-content: space-evenly; gap: 1rem; margin-left: .5rem; font-weight: 700; font-size: 1rem; color: var(--ink2); }
 .verbs a:hover { color: var(--ink); }
-.read-cta { margin-left: auto; background: var(--maple); color: #fff; border-radius: 999px; padding: .5rem 1rem; font-weight: 800; font-size: .9rem; white-space: nowrap; }
+.read-cta { background: var(--maple); color: #fff; border-radius: 999px; padding: .55rem 1.15rem; font-weight: 800; font-size: .95rem; white-space: nowrap; }
 .read-cta:hover { filter: brightness(1.08); }
-.subs { background: var(--sap); color: #1B1500; border-radius: 999px; padding: .5rem 1rem; font-weight: 800; font-size: .9rem; white-space: nowrap; }
+.subs { background: var(--sap); color: #1B1500; border-radius: 999px; padding: .55rem 1.15rem; font-weight: 800; font-size: .95rem; white-space: nowrap; }
 .subs:hover { filter: brightness(1.04); }
 .sbtn { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--line); background: var(--card); color: var(--ink2); display: grid; place-items: center; cursor: pointer; }
 .sbtn:hover { color: var(--ink); border-color: var(--ink); }
@@ -277,9 +279,9 @@ img { display: block; }
   .bar { gap: .5rem .6rem; height: auto; flex-wrap: wrap; padding-top: .55rem; padding-bottom: .55rem; }
   .bar::before { content: ""; flex-basis: 100%; height: 0; order: 3; }
   .mark { order: 1; font-size: 1rem; }
-  .read-cta { order: 2; margin-left: auto; padding: .42rem .85rem; font-size: .82rem; }
-  .subs { order: 2; padding: .42rem .85rem; font-size: .82rem; }
-  .verbs { order: 4; gap: .6rem; margin-left: 0; font-size: .85rem; }
+  .read-cta { order: 2; margin-left: auto; padding: .5rem 1rem; font-size: .88rem; }
+  .subs { order: 2; padding: .5rem 1rem; font-size: .88rem; }
+  .verbs { order: 4; flex: 1; justify-content: space-between; gap: .5rem; margin-left: 0; font-size: .9rem; }
   #theme-toggle { order: 5; margin-left: auto; }
   #search-open { order: 6; }
   .bento { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 142px; }

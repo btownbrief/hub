@@ -300,7 +300,7 @@
       if (cat && cat.groups) cat.groups.forEach(function (g) {
         (g.cards || []).forEach(function (c) {
           if (!c.title || !c.href) return;
-          if (!fold(azKey(c.href), c.title, '')) append(AZ_SHELF_FOR_GROUP[g.title] || 'more', c.title, c.href, c.emoji);
+          if (!fold(azKey(c.href), c.title, c.blurb || '')) append(AZ_SHELF_FOR_GROUP[g.title] || 'more', c.title, c.href, c.emoji);
         });
       });
       if (games && games.games) {
@@ -428,15 +428,42 @@
     if (!input || !wrap) return;
     var shelf = '';
     var chips = document.querySelectorAll('.azchip');
+    /* Everyday words → the site's own vocabulary, so the phrasing never has
+       to be exact. Each query word hits if it — or any synonym — appears
+       anywhere in a tile's terms; words match independently, in any order. */
+    var SYN = {
+      food: ['eat', 'restaurant'], dinner: ['restaurant', 'eat'], lunch: ['restaurant', 'eat'],
+      brunch: ['restaurant', 'eat'], hungry: ['restaurant', 'eat'], cheap: ['deal', 'free'],
+      drink: ['bar', 'brewer'], drinks: ['bar', 'brewer'], beer: ['brewer'],
+      concert: ['music', 'show'], gig: ['music', 'show'], band: ['music'],
+      apartment: ['housing', 'rent'], rent: ['housing'], home: ['housing'],
+      job: ['jobs', 'work'], hiring: ['jobs'], work: ['jobs'],
+      swim: ['beach', 'lake'], swimming: ['beach', 'lake'], hike: ['trail', 'outdoor'],
+      kids: ['family', 'kid'], dog: ['dog', 'pup'], news: ['pulse', 'headline', 'brief'],
+      chat: ['groupchat', 'telegram'], talk: ['chat', 'table'],
+      tonight: ['event', 'tonight'], weekend: ['event'], bored: ['what now', 'things to do', 'game'],
+      video: ['tv', 'watch'], podcast: ['listen'], radio: ['listen'],
+      weather: ['weather', 'forecast'], sunset: ['sunset']
+    };
+    /* Words match at word starts only — "eat" finds "eat, eating" but not
+       "wEATher". Terms are padded with a leading space for the check. */
+    function hitTerm(n, w) {
+      if (n.indexOf(' ' + w) !== -1) return true;
+      var alts = SYN[w] || [];
+      for (var a = 0; a < alts.length; a++) if (n.indexOf(' ' + alts[a]) !== -1) return true;
+      return false;
+    }
     function filter() {
-      var q = input.value.trim().toLowerCase();
+      var q = input.value.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+      var words = q ? q.split(/\s+/) : [];
       var grps = wrap.querySelectorAll('.grp');
       for (var i = 0; i < grps.length; i++) {
         var g = grps[i], off = shelf && g.getAttribute('data-shelf') !== shelf;
         var ts = g.querySelectorAll('.tile'), shown = 0;
         for (var j = 0; j < ts.length; j++) {
-          var n = (ts[j].getAttribute('data-n') || ts[j].textContent).toLowerCase();
-          var hit = !off && (!q || n.indexOf(q) !== -1);
+          var n = ' ' + (ts[j].getAttribute('data-n') || ts[j].textContent).toLowerCase().replace(/[^a-z0-9]+/g, ' ');
+          var hit = !off;
+          for (var w = 0; hit && w < words.length; w++) hit = hitTerm(n, words[w]);
           ts[j].classList.toggle('hide', !hit); if (hit) shown++;
         }
         g.hidden = !shown;
