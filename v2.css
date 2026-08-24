@@ -148,6 +148,12 @@ img { display: block; }
 .qp .split { margin: 1rem 0 .5rem; font-size: .72rem; font-weight: 900; letter-spacing: .09em; text-transform: uppercase; color: var(--mute); }
 .qp h3 + .split { margin-top: 0; }
 .rows { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+/* The daily panel packs a dozen links. Flex rows instead of grid: every line
+   stretches to fill its full width, so no orphan cell ever sits empty, and the
+   tighter cards keep the tallest panel scroll-light. */
+.qp[data-q="daily"] .rows { display: flex; flex-wrap: wrap; gap: 8px; }
+.qp[data-q="daily"] .rows a { flex: 1 1 190px; min-height: 0; padding: .55rem .85rem; }
+.qp[data-q="daily"] .split { margin: .65rem 0 .4rem; }
 .rows a { display: flex; flex-direction: column; gap: .12rem; padding: .9rem 1rem; border-radius: 16px; background: var(--paper); border: 1.5px solid var(--line); min-height: 66px; }
 .rows a:hover { border-color: var(--ink); background: var(--sap); color: #1B1500; }
 .rows b { font-weight: 800; font-size: 1rem; }
