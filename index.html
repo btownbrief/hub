@@ -32,7 +32,7 @@
 <link rel="preconnect" href="https://guide.btownbrief.com">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="assets/img/hero.jpg">
-<link rel="stylesheet" href="v2.css?v=20260824k">
+<link rel="stylesheet" href="v2.css?v=20260827a">
 <script>
   /* Saved theme before first paint — no flash. System preference stays the
      default until the visitor picks a side with the header toggle. */
@@ -78,6 +78,10 @@
     <p class="lede">A newsletter that got out of hand: an arcade, a live city guide,
       and a pile of free things for the people who live here. Start anywhere.</p>
   </div>
+  <button class="scroll-cue" id="scroll-cue" type="button" aria-label="Scroll down to the tiles">
+    <span>Scroll — tap any tile</span>
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 9l8 7 8-7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
 </section>
 
 <main class="wrap">
@@ -85,11 +89,11 @@
   <!-- ============ THE BENTO: live, photographic ============ -->
   <section class="bento" aria-label="Right now">
 
-    <a class="t ph big" href="https://guide.btownbrief.com/restaurants.html">
+    <a class="t ph big" href="https://guide.btownbrief.com/things-to-do.html">
       <img src="assets/img/ig/fools-night.jpg" alt="The Festival of Fools banner over Church Street at night, shops lit behind it" fetchpriority="high">
-      <p class="lab">Open right now</p>
-      <p class="num"><span id="open-n">—</span><small id="open-of"> places</small></p>
-      <p class="sub" id="open-sub">Live hours, patios, late-night kitchens</p>
+      <p class="lab">Things to do</p>
+      <p class="num">206<small>+ ideas</small></p>
+      <p class="sub">the local's list</p>
     </a>
 
     <a class="t ph" href="https://guide.btownbrief.com/weather.html">
@@ -99,11 +103,11 @@
       <p class="sub" id="sky">full forecast</p>
     </a>
 
-    <a class="t ph" href="https://guide.btownbrief.com/things-to-do.html">
-      <img src="assets/img/ig/streetfest.jpg" alt="A street festival crowd under the trees, tents and a band down the block" loading="lazy">
-      <p class="lab">Things to do</p>
-      <p class="num">204<small>+ ideas</small></p>
-      <p class="sub">the local's list</p>
+    <a class="t ph" href="https://guide.btownbrief.com/restaurants.html">
+      <img src="assets/img/ig/food.jpg" alt="Nachos and fried chicken on a window table, Church Street at sunset outside" loading="lazy">
+      <p class="lab">Open right now</p>
+      <p class="num"><span id="open-n">—</span><small id="open-of"> places</small></p>
+      <p class="sub" id="open-sub">Live hours, patios, late-night kitchens</p>
     </a>
 
     <a class="t ph" href="https://guide.btownbrief.com/events.html?when=today&amp;tonight=1">
@@ -538,6 +542,6 @@
 </main>
 
 <script src="https://guide.btownbrief.com/js/food-lib.js" defer></script>
-<script src="v2.js?v=20260824i" defer></script>
+<script src="v2.js?v=20260827a" defer></script>
 </body>
 </html>

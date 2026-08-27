@@ -487,6 +487,21 @@
     });
   })();
 
+  /* ---------- scroll cue: nudge first-timers below the cover ---------- */
+  (function () {
+    var cue = $('scroll-cue');
+    var bento = document.querySelector('.bento');
+    if (!cue || !bento) return;
+    cue.addEventListener('click', function () {
+      bento.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      cue.classList.add('gone');
+    });
+    // Once they've moved at all, the nudge has done its job — fade it out.
+    window.addEventListener('scroll', function () {
+      cue.classList.toggle('gone', window.scrollY > 80);
+    }, { passive: true });
+  })();
+
   /* ---------- go ---------- */
   function start() {
     weather().catch(noop);
