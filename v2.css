@@ -79,14 +79,32 @@ img { display: block; }
 .bar { display: flex; align-items: center; gap: 1rem; height: 60px; }
 .mark { font-variation-settings: "wdth" 112, "wght" 900; text-transform: uppercase; letter-spacing: .01em; font-size: 1.05rem; white-space: nowrap; }
 .mark i { font-style: normal; color: var(--maple); }
-/* The verbs stretch across the open middle instead of huddling by the
-   wordmark; the Read/Subscribe pills carry the right edge. */
-.verbs { display: flex; flex: 1; justify-content: space-evenly; gap: 1rem; margin-left: .5rem; font-weight: 700; font-size: 1rem; color: var(--ink2); }
+/* The switch and the verbs travel together: the switch is pinned at the head
+   of the run and the verbs scroll past it, so "which half of the site am I
+   in" can never scroll out of view. */
+.run { display: flex; align-items: center; gap: .9rem; flex: 1; min-width: 0; margin-left: .4rem; }
+.doors { display: inline-flex; align-items: center; gap: 2px; flex: none; padding: 2px;
+  background: var(--card); border: 1.5px solid var(--line); border-radius: 999px; }
+.door { padding: .3rem .7rem; border-radius: 999px; font-weight: 800; font-size: .8rem;
+  letter-spacing: .04em; text-transform: uppercase; color: var(--ink2); white-space: nowrap; }
+.door:hover { color: var(--ink); }
+.door-cur { background: var(--ink); color: var(--paper); cursor: default; }
+
+/* The verbs take the open middle. They scroll rather than wrap: a wrapped
+   third row is another band of navigation above the front door. */
+.verbs { display: flex; flex: 1; justify-content: space-evenly; gap: 1rem; min-width: 0;
+  overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none;
+  font-weight: 700; font-size: 1rem; color: var(--ink2); }
+.verbs::-webkit-scrollbar { display: none; }
+.verbs a { white-space: nowrap; }
 .verbs a:hover { color: var(--ink); }
+/* the fade only exists when there is more to scroll to — set by v2.js */
+.bar.is-over .verbs { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 26px), transparent);
+  mask-image: linear-gradient(90deg, #000 calc(100% - 26px), transparent); }
+
+/* Read and Subscribe were two pills for one destination. */
 .read-cta { background: var(--maple); color: #fff; border-radius: 999px; padding: .55rem 1.15rem; font-weight: 800; font-size: .95rem; white-space: nowrap; }
 .read-cta:hover { filter: brightness(1.08); }
-.subs { background: var(--sap); color: #1B1500; border-radius: 999px; padding: .55rem 1.15rem; font-weight: 800; font-size: .95rem; white-space: nowrap; }
-.subs:hover { filter: brightness(1.04); }
 .sbtn { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--line); background: var(--card); color: var(--ink2); display: grid; place-items: center; cursor: pointer; }
 .sbtn:hover { color: var(--ink); border-color: var(--ink); }
 
@@ -284,22 +302,30 @@ img { display: block; }
   .bento { grid-template-columns: repeat(4, 1fr); }
 }
 @media (max-width: 720px) {
-  /* Phones: two deliberate header rows, nothing squished.
-     Row 1 — wordmark left, Read + Subscribe right.
-     Row 2 — Eat Do Play Listen/Watch left, theme + search icons right.
-     The ordered ::before is a full-width flex break between the rows. */
-  .bar { gap: .5rem .6rem; height: auto; flex-wrap: wrap; padding-top: .55rem; padding-bottom: .55rem; }
+  /* Phones: two deliberate rows, and the second one holds everything now.
+     Row 1 — wordmark left; Read / Subscribe, theme and search right.
+     Row 2 — the Hub/All Day switch, then the verbs, scrolling.
+     The ordered ::before is a full-width flex break between the rows.
+     This row 1 used to be a wordmark and two pills with a hand's width of
+     nothing between them; the second row used to fit five verbs. */
+  .bar { gap: .45rem .5rem; height: auto; flex-wrap: wrap; padding-top: .5rem; padding-bottom: .4rem; }
   .bar::before { content: ""; flex-basis: 100%; height: 0; order: 3; }
   .mark { order: 1; font-size: 1rem; }
-  .read-cta { order: 2; margin-left: auto; padding: .5rem 1rem; font-size: .88rem; }
-  .subs { order: 2; padding: .5rem 1rem; font-size: .88rem; }
-  .verbs { order: 4; flex: 1; justify-content: space-between; gap: .5rem; margin-left: 0; font-size: .9rem; }
-  #theme-toggle { order: 5; margin-left: auto; }
-  #search-open { order: 6; }
+  .read-cta { order: 2; margin-left: auto; padding: .45rem .85rem; font-size: .85rem; }
+  #theme-toggle { order: 2; }
+  #search-open { order: 2; }
+  .run { order: 4; flex-basis: 100%; margin-left: 0; gap: .6rem;
+    /* bleed to the page edge so a scrolled verb does not stop short of it —
+       the same clamp .wrap uses, because there is no token for it */
+    margin-right: calc(clamp(.8rem, 2.5vw, 1.6rem) * -1);
+    padding-right: clamp(.8rem, 2.5vw, 1.6rem); }
+  .verbs { justify-content: flex-start; gap: .85rem; font-size: .9rem; }
+  .door { padding: .28rem .6rem; font-size: .73rem; }
   .bento { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 142px; }
   .t { grid-column: span 1; padding: .9rem .95rem; }
   .t.big { grid-column: span 2; grid-row: span 2; }
   .sbtn { width: 34px; height: 34px; }
+  .rc-long { display: none; }
   .t .num { font-size: 2rem; }
   .favhead { flex-direction: column; align-items: flex-start; gap: .3rem; }
   .fav { flex-basis: 200px; }

@@ -526,5 +526,19 @@
       if (window.BTFood) { openNow().catch(noop); deals().catch(noop); }
     }, 15 * 60 * 1000);
   }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+  /* The fade at the end of the verb run means "there is more this way", so it
+     may only be there when there is. Measured rather than assumed: the run's
+     width depends on the loaded font, which arrives after first paint. */
+  function measureVerbs() {
+    var bar = document.querySelector('.bar');
+    var verbs = document.querySelector('.verbs');
+    if (!bar || !verbs) return;
+    bar.classList.toggle('is-over', verbs.scrollWidth > verbs.clientWidth + 2);
+  }
+  window.addEventListener('resize', measureVerbs);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measureVerbs);
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { start(); measureVerbs(); });
+  } else { start(); measureVerbs(); }
 })();
