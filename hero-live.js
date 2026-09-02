@@ -153,7 +153,7 @@
   var firstFlight = true;
 
   function scheduleNext(now) {
-    nextMoverAt = now + 28 + Math.random() * 50;
+    nextMoverAt = now + 12 + Math.random() * 22;
   }
 
   var lastNightAlpha = 0;
@@ -173,20 +173,57 @@
               y: H * (0.12 + Math.random() * 0.22), amp: 6 + Math.random() * 10 };
   }
 
+  function spawnFlock(now) {
+    // A loose V of far-off birds, high in the frame, crossing slowly. Each
+    // bird is a few pixels of pen stroke with its own flap rhythm — at that
+    // distance, that's all a real flock is.
+    var n = 5 + (Math.random() * 4 | 0);
+    var birds = [];
+    for (var i = 0; i < n; i++) {
+      var rank = Math.ceil(i / 2), side = i % 2 === 1 ? 1 : -1;
+      birds.push({
+        dx: -rank * (13 + Math.random() * 5),          // trail behind the leader
+        dy: side * rank * (5 + Math.random() * 3) + (Math.random() - 0.5) * 4,
+        ph: Math.random() * Math.PI * 2,
+        tempo: 5.5 + Math.random() * 2.5,
+        s: 0.4 + Math.random() * 0.15
+      });
+    }
+    mover = { kind: "flock", t0: now, dur: 26 + Math.random() * 10, ltr: Math.random() < 0.5,
+              y: H * (0.07 + Math.random() * 0.16), amp: 4 + Math.random() * 5, birds: birds };
+  }
+
+  function spawnStar(now) {
+    mover = { kind: "star", t0: now, dur: 0.9,
+              x0: W * (0.15 + Math.random() * 0.5), y0: H * (0.06 + Math.random() * 0.2),
+              dx: W * 0.22, dy: H * 0.12 };
+  }
+
+  function spawnBoat(now) {
+    boatSeen = true;
+    mover = { kind: "boat", t0: now, dur: 70, ltr: Math.random() < 0.5, y: H * 0.80 };
+  }
+
+  // ?mover=flock (or gull/boat/star) forces every turn to that animation —
+  // handy for showing someone a specific one without waiting on the dice.
+  var forcedMover = new URLSearchParams(location.search).get("mover");
+
   function spawnMover(now, m) {
     var isNight = m === "night" || m === "dusk";
+    if (forcedMover === "flock") return spawnFlock(now);
+    if (forcedMover === "gull") return spawnGull(now);
+    if (forcedMover === "boat") return spawnBoat(now);
+    if (forcedMover === "star") return spawnStar(now);
     if (firstFlight) {
       firstFlight = false;
       spawnGull(now);
-    } else if (isNight && Math.random() < 0.5) {
-      mover = { kind: "star", t0: now, dur: 0.9,
-                x0: W * (0.15 + Math.random() * 0.5), y0: H * (0.06 + Math.random() * 0.2),
-                dx: W * 0.22, dy: H * 0.12 };
-    } else if (!isNight && !boatSeen && Math.random() < 0.35) {
-      boatSeen = true;
-      mover = { kind: "boat", t0: now, dur: 70, ltr: Math.random() < 0.5, y: H * 0.80 };
+    } else if (isNight) {
+      Math.random() < 0.45 ? spawnStar(now) : spawnGull(now);
     } else {
-      spawnGull(now);
+      var r = Math.random();
+      if (r < 0.35) spawnFlock(now);
+      else if (r < 0.55 && !boatSeen) spawnBoat(now);
+      else spawnGull(now);
     }
   }
 
@@ -243,6 +280,23 @@
     var p = (now - mover.t0) / mover.dur;
     if (p >= 1) { mover = null; scheduleNext(now); return; }
     if (mover.kind === "bird3d") return; // hero-bird3d.js renders this one
+    if (mover.kind === "flock") {
+      // The whole formation drifts on one path; each bird keeps formation
+      // loosely and flaps to its own clock. Faded, for the miles of air.
+      var fx = mover.ltr ? lerp(-120, W + 120, p) : lerp(W + 120, -120, p);
+      var fy = mover.y + Math.sin(p * Math.PI * 2 * 1.3) * mover.amp;
+      var dir = mover.ltr ? 1 : -1;
+      ctx.save();
+      ctx.globalAlpha = 0.55;
+      for (var bi = 0; bi < mover.birds.length; bi++) {
+        var bd = mover.birds[bi];
+        var wobble = Math.sin(now * 0.7 + bd.ph) * 2;
+        drawGull(fx + dir * bd.dx, fy + bd.dy + wobble, bd.s,
+                 Math.max(0.2, Math.sin(now * bd.tempo + bd.ph)), nightAlpha);
+      }
+      ctx.restore();
+      return;
+    }
     if (mover.kind === "gull") {
       var x = mover.ltr ? lerp(-80, W + 80, p) : lerp(W + 80, -80, p);
       var bobPhase = p * Math.PI * 2 * 2.2;
