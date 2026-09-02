@@ -174,23 +174,59 @@
   }
 
   function spawnFlock(now) {
-    // A loose V of far-off birds, high in the frame, crossing slowly. Each
-    // bird is a few pixels of pen stroke with its own flap rhythm — at that
-    // distance, that's all a real flock is.
-    var n = 7 + (Math.random() * 5 | 0);
+    // Far-off birds crossing slowly in a ragged V, with a straggler or two
+    // chasing the line. Realism at this distance is all behavior, not size:
+    // specks that change shape as the wings beat, dim when edge-on, and
+    // wander inside a formation that never holds quite still.
+    var n = 8 + (Math.random() * 5 | 0);
     var birds = [];
     for (var i = 0; i < n; i++) {
       var rank = Math.ceil(i / 2), side = i % 2 === 1 ? 1 : -1;
+      var depth = 0.75 + Math.random() * 0.5;          // nearer birds: bigger, darker
       birds.push({
-        dx: -rank * (19 + Math.random() * 7),          // trail behind the leader
-        dy: side * rank * (8 + Math.random() * 4) + (Math.random() - 0.5) * 5,
+        dx: -rank * (14 + Math.random() * 6),
+        dy: side * rank * (6 + Math.random() * 3) + (Math.random() - 0.5) * 5,
         ph: Math.random() * Math.PI * 2,
-        tempo: 5.5 + Math.random() * 2.5,
-        s: 0.68 + Math.random() * 0.3
+        tempo: 6 + Math.random() * 3,                  // wingbeats out of sync
+        wander: Math.random() * Math.PI * 2,
+        s: depth
       });
     }
-    mover = { kind: "flock", t0: now, dur: 24 + Math.random() * 8, ltr: Math.random() < 0.5,
-              y: H * (0.10 + Math.random() * 0.16), amp: 4 + Math.random() * 5, birds: birds };
+    // one or two stragglers, well behind the line and slightly off-course
+    var extras = 1 + (Math.random() * 2 | 0);
+    for (var e = 0; e < extras; e++) {
+      birds.push({
+        dx: -(n / 2) * 18 - 25 - Math.random() * 35,
+        dy: (Math.random() - 0.5) * 26,
+        ph: Math.random() * Math.PI * 2,
+        tempo: 6 + Math.random() * 3,
+        wander: Math.random() * Math.PI * 2,
+        s: 0.7 + Math.random() * 0.4
+      });
+    }
+    mover = { kind: "flock", t0: now, dur: 28 + Math.random() * 10, ltr: Math.random() < 0.5,
+              y: H * (0.08 + Math.random() * 0.15), amp: 5 + Math.random() * 5, birds: birds };
+  }
+
+  // One distant bird: a body speck and two wing strokes whose angle sweeps
+  // through the beat. When the wings pass level they're edge-on to us, so
+  // the whole bird thins out and dims — that flicker is what reads as real.
+  function drawSpeck(x, y, s, phase, nightK) {
+    var f = Math.sin(phase);                    // -1 wings down … +1 wings up
+    var ang = 0.15 - 0.75 * f;                  // wing angle from horizontal
+    var wing = 2.6 * s;
+    var lift = Math.sin(ang) * wing, run = Math.cos(ang) * wing;
+    var edge = 1 - Math.abs(f);                 // 1 = wings level (edge-on)
+    var a = (0.55 + 0.4 * Math.abs(f)) * (0.9 - 0.25 * edge);
+    var c = Math.round(14 + 4 * nightK);        // near-black; barely bluer at night
+    ctx.strokeStyle = "rgba(" + c + "," + (c + 3) + "," + (c + 8) + "," + a.toFixed(3) + ")";
+    ctx.lineWidth = Math.max(0.8, 1.05 * s);
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.moveTo(x - run, y - lift);
+    ctx.quadraticCurveTo(x - run * 0.35, y - lift * 0.2, x, y);
+    ctx.quadraticCurveTo(x + run * 0.35, y - lift * 0.2, x + run, y - lift);
+    ctx.stroke();
   }
 
   function spawnStar(now) {
@@ -281,20 +317,18 @@
     if (p >= 1) { mover = null; scheduleNext(now); return; }
     if (mover.kind === "bird3d") return; // hero-bird3d.js renders this one
     if (mover.kind === "flock") {
-      // The whole formation drifts on one path; each bird keeps formation
-      // loosely and flaps to its own clock. Faded, for the miles of air.
+      // The formation drifts on one path but never holds still: every bird
+      // wanders a little inside it and beats its wings on its own clock.
       var fx = mover.ltr ? lerp(-160, W + 160, p) : lerp(W + 160, -160, p);
-      var fy = mover.y + Math.sin(p * Math.PI * 2 * 1.3) * mover.amp;
+      var fy = mover.y + Math.sin(p * Math.PI * 2 * 1.1) * mover.amp;
       var dir = mover.ltr ? 1 : -1;
-      ctx.save();
-      ctx.globalAlpha = 0.85;
       for (var bi = 0; bi < mover.birds.length; bi++) {
         var bd = mover.birds[bi];
-        var wobble = Math.sin(now * 0.7 + bd.ph) * 2;
-        drawGull(fx + dir * bd.dx, fy + bd.dy + wobble, bd.s,
-                 Math.max(0.2, Math.sin(now * bd.tempo + bd.ph)), nightAlpha);
+        var wx = Math.sin(now * 0.35 + bd.wander) * 3;
+        var wy = Math.sin(now * 0.5 + bd.wander * 1.7) * 2.5;
+        drawSpeck(fx + dir * bd.dx + wx, fy + bd.dy + wy, bd.s,
+                  now * bd.tempo + bd.ph, nightAlpha);
       }
-      ctx.restore();
       return;
     }
     if (mover.kind === "gull") {
