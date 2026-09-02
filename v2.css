@@ -111,6 +111,10 @@ img { display: block; }
 /* ------------------------------------------- the opening frame (the cover) */
 .cover { position: relative; min-height: clamp(360px, 54vh, 580px); display: grid; place-items: center; overflow: hidden; background: var(--paper); }
 .cover > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* The living layer: a transparent canvas over the photo. Time-of-day tint,
+   stars and moon at night, the occasional gull. Pure garnish — the page is
+   complete without it. */
+#sky-live { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 /* Two layers: a dark tint up top so the headline stays readable, and a pure
    fade to the page color below it — the photo dissolves into the bento with
    no gray band and no hard edge. Cover background is paper too, so there's
@@ -121,7 +125,10 @@ img { display: block; }
 .cover-date { position: absolute; top: 10px; left: 0; right: 0; z-index: 1; margin: 0; text-align: center;
   color: rgba(246,244,239,.88); font-size: .82rem; font-weight: 700; letter-spacing: .05em;
   font-variant-numeric: tabular-nums; text-shadow: 0 1px 8px rgba(8,12,20,.5); }
-.cover-copy { position: relative; z-index: 1; text-align: center; color: #F6F4EF; padding: 3.4rem 1rem; max-width: 60rem; }
+/* The soft shadow keeps the copy readable in every sky — especially the lede,
+   which sits in the pale band where the night photo fades into the page. */
+.cover-copy { position: relative; z-index: 1; text-align: center; color: #F6F4EF; padding: 3.4rem 1rem; max-width: 60rem;
+  text-shadow: 0 1px 3px rgba(8,12,20,.38), 0 2px 18px rgba(8,12,20,.42); }
 .cover .eyebrow { margin: 0; font-size: .78rem; font-weight: 800; letter-spacing: .35em; text-transform: uppercase; opacity: .85; }
 .cover h1 { margin: .7rem 0 0; font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: clamp(2.7rem, 7vw, 5.4rem); line-height: 1.02; letter-spacing: -.01em; }
 .cover .lede { margin: 1.1rem auto 0; max-width: 48ch; font-size: clamp(1rem, 1.6vw, 1.15rem); font-weight: 500; opacity: .92; }
