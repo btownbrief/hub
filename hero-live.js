@@ -177,20 +177,20 @@
     // A loose V of far-off birds, high in the frame, crossing slowly. Each
     // bird is a few pixels of pen stroke with its own flap rhythm — at that
     // distance, that's all a real flock is.
-    var n = 5 + (Math.random() * 4 | 0);
+    var n = 7 + (Math.random() * 5 | 0);
     var birds = [];
     for (var i = 0; i < n; i++) {
       var rank = Math.ceil(i / 2), side = i % 2 === 1 ? 1 : -1;
       birds.push({
-        dx: -rank * (13 + Math.random() * 5),          // trail behind the leader
-        dy: side * rank * (5 + Math.random() * 3) + (Math.random() - 0.5) * 4,
+        dx: -rank * (19 + Math.random() * 7),          // trail behind the leader
+        dy: side * rank * (8 + Math.random() * 4) + (Math.random() - 0.5) * 5,
         ph: Math.random() * Math.PI * 2,
         tempo: 5.5 + Math.random() * 2.5,
-        s: 0.4 + Math.random() * 0.15
+        s: 0.68 + Math.random() * 0.3
       });
     }
-    mover = { kind: "flock", t0: now, dur: 26 + Math.random() * 10, ltr: Math.random() < 0.5,
-              y: H * (0.07 + Math.random() * 0.16), amp: 4 + Math.random() * 5, birds: birds };
+    mover = { kind: "flock", t0: now, dur: 24 + Math.random() * 8, ltr: Math.random() < 0.5,
+              y: H * (0.10 + Math.random() * 0.16), amp: 4 + Math.random() * 5, birds: birds };
   }
 
   function spawnStar(now) {
@@ -283,11 +283,11 @@
     if (mover.kind === "flock") {
       // The whole formation drifts on one path; each bird keeps formation
       // loosely and flaps to its own clock. Faded, for the miles of air.
-      var fx = mover.ltr ? lerp(-120, W + 120, p) : lerp(W + 120, -120, p);
+      var fx = mover.ltr ? lerp(-160, W + 160, p) : lerp(W + 160, -160, p);
       var fy = mover.y + Math.sin(p * Math.PI * 2 * 1.3) * mover.amp;
       var dir = mover.ltr ? 1 : -1;
       ctx.save();
-      ctx.globalAlpha = 0.55;
+      ctx.globalAlpha = 0.85;
       for (var bi = 0; bi < mover.birds.length; bi++) {
         var bd = mover.birds[bi];
         var wobble = Math.sin(now * 0.7 + bd.ph) * 2;
