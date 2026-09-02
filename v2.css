@@ -111,6 +111,18 @@ img { display: block; }
 /* ------------------------------------------- the opening frame (the cover) */
 .cover { position: relative; min-height: clamp(360px, 54vh, 580px); display: grid; place-items: center; overflow: hidden; background: var(--paper); }
 .cover > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* The painted harbor: a living painting of the same view drawn on canvas.
+   It fades in over the photo, which stays behind it as the no-JS fallback. */
+#sky-painted { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none;
+  opacity: 0; transition: opacity 1.4s ease; }
+#sky-painted.on { opacity: 1; }
+.sky-dots { position: absolute; left: 14px; bottom: 10px; z-index: 2; display: flex; gap: 8px; }
+.sky-dot { width: 15px; height: 15px; border-radius: 50%; cursor: pointer; padding: 0;
+  border: 1.5px solid rgba(246,244,239,.5); opacity: .6; transition: opacity .2s ease, transform .2s ease; }
+.sky-dot.on { opacity: 1; transform: scale(1.2); border-color: rgba(246,244,239,.9); }
+.sky-dot.auto { background: linear-gradient(135deg, #9db8de 50%, #182a4a 50%); }
+.sky-dot.golden { background: linear-gradient(180deg, #d894a0, #ffba8c); }
+.sky-dot.night { background: linear-gradient(180deg, #0a102a, #1e2c52); }
 /* Two layers: a dark tint up top so the headline stays readable, and a pure
    fade to the page color below it — the photo dissolves into the bento with
    no gray band and no hard edge. Cover background is paper too, so there's
