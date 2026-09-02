@@ -32,7 +32,7 @@
 <link rel="preconnect" href="https://guide.btownbrief.com">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="assets/img/hero.jpg">
-<link rel="stylesheet" href="v2.css?v=20260901a">
+<link rel="stylesheet" href="v2.css?v=20260901c">
 <script>
   /* Saved theme before first paint — no flash. System preference stays the
      default until the visitor picks a side with the header toggle. */
@@ -348,18 +348,21 @@
       <p id="az-count">93 pages and games, by shelf. If it isn't in a question above, it's here.</p>
       <label class="find"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.2" y2="16.2"/></svg><input type="search" id="find" placeholder="Find anything — a page, a game, a place" autocomplete="off"></label>
     </div>
+    <!-- The table of contents. Same filter buttons as ever, dressed like the
+         index page of a book: dotted leaders out to a live count per shelf.
+         v2.js fills the counts after it merges the catalogs. -->
     <div class="azchips" role="group" aria-label="Filter by shelf">
-      <button class="azchip on" data-shelf="">All</button>
-      <button class="azchip" data-shelf="now">Right now</button>
-      <button class="azchip" data-shelf="evening">Evening</button>
-      <button class="azchip" data-shelf="go">Go and do</button>
-      <button class="azchip" data-shelf="table">At the table</button>
-      <button class="azchip" data-shelf="people">People</button>
-      <button class="azchip" data-shelf="live">Live here</button>
-      <button class="azchip" data-shelf="reading">Reading</button>
-      <button class="azchip" data-shelf="daily">Daily puzzles</button>
-      <button class="azchip" data-shelf="arcade">Arcade</button>
-      <button class="azchip" data-shelf="board">Board &amp; card</button>
+      <button class="azchip on" data-shelf=""><span class="ct">All shelves</span><i class="lead" aria-hidden="true"></i><span class="n">93</span></button>
+      <button class="azchip" data-shelf="now"><span class="ct">Right now</span><i class="lead" aria-hidden="true"></i><span class="n"></span></button>
+      <button class="azchip" data-shelf="evening"><span class="ct">Evening</span><i class="lead" aria-hidden="true"></i><span class="n"></span></button>
+      <button class="azchip" data-shelf="go"><span class="ct">Go and do</span><i class="lead" aria-hidden="true"></i><span class="n"></span></button>
+      <button class="azchip" data-shelf="table"><span class="ct">At the table</span><i class="lead" aria-hidden="true"></i><span class="n"></span></button>
+      <button class="azchip" data-shelf="people"><span class="ct">People</span><i class="lead" aria-hidden="true"></i><span class="n"></span></button>
+      <button class="azchip" data-shelf="live"><span class="ct">Live here</span><i class="lead" aria-hidden="true"></i><span class="n"></span></button>
+      <button class="azchip" data-shelf="reading"><span class="ct">Reading</span><i class="lead" aria-hidden="true"></i><span class="n"></span></button>
+      <button class="azchip" data-shelf="daily"><span class="ct">Daily puzzles</span><i class="lead" aria-hidden="true"></i><span class="n"></span></button>
+      <button class="azchip" data-shelf="arcade"><span class="ct">Arcade</span><i class="lead" aria-hidden="true"></i><span class="n"></span></button>
+      <button class="azchip" data-shelf="board"><span class="ct">Board &amp; card</span><i class="lead" aria-hidden="true"></i><span class="n"></span></button>
     </div>
 
     <!-- Curated shelves. v2.js merges catalog.json + games.json + search-index.json into
@@ -511,7 +514,7 @@
 </main>
 
 <script src="https://guide.btownbrief.com/js/food-lib.js" defer></script>
-<script src="v2.js?v=20260830a" defer></script>
+<script src="v2.js?v=20260901c" defer></script>
 <script src="hero-live.js?v=20260901a" defer></script>
 </body>
 </html>
