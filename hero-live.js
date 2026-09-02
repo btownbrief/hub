@@ -80,12 +80,23 @@
   var W = 0, H = 0, dpr = 1;
   var reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  // A second canvas ABOVE the headline (z-index 2 beats .cover-copy's 1).
+  // Only the flocks draw here — specks small enough to cross the title
+  // without costing readability, and easy to spot at night.
+  var front = document.createElement("canvas");
+  front.setAttribute("aria-hidden", "true");
+  front.style.cssText = "position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;";
+  cover.appendChild(front);
+  var fctx = front.getContext("2d");
+
   var stars = [];
   function resize() {
     dpr = Math.min(window.devicePixelRatio || 1, 2);
     W = cover.clientWidth; H = cover.clientHeight;
     canvas.width = W * dpr; canvas.height = H * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    front.width = W * dpr; front.height = H * dpr;
+    fctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     // Stars live in the top ~55% — the sky part of the photo.
     stars = [];
     var n = Math.round(W / 9);
@@ -173,6 +184,15 @@
               y: H * (0.12 + Math.random() * 0.22), amp: 6 + Math.random() * 10 };
   }
 
+  /* ------------------------------------------------------------- flocks */
+  // Flocks are their own channel, separate from the mover: they can overlap
+  // the gull, and up to two can cross at once at different heights. They
+  // draw on the front canvas — above the headline — so a line of birds can
+  // cross the title the way credits get crossed in a film. First one shows
+  // up within seconds. They fly at night too, as faint moonlit silhouettes.
+  var flocks = [];
+  var nextFlockAt = performance.now() / 1000 + 5 + Math.random() * 6;
+
   function spawnFlock(now) {
     // Far-off birds crossing slowly in a ragged V, with a straggler or two
     // chasing the line. Realism at this distance is all behavior, not size:
@@ -204,29 +224,57 @@
         s: 0.7 + Math.random() * 0.4
       });
     }
-    mover = { kind: "flock", t0: now, dur: 28 + Math.random() * 10, ltr: Math.random() < 0.5,
-              y: H * (0.08 + Math.random() * 0.15), amp: 5 + Math.random() * 5, birds: birds };
+    flocks.push({ t0: now, dur: 28 + Math.random() * 10, ltr: Math.random() < 0.5,
+                  y: H * (0.06 + Math.random() * 0.24), amp: 5 + Math.random() * 5, birds: birds });
+  }
+
+  function updateFlocks(now, nightAlpha) {
+    if (flocks.length < 2 && now >= nextFlockAt) {
+      spawnFlock(now);
+      var wait = forcedMover === "flock" ? 4 + Math.random() * 5 : 18 + Math.random() * 42;
+      nextFlockAt = now + wait;
+    }
+    for (var i = flocks.length - 1; i >= 0; i--) {
+      var f = flocks[i];
+      var p = (now - f.t0) / f.dur;
+      if (p >= 1) { flocks.splice(i, 1); continue; }
+      var fx = f.ltr ? lerp(-160, W + 160, p) : lerp(W + 160, -160, p);
+      var fy = f.y + Math.sin(p * Math.PI * 2 * 1.1) * f.amp;
+      var dir = f.ltr ? 1 : -1;
+      for (var bi = 0; bi < f.birds.length; bi++) {
+        var bd = f.birds[bi];
+        var wx = Math.sin(now * 0.35 + bd.wander) * 3;
+        var wy = Math.sin(now * 0.5 + bd.wander * 1.7) * 2.5;
+        drawSpeck(fx + dir * bd.dx + wx, fy + bd.dy + wy, bd.s,
+                  now * bd.tempo + bd.ph, nightAlpha);
+      }
+    }
   }
 
   // One distant bird: a body speck and two wing strokes whose angle sweeps
   // through the beat. When the wings pass level they're edge-on to us, so
   // the whole bird thins out and dims — that flicker is what reads as real.
+  // Ink by day; after dark it lightens to a faint moonlit grey, the way a
+  // night flock only shows where the sky still glows. Drawn on the FRONT
+  // canvas, above the headline.
   function drawSpeck(x, y, s, phase, nightK) {
     var f = Math.sin(phase);                    // -1 wings down … +1 wings up
     var ang = 0.15 - 0.75 * f;                  // wing angle from horizontal
     var wing = 2.6 * s;
     var lift = Math.sin(ang) * wing, run = Math.cos(ang) * wing;
     var edge = 1 - Math.abs(f);                 // 1 = wings level (edge-on)
-    var a = (0.55 + 0.4 * Math.abs(f)) * (0.9 - 0.25 * edge);
-    var c = Math.round(14 + 4 * nightK);        // near-black; barely bluer at night
-    ctx.strokeStyle = "rgba(" + c + "," + (c + 3) + "," + (c + 8) + "," + a.toFixed(3) + ")";
-    ctx.lineWidth = Math.max(0.8, 1.05 * s);
-    ctx.lineCap = "round";
-    ctx.beginPath();
-    ctx.moveTo(x - run, y - lift);
-    ctx.quadraticCurveTo(x - run * 0.35, y - lift * 0.2, x, y);
-    ctx.quadraticCurveTo(x + run * 0.35, y - lift * 0.2, x + run, y - lift);
-    ctx.stroke();
+    var a = (lerp(0.55, 0.7, nightK) + 0.35 * Math.abs(f)) * (0.9 - 0.25 * edge);
+    var r = Math.round(lerp(14, 216, nightK));
+    var g = Math.round(lerp(17, 223, nightK));
+    var b = Math.round(lerp(22, 240, nightK));
+    fctx.strokeStyle = "rgba(" + r + "," + g + "," + b + "," + a.toFixed(3) + ")";
+    fctx.lineWidth = Math.max(0.8, 1.05 * s * (1 + 0.3 * nightK));
+    fctx.lineCap = "round";
+    fctx.beginPath();
+    fctx.moveTo(x - run, y - lift);
+    fctx.quadraticCurveTo(x - run * 0.35, y - lift * 0.2, x, y);
+    fctx.quadraticCurveTo(x + run * 0.35, y - lift * 0.2, x + run, y - lift);
+    fctx.stroke();
   }
 
   function spawnStar(now) {
@@ -246,7 +294,6 @@
 
   function spawnMover(now, m) {
     var isNight = m === "night" || m === "dusk";
-    if (forcedMover === "flock") return spawnFlock(now);
     if (forcedMover === "gull") return spawnGull(now);
     if (forcedMover === "boat") return spawnBoat(now);
     if (forcedMover === "star") return spawnStar(now);
@@ -257,8 +304,7 @@
       Math.random() < 0.45 ? spawnStar(now) : spawnGull(now);
     } else {
       var r = Math.random();
-      if (r < 0.35) spawnFlock(now);
-      else if (r < 0.55 && !boatSeen) spawnBoat(now);
+      if (r < 0.25 && !boatSeen) spawnBoat(now);
       else spawnGull(now);
     }
   }
@@ -316,21 +362,6 @@
     var p = (now - mover.t0) / mover.dur;
     if (p >= 1) { mover = null; scheduleNext(now); return; }
     if (mover.kind === "bird3d") return; // hero-bird3d.js renders this one
-    if (mover.kind === "flock") {
-      // The formation drifts on one path but never holds still: every bird
-      // wanders a little inside it and beats its wings on its own clock.
-      var fx = mover.ltr ? lerp(-160, W + 160, p) : lerp(W + 160, -160, p);
-      var fy = mover.y + Math.sin(p * Math.PI * 2 * 1.1) * mover.amp;
-      var dir = mover.ltr ? 1 : -1;
-      for (var bi = 0; bi < mover.birds.length; bi++) {
-        var bd = mover.birds[bi];
-        var wx = Math.sin(now * 0.35 + bd.wander) * 3;
-        var wy = Math.sin(now * 0.5 + bd.wander * 1.7) * 2.5;
-        drawSpeck(fx + dir * bd.dx + wx, fy + bd.dy + wy, bd.s,
-                  now * bd.tempo + bd.ph, nightAlpha);
-      }
-      return;
-    }
     if (mover.kind === "gull") {
       var x = mover.ltr ? lerp(-80, W + 80, p) : lerp(W + 80, -80, p);
       var bobPhase = p * Math.PI * 2 * 2.2;
@@ -460,6 +491,9 @@
 
     if (!mover && now >= nextMoverAt) spawnMover(now, blend.to);
     drawMover(now, nightAlpha);
+
+    fctx.clearRect(0, 0, W, H);
+    updateFlocks(now, nightAlpha);
 
     if (running) rafId = requestAnimationFrame(frame);
   }
