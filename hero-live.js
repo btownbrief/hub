@@ -119,6 +119,34 @@
   // of arriving — day or night, everyone gets to see the bird. After that:
   // more gulls, a sailboat once per visit by day, and after dark a shooting
   // star takes some of the turns. Rare-ish is still the trick.
+
+  // The gull is a real one — three photographic frames (glide, wings up,
+  // wings down) keyed out to transparency. A moonlit copy of each frame is
+  // pre-tinted on a small canvas, and the two are crossfaded by how dark the
+  // sky is. Until the images arrive (or if they never do), the old two-stroke
+  // pen gull flies instead.
+  var gullImgs = {}, gullNight = {}, gullReady = false;
+  (function loadGullSprites() {
+    var srcs = { glide: "assets/img/gull/fly-glide.png", up: "assets/img/gull/fly-up.png", down: "assets/img/gull/fly-down.png" };
+    var need = 3;
+    Object.keys(srcs).forEach(function (k) {
+      var img = new Image();
+      img.onload = function () {
+        gullImgs[k] = img;
+        var c = document.createElement("canvas");
+        c.width = img.width; c.height = img.height;
+        var cc = c.getContext("2d");
+        cc.drawImage(img, 0, 0);
+        cc.globalCompositeOperation = "source-atop";
+        cc.fillStyle = "rgba(38,52,86,0.62)";
+        cc.fillRect(0, 0, c.width, c.height);
+        gullNight[k] = c;
+        if (--need === 0) gullReady = true;
+      };
+      img.src = srcs[k];
+    });
+  })();
+
   var mover = null;
   var nextMoverAt = performance.now() / 1000 + 4 + Math.random() * 5;
   var boatSeen = false;
@@ -148,6 +176,25 @@
     } else {
       spawnGull(now);
     }
+  }
+
+  function drawGullSprite(x, y, ltr, frame, tilt, nightAlpha) {
+    var img = gullImgs[frame], nimg = gullNight[frame];
+    if (!img) return;
+    // Wingspan lands around 55–75px depending on cover width.
+    var scale = Math.max(0.45, Math.min(0.62, W / 2100));
+    var w = img.width * scale, h = img.height * scale;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(tilt);
+    if (ltr) ctx.scale(-1, 1); // the photographed bird faces left
+    ctx.drawImage(img, -w / 2, -h / 2, w, h);
+    if (nightAlpha > 0.02 && nimg) {
+      // crossfade to the moonlit copy as the sky darkens
+      ctx.globalAlpha = Math.min(1, nightAlpha);
+      ctx.drawImage(nimg, -w / 2, -h / 2, w, h);
+    }
+    ctx.restore();
   }
 
   function drawGull(x, y, s, flap, nightAlpha) {
@@ -184,12 +231,28 @@
     var p = (now - mover.t0) / mover.dur;
     if (p >= 1) { mover = null; scheduleNext(now); return; }
     if (mover.kind === "gull") {
-      var x = mover.ltr ? lerp(-30, W + 30, p) : lerp(W + 30, -30, p);
-      var y = mover.y + Math.sin(p * Math.PI * 2 * 2.2) * mover.amp;
-      // Glide, flap-flap, glide: flap strength comes and goes.
-      var beat = Math.sin(now * 9 + mover.t0);
-      var effort = 0.5 + 0.5 * Math.sin(p * Math.PI * 6);
-      drawGull(x, y, 1, Math.max(0.15, beat * effort), nightAlpha);
+      var x = mover.ltr ? lerp(-80, W + 80, p) : lerp(W + 80, -80, p);
+      var bobPhase = p * Math.PI * 2 * 2.2;
+      var y = mover.y + Math.sin(bobPhase) * mover.amp;
+      if (gullReady) {
+        // Mostly soaring, with a quick flap burst every couple of seconds.
+        if (!mover.nextFlap) mover.nextFlap = mover.t0 + 1 + Math.random() * 1.5;
+        var frame = "glide";
+        if (now >= mover.nextFlap) {
+          var seq = ["up", "down", "up", "down", "up"];
+          var fi = Math.floor((now - mover.nextFlap) / 0.09);
+          if (fi < seq.length) frame = seq[fi];
+          else mover.nextFlap = now + 1.8 + Math.random() * 2.4;
+        }
+        // Lean into the bob: nose dips as it sinks, lifts as it rises.
+        var tilt = Math.cos(bobPhase) * -0.07 * (mover.ltr ? 1 : -1);
+        drawGullSprite(x, y, mover.ltr, frame, tilt, nightAlpha);
+      } else {
+        // Images not here (yet): the old two-stroke pen gull flies instead.
+        var beat = Math.sin(now * 9 + mover.t0);
+        var effort = 0.5 + 0.5 * Math.sin(p * Math.PI * 6);
+        drawGull(x, y, 1, Math.max(0.15, beat * effort), nightAlpha);
+      }
     } else if (mover.kind === "boat") {
       var bx = mover.ltr ? lerp(-16, W * 0.55, p) : lerp(W + 16, W * 0.45, p);
       drawBoat(bx, mover.y, 1);
