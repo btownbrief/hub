@@ -73,6 +73,15 @@ img { display: block; }
   letter-spacing: -.025em;
   line-height: .9;
 }
+/* ?serif=1 try-on: the section titles borrow the cover's serif voice. */
+.serif-heads .D {
+  font-family: "Instrument Serif", Georgia, serif;
+  font-variation-settings: normal;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: -.01em;
+  line-height: .95;
+}
 
 /* ---------------------------------------------------------------- header */
 .top { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--paper) 86%, transparent); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
@@ -268,10 +277,21 @@ img { display: block; }
 .find:focus-within { border-color: var(--ink); }
 .find input { flex: 1; border: 0; outline: 0; background: transparent; font: inherit; font-size: 1rem; color: var(--ink); min-width: 0; }
 /* shelf chips: filter the shelves below */
-.azchips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: .9rem; }
-.azchip { border: 1.5px solid var(--line); background: var(--card); color: var(--ink2); border-radius: 999px; padding: .4rem .85rem; font: inherit; font-weight: 700; font-size: .8rem; cursor: pointer; white-space: nowrap; }
-.azchip:hover { border-color: var(--ink); color: var(--ink); }
-.azchip.on { background: var(--ink); color: var(--paper); border-color: var(--ink); font-weight: 800; }
+/* The shelf filters as a table of contents: name, dotted leader, count —
+   like the index page of a book. Same buttons, same behavior as the chips
+   they replace. */
+.azchips { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); column-gap: 2.2rem; row-gap: .15rem; margin-top: 1.1rem; }
+.azchip { display: flex; align-items: baseline; gap: .55em; width: 100%; text-align: left;
+  border: 0; background: none; color: var(--ink2); padding: .32rem 0; cursor: pointer;
+  font: inherit; font-weight: 700; font-size: .92rem; }
+.azchip .ct { white-space: nowrap; }
+.azchip .lead { flex: 1; border-bottom: 2px dotted var(--line); transform: translateY(-.28em); min-width: 1.5em; }
+.azchip .n { font-variant-numeric: tabular-nums; font-size: .8rem; font-weight: 800; min-width: 1.6em; text-align: center; padding: .05em .3em; border-radius: 6px; }
+.azchip:hover { color: var(--ink); }
+.azchip:hover .lead { border-color: var(--mute); }
+.azchip.on { color: var(--ink); font-weight: 800; }
+.azchip.on .lead { border-bottom-style: solid; border-color: var(--ink); }
+.azchip.on .n { background: var(--ink); color: var(--paper); }
 
 /* the shelves: compact photo tiles, four columns of them */
 .shelves { columns: 4; column-gap: 16px; margin-top: 1.2rem; }

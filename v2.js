@@ -11,6 +11,13 @@
 
   function $(id) { return document.getElementById(id); }
   function txt(id, s) { var el = $(id); if (el && s != null) el.textContent = s; }
+
+  // Try-on flag: ?serif=1 sets the big section titles in the cover's serif
+  // instead of the poster caps. Inert without the param — it exists so the
+  // two voices can be compared on the live page before committing to one.
+  try {
+    if (new URLSearchParams(location.search).has('serif')) document.documentElement.classList.add('serif-heads');
+  } catch (e) {}
   function live(key, s) {
     if (s == null) return;
     var els = document.querySelectorAll('[data-live="' + key + '"]');
@@ -323,8 +330,13 @@
         var n = grps[j].querySelectorAll('.tile').length;
         total += n;
         var s = grps[j].querySelector('.gh small'); if (s) s.textContent = String(n);
+        // the same count feeds the shelf's line in the table of contents
+        var chipN = document.querySelector('.azchip[data-shelf="' + grps[j].getAttribute('data-shelf') + '"] .n');
+        if (chipN) chipN.textContent = String(n);
         if (!n) grps[j].hidden = true;
       }
+      var allN = document.querySelector('.azchip[data-shelf=""] .n');
+      if (allN) allN.textContent = String(total);
       txt('az-count', total + ' pages and games, by shelf. If it isn’t in a question above, it’s here.');
       var f = $('find'); if (f && f.value) f.dispatchEvent(new Event('input'));
     });
