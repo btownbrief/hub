@@ -156,8 +156,20 @@
     nextMoverAt = now + 28 + Math.random() * 50;
   }
 
+  var lastNightAlpha = 0;
+
   function spawnGull(now) {
-    mover = { kind: "gull", t0: now, dur: 13 + Math.random() * 6, ltr: Math.random() < 0.5,
+    var dur = 13 + Math.random() * 6;
+    // If the 3D bird (hero-bird3d.js) is ready, it takes the gull's turn —
+    // a rigged model with a real wing animation. The mover entry just holds
+    // the slot so nothing else flies at the same time.
+    if (window.BtownBird && window.BtownBird.ready &&
+        window.BtownBird.fly({ ltr: Math.random() < 0.5, y: 0.12 + Math.random() * 0.22,
+                               dur: dur, night: function () { return lastNightAlpha; } })) {
+      mover = { kind: "bird3d", t0: now, dur: dur };
+      return;
+    }
+    mover = { kind: "gull", t0: now, dur: dur, ltr: Math.random() < 0.5,
               y: H * (0.12 + Math.random() * 0.22), amp: 6 + Math.random() * 10 };
   }
 
@@ -230,6 +242,7 @@
     if (!mover) return;
     var p = (now - mover.t0) / mover.dur;
     if (p >= 1) { mover = null; scheduleNext(now); return; }
+    if (mover.kind === "bird3d") return; // hero-bird3d.js renders this one
     if (mover.kind === "gull") {
       var x = mover.ltr ? lerp(-80, W + 80, p) : lerp(W + 80, -80, p);
       var bobPhase = p * Math.PI * 2 * 2.2;
@@ -354,6 +367,7 @@
     ctx.fillRect(0, 0, W, H);
 
     var nightAlpha = lerp(a.night, b.night, t);
+    lastNightAlpha = nightAlpha; // the 3D bird's lighting reads this
     drawNight(now, nightAlpha);
 
     if (!mover && now >= nextMoverAt) spawnMover(now, blend.to);
