@@ -115,37 +115,49 @@
   function rgba(c) { return "rgba(" + (c[0] | 0) + "," + (c[1] | 0) + "," + (c[2] | 0) + "," + c[3].toFixed(3) + ")"; }
 
   /* ------------------------------------------------------------ movers */
-  // One visitor at a time. Gulls by day, a sailboat on the water once in a
-  // while, a shooting star after dark. Rare is the whole trick.
+  // One visitor at a time, and the first is always the gull, within seconds
+  // of arriving — day or night, everyone gets to see the bird. After that:
+  // more gulls, a sailboat once per visit by day, and after dark a shooting
+  // star takes some of the turns. Rare-ish is still the trick.
   var mover = null;
-  var nextMoverAt = performance.now() / 1000 + 14 + Math.random() * 20; // first one fairly soon
+  var nextMoverAt = performance.now() / 1000 + 4 + Math.random() * 5;
   var boatSeen = false;
+  var firstFlight = true;
 
   function scheduleNext(now) {
-    nextMoverAt = now + 55 + Math.random() * 75;
+    nextMoverAt = now + 28 + Math.random() * 50;
+  }
+
+  function spawnGull(now) {
+    mover = { kind: "gull", t0: now, dur: 13 + Math.random() * 6, ltr: Math.random() < 0.5,
+              y: H * (0.12 + Math.random() * 0.22), amp: 6 + Math.random() * 10 };
   }
 
   function spawnMover(now, m) {
     var isNight = m === "night" || m === "dusk";
-    if (isNight) {
+    if (firstFlight) {
+      firstFlight = false;
+      spawnGull(now);
+    } else if (isNight && Math.random() < 0.5) {
       mover = { kind: "star", t0: now, dur: 0.9,
                 x0: W * (0.15 + Math.random() * 0.5), y0: H * (0.06 + Math.random() * 0.2),
                 dx: W * 0.22, dy: H * 0.12 };
-    } else if (!boatSeen && Math.random() < 0.35) {
+    } else if (!isNight && !boatSeen && Math.random() < 0.35) {
       boatSeen = true;
-      var ltr = Math.random() < 0.5;
-      mover = { kind: "boat", t0: now, dur: 70, ltr: ltr, y: H * 0.80 };
+      mover = { kind: "boat", t0: now, dur: 70, ltr: Math.random() < 0.5, y: H * 0.80 };
     } else {
-      var ltr2 = Math.random() < 0.5;
-      mover = { kind: "gull", t0: now, dur: 13 + Math.random() * 6, ltr: ltr2,
-                y: H * (0.12 + Math.random() * 0.22), amp: 6 + Math.random() * 10 };
+      spawnGull(now);
     }
   }
 
-  function drawGull(x, y, s, flap) {
+  function drawGull(x, y, s, flap, nightAlpha) {
     // Two strokes of the pen, like every gull ever drawn on a postcard.
+    // By day it's ink against the sky; after dark the same bird goes pale,
+    // like the moon is catching its wings — ink would vanish in the night.
     var w = 9 * s, lift = flap * 4.5 * s;
-    ctx.strokeStyle = "rgba(30,34,44,0.78)";
+    var k = nightAlpha || 0;
+    ctx.strokeStyle = "rgba(" + Math.round(30 + 175 * k) + "," + Math.round(34 + 181 * k) + "," +
+                      Math.round(44 + 186 * k) + ",0.75)";
     ctx.lineWidth = 1.6 * s;
     ctx.lineCap = "round";
     ctx.beginPath();
@@ -177,7 +189,7 @@
       // Glide, flap-flap, glide: flap strength comes and goes.
       var beat = Math.sin(now * 9 + mover.t0);
       var effort = 0.5 + 0.5 * Math.sin(p * Math.PI * 6);
-      drawGull(x, y, 1, Math.max(0.15, beat * effort));
+      drawGull(x, y, 1, Math.max(0.15, beat * effort), nightAlpha);
     } else if (mover.kind === "boat") {
       var bx = mover.ltr ? lerp(-16, W * 0.55, p) : lerp(W + 16, W * 0.45, p);
       drawBoat(bx, mover.y, 1);
