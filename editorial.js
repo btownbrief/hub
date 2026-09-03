@@ -32,16 +32,28 @@
     }
   }
 
-  var swatches = document.querySelectorAll("[data-sky]");
-  function chooseSky(button) {
-    var mood = button.getAttribute("data-sky");
-    if (!window.BtownSky || !window.BtownSky.setMood(mood)) return;
-    for (var i = 0; i < swatches.length; i++) {
-      swatches[i].setAttribute("aria-pressed", String(swatches[i] === button));
+  /* One explicit control changes both the photograph's sky and the whole
+     page, so "Night" never leaves a bright page underneath it. */
+  var themeSkyToggle = document.getElementById("theme-sky-toggle");
+  function applyTheme(theme, persist) {
+    var night = theme === "dark";
+    document.documentElement.setAttribute("data-theme", night ? "dark" : "light");
+    if (window.BtownSky) window.BtownSky.setMood(night ? "night" : "day");
+    if (themeSkyToggle) {
+      themeSkyToggle.setAttribute("aria-pressed", String(night));
+      themeSkyToggle.setAttribute("aria-label", night ? "Switch to day mode" : "Switch to night mode");
+    }
+    if (persist) {
+      try { localStorage.setItem("btown-theme", night ? "dark" : "light"); } catch (e) {}
     }
   }
-  for (var s = 0; s < swatches.length; s++) {
-    swatches[s].addEventListener("click", function () { chooseSky(this); });
+  window.BtownTheme = { set: function (theme) { applyTheme(theme, true); } };
+  var initialTheme = document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+  applyTheme(initialTheme, false);
+  if (themeSkyToggle) {
+    themeSkyToggle.addEventListener("click", function () {
+      applyTheme(this.getAttribute("aria-pressed") === "true" ? "light" : "dark", true);
+    });
   }
 
   /* The small reading index mirrors the reference's persistent contents rail.

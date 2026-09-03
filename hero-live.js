@@ -143,7 +143,6 @@
      neutral white/grey cells to alpha after loading; the photographed branch
      remains untouched. */
   var perchFrame = null;
-  var heroStartedAt = performance.now() / 1000;
 
   function keyCheckerboard(img) {
     var c = document.createElement("canvas");
@@ -215,7 +214,7 @@
         s: 0.7 + Math.random() * 0.4
       });
     }
-    flocks.push({ t0: now, dur: 15 + Math.random() * 4, ltr: true,
+    flocks.push({ t0: now, dur: 32 + Math.random() * 8, ltr: true,
                   y: H * (0.10 + Math.random() * 0.10), amp: 6 + Math.random() * 4, birds: birds });
   }
 
@@ -307,16 +306,9 @@
     }
   }
 
-  function smoothstep(edge0, edge1, x) {
-    x = Math.max(0, Math.min(1, (x - edge0) / (edge1 - edge0)));
-    return x * x * (3 - 2 * x);
-  }
-
   function drawPerch(now, nightAlpha) {
     if (!perchFrame) return;
-    var elapsed = now - heroStartedAt;
-    var sceneAlpha = smoothstep(1.1, 2.4, elapsed) * 0.70;
-    if (sceneAlpha <= 0.001) return;
+    var sceneAlpha = 0.70;
 
     // Keep the branch's rooted end nearly still while the long tips travel in
     // the breeze. Two slow, offset waves create an occasional gentle gust.
@@ -324,7 +316,7 @@
     var targetH = targetW * 941 / 1672;
     var x = W * (W < 720 ? 0.05 : 0.34);
     var y = H * (W < 720 ? 0.33 : 0.21);
-    var wind = Math.sin(now * 0.58) * 0.0065 + Math.sin(now * 0.21 + 1.7) * 0.0035;
+    var wind = Math.sin(now * 0.58) * 0.009 + Math.sin(now * 0.21 + 1.7) * 0.0045;
     var pivotX = x + targetW * 0.96;
     var pivotY = y + targetH * 0.55;
 

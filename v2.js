@@ -406,8 +406,11 @@
       var dark = root.getAttribute('data-theme') === 'dark' ||
         (!root.getAttribute('data-theme') && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
       var next = dark ? 'light' : 'dark';
-      root.setAttribute('data-theme', next);
-      try { localStorage.setItem('btown-theme', next); } catch (e) {}
+      if (window.BtownTheme && window.BtownTheme.set) window.BtownTheme.set(next);
+      else {
+        root.setAttribute('data-theme', next);
+        try { localStorage.setItem('btown-theme', next); } catch (e) {}
+      }
     });
   })();
 
