@@ -33,7 +33,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..900&family=Instrument+Serif:ital@0;1&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="assets/img/hero.jpg">
 <link rel="stylesheet" href="v2.css?v=20260901c">
-<link rel="stylesheet" href="editorial.css?v=20260903a">
+<link rel="stylesheet" href="editorial.css?v=20260903b">
 <script>
   /* Saved theme before first paint — no flash. System preference stays the
      default until the visitor picks a side with the header toggle. */
@@ -125,12 +125,7 @@
 </nav>
 <main class="wrap" id="main-content">
 
-  <section class="intro" id="right-now" aria-labelledby="right-now-title">
-    <p class="section-number">[1] Right now</p>
-    <h2 id="right-now-title">A little closer to Burlington.</h2>
-    <p>A newsletter that got out of hand: an arcade, a live city guide, and a pile of free things for the people who live here. Everything in one place. Start anywhere.</p>
-    <p class="live-date"><span id="date-line">Today</span><span aria-hidden="true"> · </span><span id="now-clock"></span></p>
-  </section>
+  <div class="classic-layout" id="right-now">
 
   <!-- ============ THE BENTO: live, photographic ============ -->
   <section class="bento" aria-label="Right now">
@@ -174,8 +169,7 @@
 
   <!-- ============ THE QUESTIONS: pills + one open panel ============ -->
   <section class="ask" id="ask">
-    <p class="section-number">[2] Find your thing</p>
-    <h2 class="D">What are you here for?</h2>
+    <h2>What are you<br>here for?</h2>
     <div class="pills" role="group" aria-label="What are you here for?">
       <button class="pill on" aria-pressed="true" data-q="daily">What am I checking every day?</button>
       <button class="pill" aria-pressed="false" data-q="do">I want something to do.</button>
@@ -190,7 +184,10 @@
       <button class="pill" aria-pressed="false" data-q="evening">It's evening. Wind me down.</button>
       <button class="pill" aria-pressed="false" data-q="help">I want to pitch in.</button>
     </div>
+  </section>
+  </div>
 
+  <section class="answers" aria-label="Your recommendations">
     <div class="panels">
       <div class="qp" data-q="do">
         <img src="assets/img/ig/fools-s.jpg" alt="" loading="lazy">
@@ -550,8 +547,8 @@
 </main>
 
 <script src="https://guide.btownbrief.com/js/food-lib.js" defer></script>
-<script src="v2.js?v=20260901c" defer></script>
-<script src="hero-live.js?v=20260903h" defer></script>
+<script src="v2.js?v=20260903a" defer></script>
+<script src="hero-live.js?v=20260903k" defer></script>
 <script src="editorial.js?v=20260903b" defer></script>
 </body>
 </html>

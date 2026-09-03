@@ -373,18 +373,26 @@
         idx = (idx + 1) % pills.length;
         show(pills[idx].getAttribute('data-q'));
       }
-      function halt() { if (timer) { clearInterval(timer); timer = null; } }
+      function halt() {
+        if (timer) { clearInterval(timer); timer = null; }
+        ask.classList.remove('touring');
+      }
+      function begin() {
+        if (timer) return;
+        ask.classList.add('touring');
+        timer = setInterval(tick, 5000);
+      }
       function stop() { dead = true; halt(); }
       ask.addEventListener('pointerdown', stop, { once: true });
       ask.addEventListener('focusin', stop, { once: true });
       if ('IntersectionObserver' in window) {
         new IntersectionObserver(function (es) {
           if (dead) return;
-          if (es[0].isIntersecting) { if (!timer) timer = setInterval(tick, 5000); }
+          if (es[0].isIntersecting) begin();
           else halt();
         }, { threshold: 0.25 }).observe(ask);
       } else {
-        timer = setInterval(tick, 5000);
+        begin();
       }
     }
   })();
@@ -407,23 +415,25 @@
   (function () {
     var shelf = document.getElementById('favshelf'), dots = document.getElementById('favdots');
     if (!shelf || !dots) return;
-    /* One dot per ~two screenfuls — a flick with momentum covers about that
-       much, and it keeps the dot row IG-short instead of one-per-card-page. */
-    function unit() { return shelf.clientWidth * 2; }
-    function pages() { return Math.max(1, Math.ceil(shelf.scrollWidth / unit())); }
+    var cards = shelf.querySelectorAll('.fav');
+    function maxScroll() { return Math.max(0, shelf.scrollWidth - shelf.clientWidth); }
     function mark() {
-      var i = Math.min(dots.childElementCount - 1, Math.round(shelf.scrollLeft / unit()));
+      var max = maxScroll();
+      var i = max ? Math.round((shelf.scrollLeft / max) * (dots.childElementCount - 1)) : 0;
       for (var k = 0; k < dots.childElementCount; k++) dots.children[k].classList.toggle('on', k === i);
     }
     function build() {
-      var n = pages();
+      var n = cards.length;
       if (dots.childElementCount !== n) {
         dots.innerHTML = '';
         for (var i = 0; i < n; i++) (function (i) {
           var b = document.createElement('button');
           b.type = 'button';
-          b.setAttribute('aria-label', 'Favorites page ' + (i + 1));
-          b.addEventListener('click', function () { shelf.scrollTo({ left: i * unit(), behavior: 'smooth' }); });
+          b.setAttribute('aria-label', 'Favorite ' + (i + 1) + ' of ' + n);
+          b.addEventListener('click', function () {
+            var max = maxScroll();
+            shelf.scrollTo({ left: n > 1 ? max * i / (n - 1) : 0, behavior: 'smooth' });
+          });
           dots.appendChild(b);
         })(i);
       }

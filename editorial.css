@@ -351,3 +351,123 @@ main.wrap { padding-top: 90px; }
   *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
   .scene-curtain { display: none; }
 }
+
+/* The live cards and question chooser keep the original Hub composition the
+   user preferred. The recommendation panel beneath them stays editorial. */
+.classic-layout {
+  margin-top: -90px;
+  padding: 55px 0 28px;
+  color: #f6f4ef;
+  background: #0b0e12;
+  box-shadow: 0 0 0 100vmax #0b0e12;
+  clip-path: inset(0 -100vmax);
+}
+.classic-layout .bento {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(2, 152px);
+  grid-auto-rows: 152px;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.classic-layout .bento .t {
+  grid-column: span 2;
+  grid-row: auto;
+  min-width: 0;
+  min-height: 0;
+  padding: 1.05rem 1.2rem;
+  border: 0;
+  border-radius: 24px;
+  background: #151a22;
+  color: #fff;
+  justify-content: flex-end;
+  transition: transform .2s ease;
+}
+.classic-layout .bento .t:hover { transform: translateY(-2px); background: #151a22; }
+.classic-layout .bento .t.ph:not(.big) > img,
+.classic-layout .bento .t.ph:not(.big)::after { display: block; }
+.classic-layout .bento .t.ph::after {
+  background: linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,0) 38%, rgba(8,12,24,.72));
+}
+.classic-layout .bento .t.big {
+  grid-column: span 2;
+  grid-row: span 2;
+  min-height: 0;
+  padding: 1.05rem 1.2rem;
+}
+.classic-layout .bento .lab { font-size: .78rem; font-weight: 800; letter-spacing: .06em; }
+.classic-layout .bento .num,
+.classic-layout .bento .big .num {
+  margin: .12rem 0 0;
+  font-family: var(--f);
+  font-variation-settings: "wdth" 108, "wght" 900;
+  font-weight: 900;
+  font-size: clamp(2.2rem, 4.4vw, 3.6rem);
+  line-height: .95;
+}
+.classic-layout .bento .num small { font-family: var(--f); font-size: .42em; font-weight: 700; }
+.classic-layout .bento .sub,
+.classic-layout .bento .big .sub { color: #fff; font-size: .88rem; font-weight: 500; }
+
+.classic-layout .ask { margin: 64px 0 0; color: #f6f4ef; }
+.classic-layout .ask h2 {
+  margin: 0 0 18px;
+  color: #f6f4ef;
+  font-family: var(--f);
+  font-size: clamp(3rem, 5vw, 4rem);
+  font-weight: 900;
+  line-height: .86;
+  letter-spacing: -.045em;
+  text-transform: uppercase;
+}
+.classic-layout .pills { display: flex; flex-wrap: wrap; gap: 10px; }
+.classic-layout .pill {
+  position: relative;
+  overflow: hidden;
+  border: 0;
+  border-radius: 999px;
+  padding: .78rem 1.15rem;
+  background: #151a22;
+  box-shadow: inset 0 0 0 1.5px #2b3340;
+  color: #f6f4ef;
+  font-size: clamp(.98rem, 1.5vw, 1.2rem);
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+  cursor: pointer;
+}
+.classic-layout .pill:hover { color: #fff; background: #1b222c; box-shadow: inset 0 0 0 1.5px #f6f4ef; transform: none; }
+.classic-layout .pill.on,
+.classic-layout .pill.on:hover { color: #fff; background: var(--maple); box-shadow: none; }
+.classic-layout .ask.touring .pill.on {
+  background: linear-gradient(90deg, var(--maple) 0 50%, #151a22 50% 100%);
+  background-size: 200% 100%;
+  background-position: 100% 0;
+  animation: pill-cycle-fill 5s linear forwards;
+}
+@keyframes pill-cycle-fill { to { background-position: 0 0; } }
+
+.answers { margin-top: 32px; }
+.answers .panels { margin-top: 0; }
+.favdots button { width: 7px; height: 7px; background: var(--ink2); opacity: .58; }
+.favdots button.on { background: var(--ink); opacity: 1; transform: scale(1.25); }
+
+@media (max-width: 700px) {
+  .classic-layout { margin-top: -58px; padding-top: 34px; }
+  .classic-layout .bento {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(4, 142px);
+    grid-auto-rows: 142px;
+  }
+  .classic-layout .bento .t { grid-column: span 1; padding: .9rem .95rem; border-radius: 18px; }
+  .classic-layout .bento .t.big { grid-column: span 2; grid-row: span 2; padding: .9rem .95rem; }
+  .classic-layout .ask h2 { font-size: clamp(2.7rem, 13vw, 3.5rem); }
+  .classic-layout .pills { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .classic-layout .pill { padding: .65rem .7rem; font-size: .82rem; }
+  .classic-layout .pill[data-q="daily"] { grid-column: 1 / -1; padding: .72rem; font-size: .95rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .classic-layout .ask.touring .pill.on { animation: none; background: var(--maple); }
+}

@@ -1,9 +1,8 @@
 /* The living photo. A transparent canvas sits over the harbor photo and keeps
    it honest with the sky outside: Burlington's real sun times pick the mood,
    night brings stars, a photographed moon stays faintly visible by day, and
-   once in a while something
-   small crosses the frame — a gull by day, a sailboat on the water, a shooting
-   star after dark. Everything here is garnish: if this file never runs, the
+   a small flock crosses the frame, and a shooting star can pass after dark.
+   Everything here is garnish: if this file never runs, the
    page is exactly what it was before.
 
    Force a mood for testing: ?sky=dawn|day|golden|dusk|night */
@@ -75,8 +74,8 @@
   var W = 0, H = 0, dpr = 1;
   var reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // A second canvas ABOVE the headline. Flocks and the opening hero bird draw
-  // here so they can physically cross the words instead of hiding behind them.
+  // A second canvas ABOVE the headline lets the flock physically cross the
+  // words instead of hiding behind them.
   var front = document.createElement("canvas");
   front.setAttribute("aria-hidden", "true");
   front.style.cssText = "position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5;";
@@ -132,37 +131,8 @@
   function rgba(c) { return "rgba(" + (c[0] | 0) + "," + (c[1] | 0) + "," + (c[2] | 0) + "," + c[3].toFixed(3) + ")"; }
 
   /* ------------------------------------------------------------ movers */
-  // One visitor at a time, and the first is always the gull, within seconds
-  // of arriving — day or night, everyone gets to see the bird. After that:
-  // more gulls, a sailboat once per visit by day, and after dark a shooting
-  // star takes some of the turns. Rare-ish is still the trick.
-
-  // The gull is a real one — three photographic frames (glide, wings up,
-  // wings down) keyed out to transparency. A moonlit copy of each frame is
-  // pre-tinted on a small canvas, and the two are crossfaded by how dark the
-  // sky is. Until the images arrive (or if they never do), the old two-stroke
-  // pen gull flies instead.
-  var gullImgs = {}, gullNight = {}, gullReady = false;
-  (function loadGullSprites() {
-    var srcs = { glide: "assets/img/gull/fly-glide.png", up: "assets/img/gull/fly-up.png", down: "assets/img/gull/fly-down.png" };
-    var need = 3;
-    Object.keys(srcs).forEach(function (k) {
-      var img = new Image();
-      img.onload = function () {
-        gullImgs[k] = img;
-        var c = document.createElement("canvas");
-        c.width = img.width; c.height = img.height;
-        var cc = c.getContext("2d");
-        cc.drawImage(img, 0, 0);
-        cc.globalCompositeOperation = "source-atop";
-        cc.fillStyle = "rgba(38,52,86,0.62)";
-        cc.fillRect(0, 0, c.width, c.height);
-        gullNight[k] = c;
-        if (--need === 0) gullReady = true;
-      };
-      img.src = srcs[k];
-    });
-  })();
+  // The flock owns the daytime sky. The only independent mover left is a
+  // rare shooting star after dark.
 
   var moonImg = new Image();
   var moonReady = false;
@@ -171,9 +141,8 @@
 
   /* The supplied branch artwork has a baked checkerboard. Key only its nearly
      neutral white/grey cells to alpha after loading; the photographed branch
-     and bird remain untouched. Keeping empty/perched frames lets the bird
-     visit without making the branch itself pop in and out. */
-  var perchFrames = { empty: null, bird: null };
+     remains untouched. */
+  var perchFrame = null;
   var heroStartedAt = performance.now() / 1000;
 
   function keyCheckerboard(img) {
@@ -194,63 +163,44 @@
     return c;
   }
 
-  function loadPerchFrame(name, src) {
+  function loadPerchFrame(src) {
     var img = new Image();
-    img.onload = function () { perchFrames[name] = keyCheckerboard(img); };
+    img.onload = function () { perchFrame = keyCheckerboard(img); };
     img.src = src;
   }
-  loadPerchFrame("empty", "assets/img/hero-fx/perch-empty-source.png");
-  loadPerchFrame("bird", "assets/img/hero-fx/perch-bird-source.png");
+  loadPerchFrame("assets/img/hero-fx/perch-empty-source.png");
 
   var mover = null;
-  var nextMoverAt = performance.now() / 1000 + 3.35;
-  var boatSeen = false;
-  var firstFlight = true;
+  var nextMoverAt = performance.now() / 1000 + 12;
 
   function scheduleNext(now) {
     nextMoverAt = now + 12 + Math.random() * 22;
   }
 
-  function spawnGull(now, featured) {
-    var dur = featured ? 2.85 : 13 + Math.random() * 6;
-    mover = {
-      kind: "gull",
-      t0: now,
-      dur: dur,
-      ltr: featured ? true : Math.random() < 0.5,
-      y: featured ? H * (W < 720 ? 0.43 : 0.42) : H * (0.12 + Math.random() * 0.22),
-      amp: featured ? Math.max(11, H * 0.022) : 6 + Math.random() * 10,
-      scale: featured ? (W < 720 ? 2.35 : 2.85) : 1,
-      featured: !!featured
-    };
-  }
-
   /* ------------------------------------------------------------- flocks */
-  // Flocks are their own channel, separate from the mover: they can overlap
-  // the gull, and up to two can cross at once at different heights. They
-  // draw on the front canvas — above the headline — so a line of birds can
-  // cross the title the way credits get crossed in a film. First one shows
-  // up within seconds. They fly at night too, as faint moonlit silhouettes.
+  // The first flock enters from the left at two seconds and crosses the title
+  // in a readable, shallow V. Later flocks can overlap at different heights.
+  // They fly at night too, as faint moonlit silhouettes.
   var flocks = [];
-  var nextFlockAt = performance.now() / 1000 + 14 + Math.random() * 4;
+  var nextFlockAt = performance.now() / 1000 + 2;
 
   function spawnFlock(now) {
     // Far-off birds crossing slowly in a ragged V, with a straggler or two
     // chasing the line. Realism at this distance is all behavior, not size:
     // specks that change shape as the wings beat, dim when edge-on, and
     // wander inside a formation that never holds quite still.
-    var n = 8 + (Math.random() * 5 | 0);
+    var n = 12 + (Math.random() * 4 | 0);
     var birds = [];
     for (var i = 0; i < n; i++) {
       var rank = Math.ceil(i / 2), side = i % 2 === 1 ? 1 : -1;
       var depth = 0.75 + Math.random() * 0.5;          // nearer birds: bigger, darker
       birds.push({
-        dx: -rank * (14 + Math.random() * 6),
-        dy: side * rank * (6 + Math.random() * 3) + (Math.random() - 0.5) * 5,
+        dx: -rank * (12 + Math.random() * 4),
+        dy: side * rank * (5 + Math.random() * 2) + (Math.random() - 0.5) * 3,
         ph: Math.random() * Math.PI * 2,
         tempo: 6 + Math.random() * 3,                  // wingbeats out of sync
         wander: Math.random() * Math.PI * 2,
-        s: depth
+        s: depth * 1.08
       });
     }
     // one or two stragglers, well behind the line and slightly off-course
@@ -265,8 +215,8 @@
         s: 0.7 + Math.random() * 0.4
       });
     }
-    flocks.push({ t0: now, dur: 28 + Math.random() * 10, ltr: Math.random() < 0.5,
-                  y: H * (0.06 + Math.random() * 0.24), amp: 5 + Math.random() * 5, birds: birds });
+    flocks.push({ t0: now, dur: 15 + Math.random() * 4, ltr: true,
+                  y: H * (0.10 + Math.random() * 0.10), amp: 6 + Math.random() * 4, birds: birds });
   }
 
   function updateFlocks(now, nightAlpha) {
@@ -279,7 +229,9 @@
       var f = flocks[i];
       var p = (now - f.t0) / f.dur;
       if (p >= 1) { flocks.splice(i, 1); continue; }
-      var fx = f.ltr ? lerp(-160, W + 160, p) : lerp(W + 160, -160, p);
+      // The lead bird touches the frame as soon as the flock is spawned, so
+      // the first sighting is genuinely two seconds after the hero begins.
+      var fx = f.ltr ? lerp(8, W + 160, p) : lerp(W - 8, -160, p);
       var fy = f.y + Math.sin(p * Math.PI * 2 * 1.1) * f.amp;
       var dir = f.ltr ? 1 : -1;
       for (var bi = 0; bi < f.birds.length; bi++) {
@@ -324,128 +276,22 @@
               dx: W * 0.22, dy: H * 0.12 };
   }
 
-  function spawnBoat(now) {
-    boatSeen = true;
-    mover = { kind: "boat", t0: now, dur: 70, ltr: Math.random() < 0.5, y: H * 0.80 };
-  }
-
-  // ?mover=flock (or gull/boat/star) forces every turn to that animation —
+  // ?mover=flock (or star) forces every turn to that animation —
   // handy for showing someone a specific one without waiting on the dice.
   var forcedMover = new URLSearchParams(location.search).get("mover");
 
   function spawnMover(now, m) {
     var isNight = m === "night" || m === "dusk";
-    if (forcedMover === "gull") return spawnGull(now, false);
-    if (forcedMover === "boat") return spawnBoat(now);
     if (forcedMover === "star") return spawnStar(now);
-    if (firstFlight) {
-      firstFlight = false;
-      spawnGull(now, true);
-    } else if (isNight) {
-      Math.random() < 0.45 ? spawnStar(now) : spawnGull(now, false);
-    } else {
-      var r = Math.random();
-      if (r < 0.25 && !boatSeen) spawnBoat(now);
-      else spawnGull(now, false);
-    }
-  }
-
-  function drawGullSprite(target, x, y, ltr, frame, tilt, nightAlpha, sizeBoost) {
-    var img = gullImgs[frame], nimg = gullNight[frame];
-    if (!img) return;
-    // Wingspan lands around 55–75px depending on cover width.
-    var scale = Math.max(0.45, Math.min(0.62, W / 2100)) * (sizeBoost || 1);
-    var w = img.width * scale, h = img.height * scale;
-    target.save();
-    if ((sizeBoost || 1) > 1.4) {
-      target.globalAlpha = 0.78;
-      target.filter = "blur(" + (W < 720 ? 4 : 6) + "px) saturate(.48) brightness(.52)";
-    }
-    target.translate(x, y);
-    target.rotate(tilt);
-    if (ltr) target.scale(-1, 1); // the photographed bird faces left
-    target.drawImage(img, -w / 2, -h / 2, w, h);
-    if ((sizeBoost || 1) > 1.4 && nimg) {
-      // The reference's close flyover reads as a dark, defocused shape rather
-      // than white plumage. Lay the moonlit tint over the source even by day.
-      target.globalAlpha = 0.72;
-      target.drawImage(nimg, -w / 2, -h / 2, w, h);
-    } else if (nightAlpha > 0.02 && nimg) {
-      // crossfade to the moonlit copy as the sky darkens
-      target.globalAlpha = Math.min(1, nightAlpha);
-      target.drawImage(nimg, -w / 2, -h / 2, w, h);
-    }
-    target.restore();
-  }
-
-  function drawGull(target, x, y, s, flap, nightAlpha) {
-    // Two strokes of the pen, like every gull ever drawn on a postcard.
-    // By day it's ink against the sky; after dark the same bird goes pale,
-    // like the moon is catching its wings — ink would vanish in the night.
-    var w = 9 * s, lift = flap * 4.5 * s;
-    var k = nightAlpha || 0;
-    target.save();
-    if (s > 1.4) {
-      target.globalAlpha = 0.66;
-      target.filter = "blur(" + (W < 720 ? 4 : 7) + "px)";
-    }
-    target.strokeStyle = "rgba(" + Math.round(30 + 175 * k) + "," + Math.round(34 + 181 * k) + "," +
-                      Math.round(44 + 186 * k) + ",0.75)";
-    target.lineWidth = 1.6 * s;
-    target.lineCap = "round";
-    target.beginPath();
-    target.moveTo(x - w, y + 1 * s);
-    target.quadraticCurveTo(x - w * 0.45, y - lift, x, y);
-    target.quadraticCurveTo(x + w * 0.45, y - lift, x + w, y + 1 * s);
-    target.stroke();
-    target.restore();
-  }
-
-  function drawBoat(x, y, s) {
-    ctx.fillStyle = "rgba(28,30,40,0.62)";
-    ctx.beginPath(); // hull
-    ctx.moveTo(x - 7 * s, y); ctx.lineTo(x + 7 * s, y);
-    ctx.lineTo(x + 4.5 * s, y + 2.4 * s); ctx.lineTo(x - 4.5 * s, y + 2.4 * s);
-    ctx.closePath(); ctx.fill();
-    ctx.beginPath(); // sail
-    ctx.moveTo(x + 0.5 * s, y - 1 * s); ctx.lineTo(x + 0.5 * s, y - 11 * s);
-    ctx.lineTo(x - 5.5 * s, y - 1.5 * s);
-    ctx.closePath(); ctx.fill();
+    if (isNight) spawnStar(now);
+    else scheduleNext(now);
   }
 
   function drawMover(now, nightAlpha) {
     if (!mover) return;
     var p = (now - mover.t0) / mover.dur;
     if (p >= 1) { mover = null; scheduleNext(now); return; }
-    if (mover.kind === "gull") {
-      var x = mover.ltr ? lerp(-80, W + 80, p) : lerp(W + 80, -80, p);
-      var bobPhase = p * Math.PI * 2 * 2.2;
-      var y = mover.y + Math.sin(bobPhase) * mover.amp;
-      if (gullReady) {
-        // Mostly soaring, with a quick flap burst every couple of seconds.
-        if (!mover.nextFlap) mover.nextFlap = mover.t0 + 1 + Math.random() * 1.5;
-        var frame = "glide";
-        if (now >= mover.nextFlap) {
-          var seq = ["up", "down", "up", "down", "up"];
-          var fi = Math.floor((now - mover.nextFlap) / 0.09);
-          if (fi < seq.length) frame = seq[fi];
-          else mover.nextFlap = now + 1.8 + Math.random() * 2.4;
-        }
-        // Lean into the bob: nose dips as it sinks, lifts as it rises.
-        var tilt = Math.cos(bobPhase) * -0.07 * (mover.ltr ? 1 : -1);
-        var birdCtx = mover.featured ? fctx : ctx;
-        drawGullSprite(birdCtx, x, y, mover.ltr, frame, tilt, nightAlpha, mover.scale);
-      } else {
-        // Images not here (yet): the old two-stroke pen gull flies instead.
-        var beat = Math.sin(now * 9 + mover.t0);
-        var effort = 0.5 + 0.5 * Math.sin(p * Math.PI * 6);
-        drawGull(mover.featured ? fctx : ctx, x, y, mover.scale || 1,
-                 Math.max(0.15, beat * effort), nightAlpha);
-      }
-    } else if (mover.kind === "boat") {
-      var bx = mover.ltr ? lerp(-16, W * 0.55, p) : lerp(W + 16, W * 0.45, p);
-      drawBoat(bx, mover.y, 1);
-    } else { // shooting star
+    if (mover.kind === "star") {
       var fade = Math.sin(p * Math.PI) * nightAlpha;
       if (fade <= 0) return;
       var sx = mover.x0 + mover.dx * p, sy = mover.y0 + mover.dy * p;
@@ -467,42 +313,29 @@
   }
 
   function drawPerch(now, nightAlpha) {
-    if (!perchFrames.empty) return;
+    if (!perchFrame) return;
     var elapsed = now - heroStartedAt;
-    var qaPerch = forcedMover === "perch";
     var sceneAlpha = smoothstep(1.1, 2.4, elapsed) * 0.70;
     if (sceneAlpha <= 0.001) return;
 
-    // Claude's bird first crosses at ~3s, then a later visit lasts 12–26s.
-    // ?mover=perch pulls the visit forward for visual QA.
-    var visitStart = qaPerch ? 2.8 : 14.5;
-    var birdAlpha = smoothstep(visitStart, visitStart + 0.8, elapsed) *
-                    (1 - smoothstep(visitStart + 16, visitStart + 17.2, elapsed));
-    var targetW = W * (W < 720 ? 1.32 : 0.88);
+    // Keep the branch's rooted end nearly still while the long tips travel in
+    // the breeze. Two slow, offset waves create an occasional gentle gust.
+    var targetW = W * (W < 720 ? 1.42 : 0.98);
     var targetH = targetW * 941 / 1672;
-    var x = W * (W < 720 ? 0.15 : 0.46) + Math.sin(now * 0.31) * 2.2;
-    var y = H * (W < 720 ? 0.39 : 0.28) + Math.sin(now * 0.23 + 1.4) * 1.8;
+    var x = W * (W < 720 ? 0.05 : 0.34);
+    var y = H * (W < 720 ? 0.33 : 0.21);
+    var wind = Math.sin(now * 0.58) * 0.0065 + Math.sin(now * 0.21 + 1.7) * 0.0035;
+    var pivotX = x + targetW * 0.96;
+    var pivotY = y + targetH * 0.55;
 
     fctx.save();
-    fctx.globalAlpha = sceneAlpha;
     fctx.filter = "blur(" + (W < 720 ? 9 : 12) + "px) saturate(.48) contrast(.90) brightness(" +
       (0.68 - nightAlpha * 0.16).toFixed(2) + ")";
-    fctx.globalAlpha = sceneAlpha * (1 - birdAlpha);
-    fctx.drawImage(perchFrames.empty, x, y, targetW, targetH);
-    if (perchFrames.bird && birdAlpha > 0.001) {
-      fctx.globalAlpha = sceneAlpha * birdAlpha;
-      fctx.drawImage(perchFrames.bird, x, y, targetW, targetH);
-
-      // Keep the perched bird one optical step nearer than the branch. The
-      // tight source crop avoids adding any foliage while allowing its body
-      // to remain legible through the foreground defocus.
-      fctx.globalAlpha = 0.86 * birdAlpha;
-      fctx.filter = "blur(" + (W < 720 ? 5 : 7) + "px) saturate(.40) brightness(" +
-                    (0.60 - nightAlpha * 0.12).toFixed(2) + ")";
-      fctx.drawImage(perchFrames.bird, 430, 220, 280, 250,
-        x + targetW * 430 / 1672, y + targetH * 220 / 941,
-        targetW * 280 / 1672, targetH * 250 / 941);
-    }
+    fctx.globalAlpha = sceneAlpha;
+    fctx.translate(pivotX, pivotY);
+    fctx.rotate(wind);
+    fctx.translate(-pivotX, -pivotY);
+    fctx.drawImage(perchFrame, x, y, targetW, targetH);
     fctx.restore();
   }
 
