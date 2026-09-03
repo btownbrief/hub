@@ -71,8 +71,9 @@
   }
 
   var forced = new URLSearchParams(location.search).get("sky");
+  var manualMood = null;
   function currentMood() {
-    return MOODS[forced] ? forced : moodNow(new Date());
+    return manualMood || (MOODS[forced] ? forced : moodNow(new Date()));
   }
 
   /* ------------------------------------------------------------ canvas */
@@ -118,6 +119,18 @@
     if (next === blend.to) return;
     blend = { from: blend.to, to: next, t: 0 };
   }
+
+  /* The small cover swatches can preview the same three moods as the
+     reference page without reloading or changing the visitor's URL. */
+  window.BtownSky = {
+    setMood: function (next) {
+      if (!MOODS[next]) return false;
+      manualMood = next;
+      setMood(next);
+      return true;
+    },
+    currentMood: currentMood
+  };
 
   function lerp(a, b, t) { return a + (b - a) * t; }
   function mixTint(a, b, t) {

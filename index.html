@@ -30,15 +30,16 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://guide.btownbrief.com">
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..900&family=Instrument+Serif:ital@0;1&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="assets/img/hero.jpg">
 <link rel="stylesheet" href="v2.css?v=20260901c">
+<link rel="stylesheet" href="editorial.css?v=20260903a">
 <script>
   /* Saved theme before first paint — no flash. System preference stays the
      default until the visitor picks a side with the header toggle. */
   try {
     var t = localStorage.getItem('btown-theme');
-    if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+    document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light');
   } catch (e) {}
 </script>
 <!-- GoatCounter -->
@@ -46,31 +47,37 @@
         async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to content</a>
 
 <!-- ============ HEADER: wordmark · what people want · subscribe · search ============ -->
 <header class="top">
   <div class="wrap bar">
     <a class="mark" href="/">BTown <i>Brief</i></a>
-    <!-- The two front doors. The hub is the index you browse; All Day is the
-         feed you read. Until now the only way between them was knowing a URL. -->
     <div class="run">
-      <div class="doors" role="group" aria-label="Hub or All Day">
-        <span class="door door-cur" aria-current="page">Hub</span>
-        <a class="door" href="https://guide.btownbrief.com/all-day/">All&nbsp;Day</a>
-      </div>
       <nav class="verbs" aria-label="BTown Brief">
-        <a href="https://guide.btownbrief.com/restaurants.html">Eat</a>
-        <a href="https://guide.btownbrief.com/events.html">Do</a>
-        <a href="https://guide.btownbrief.com/things-to-do.html">Things&nbsp;to&nbsp;do</a>
-        <a href="https://guide.btownbrief.com/weather.html">Weather</a>
-        <a href="https://play.btownbrief.com/">Play</a>
-        <a href="https://guide.btownbrief.com/telegram.html">Groupchat</a>
-        <a href="https://guide.btownbrief.com/live.html">Pulse&nbsp;Live</a>
+        <a href="https://guide.btownbrief.com/all-day/">All Day</a>
+        <a href="#right-now">City guide</a>
+        <a href="https://play.btownbrief.com/">Games</a>
+        <a href="https://guide.btownbrief.com/telegram.html">Community</a>
       </nav>
     </div>
-    <!-- Read and Subscribe were two buttons for one thing. Listen / Watch left
-         the bar: both are tabs inside All Day, one tap away on the switch. -->
-    <a class="read-cta" href="https://www.btownbrief.com?utm_source=hub&amp;utm_medium=referral&amp;utm_campaign=nav">Read<span class="rc-long">&nbsp;/ Subscribe</span></a>
+    <div class="read-group">
+      <a class="read-cta" href="https://www.btownbrief.com?utm_source=hub&amp;utm_medium=referral&amp;utm_campaign=nav">Read the Brief</a>
+      <details class="site-menu" id="site-menu">
+        <summary aria-label="Open site menu"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <div class="menu-panel">
+          <p class="menu-label">Around Burlington</p>
+          <a href="https://guide.btownbrief.com/all-day/">All Day <span>↗</span></a>
+          <a href="https://guide.btownbrief.com/restaurants.html">Eat &amp; drink <span>↗</span></a>
+          <a href="https://guide.btownbrief.com/events.html">Events <span>↗</span></a>
+          <a href="https://guide.btownbrief.com/things-to-do.html">Things to do <span>↗</span></a>
+          <a href="https://guide.btownbrief.com/weather.html">Weather &amp; lake <span>↗</span></a>
+          <a href="https://play.btownbrief.com/">Games <span>↗</span></a>
+          <a href="https://guide.btownbrief.com/telegram.html">Community <span>↗</span></a>
+          <a href="https://guide.btownbrief.com/live.html">Pulse Live <span>↗</span></a>
+          <a href="https://www.btownbrief.com/about-me">About Steve <span>↗</span></a>
+          <a href="#subscribe">Subscribe, free <span>↓</span></a>
+          <div class="menu-tools">
     <button class="sbtn" type="button" id="theme-toggle" aria-label="Toggle light or dark mode" title="Light / dark">
       <svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.6"/><line x1="12" y1="2" x2="12" y2="4.6"/><line x1="12" y1="19.4" x2="12" y2="22"/><line x1="2" y1="12" x2="4.6" y2="12"/><line x1="19.4" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="6.7" y2="6.7"/><line x1="17.3" y1="17.3" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="6.7" y2="17.3"/><line x1="17.3" y1="6.7" x2="19.1" y2="4.9"/></svg>
       <svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -78,27 +85,48 @@
     <button class="sbtn" type="button" id="search-open" aria-label="Search everything I made">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.2" y2="16.2"/></svg>
     </button>
+            <span>Theme &amp; search</span>
+          </div>
+        </div>
+      </details>
+    </div>
   </div>
 </header>
 
 <!-- ============ THE OPENING FRAME: everything I made ============ -->
-<section class="cover">
+<section class="cover" aria-labelledby="cover-title">
   <img src="assets/img/hero.jpg" alt="Sunset over Burlington Harbor" fetchpriority="high">
   <canvas id="sky-live" aria-hidden="true"></canvas>
-  <p class="cover-date"><span id="date-line">Today</span> · <span id="now-clock"></span></p>
   <div class="cover-copy">
-    <p class="eyebrow">The BTown Brief</p>
-    <h1>Everything I made<br>for Burlington</h1>
-    <p class="lede">A newsletter that got out of hand: an arcade, a live city guide,
-      and a pile of free things for the people who live here. Start anywhere.</p>
+    <p class="eyebrow">Burlington, Vermont</p>
+    <h1 id="cover-title"><span>Everything I made</span><span>for Burlington</span></h1>
+    <nav class="cover-contents" aria-label="Page contents">
+      <a href="#right-now"><span class="chapter">[1]</span><span class="dots" aria-hidden="true"></span><span>Right now</span></a>
+      <a href="#ask"><span class="chapter">[2]</span><span class="dots" aria-hidden="true"></span><span>What are you here for?</span></a>
+      <a href="#favorites"><span class="chapter">[3]</span><span class="dots" aria-hidden="true"></span><span>A few of my favorites</span></a>
+      <a href="#everything"><span class="chapter">[4]</span><span class="dots" aria-hidden="true"></span><span>Everything I made</span></a>
+      <a href="#subscribe"><span class="chapter">[5]</span><span class="dots" aria-hidden="true"></span><span>The Brief</span></a>
+    </nav>
   </div>
-  <button class="scroll-cue" id="scroll-cue" type="button" aria-label="Scroll down to the tiles">
-    <span>Scroll — tap any tile</span>
-    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 9l8 7 8-7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  </button>
+  <div class="sky-controls" role="group" aria-label="Time of day">
+    <button type="button" class="sky-swatch sky-day" data-sky="day" aria-label="Day sky" aria-pressed="false"><span>Day</span></button>
+    <button type="button" class="sky-swatch sky-night" data-sky="night" aria-label="Night sky" aria-pressed="false"><span>Night</span></button>
+    <button type="button" class="sky-swatch sky-golden" data-sky="golden" aria-label="Golden hour sky" aria-pressed="false"><span>Golden hour</span></button>
+  </div>
+  <p class="cover-credit">Burlington Harbor · Photograph by Steve Davis</p>
 </section>
 
-<main class="wrap">
+<nav class="reading-nav" aria-label="Section navigation">
+  <a href="#right-now">Right now</a><a href="#ask">Find your thing</a><a href="#favorites">Favorites</a><a href="#everything">Everything</a><a href="#subscribe">The Brief</a>
+</nav>
+<main class="wrap" id="main-content">
+
+  <section class="intro" id="right-now" aria-labelledby="right-now-title">
+    <p class="section-number">[1] Right now</p>
+    <h2 id="right-now-title">A little closer to Burlington.</h2>
+    <p>A newsletter that got out of hand: an arcade, a live city guide, and a pile of free things for the people who live here. Everything in one place. Start anywhere.</p>
+    <p class="live-date"><span id="date-line">Today</span><span aria-hidden="true"> · </span><span id="now-clock"></span></p>
+  </section>
 
   <!-- ============ THE BENTO: live, photographic ============ -->
   <section class="bento" aria-label="Right now">
@@ -142,7 +170,8 @@
 
   <!-- ============ THE QUESTIONS: pills + one open panel ============ -->
   <section class="ask" id="ask">
-    <h2 class="D">What are you<br>here for?</h2>
+    <p class="section-number">[2] Find your thing</p>
+    <h2 class="D">What are you here for?</h2>
     <div class="pills" role="group" aria-label="What are you here for?">
       <button class="pill on" aria-pressed="true" data-q="daily">What am I checking every day?</button>
       <button class="pill" aria-pressed="false" data-q="do">I want something to do.</button>
@@ -303,9 +332,10 @@
   </section>
 
   <!-- ============ A FEW OF MY FAVORITES: the shelf that scrolls ============ -->
-  <section class="favs" aria-label="A few of my favorites">
+  <section class="favs" id="favorites" aria-label="A few of my favorites">
+    <p class="section-number">[3] A personal shortlist</p>
     <div class="favhead">
-      <h2 class="D">A few of my<br>favorites:</h2>
+      <h2 class="D">A few of my favorites</h2>
       <p>Seven. The ones I'd actually send you first — everything else is on the shelves below.</p>
     </div>
     <div class="favshelf" id="favshelf" tabindex="0" aria-label="Favorites, scrolls sideways">
@@ -343,8 +373,9 @@
 
   <!-- ============ EVERYTHING, A–Z — generated from the catalogs; the guarantee ============ -->
   <section class="az" id="everything">
+    <p class="section-number">[4] The complete collection</p>
     <div class="azhead">
-      <h2 class="D">Everything<br>I made</h2>
+      <h2 class="D">Everything I made</h2>
       <p id="az-count">93 pages and games, by shelf. If it isn't in a question above, it's here.</p>
       <label class="find"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.2" y2="16.2"/></svg><input type="search" id="find" placeholder="Find anything — a page, a game, a place" autocomplete="off"></label>
     </div>
@@ -501,7 +532,8 @@
   <!-- ============ THE SIGNUP: the last thing on the page ============ -->
   <section class="band">
     <div class="t dark full" id="subscribe">
-      <p class="lab">Get the Brief, free</p>
+      <p class="section-number">[5] The newsletter</p>
+      <h2>Get the Brief, free.</h2>
       <p class="sub">All of this exists because of one twice-weekly newsletter. 3,000+ neighbors · 7 in 10 open every issue · Mondays &amp; Fridays.</p>
       <iframe src="https://embeds.beehiiv.com/a1c106df-f519-4dfc-a892-61261d0f8389?slim=true" data-test-id="beehiiv-embed" height="52" frameborder="0" scrolling="no" title="Subscribe to the BTown Brief" loading="lazy"></iframe>
     </div>
@@ -517,5 +549,6 @@
 <script src="v2.js?v=20260901c" defer></script>
 <script src="hero-live.js?v=20260902d" defer></script>
 <script src="hero-bird3d.js?v=20260902b" defer></script>
+<script src="editorial.js?v=20260903a" defer></script>
 </body>
 </html>
