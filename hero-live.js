@@ -43,11 +43,11 @@
   // layer (stars + moon) shows through. Tints stay gentle on purpose: the
   // photo is the hero, the canvas just nudges it toward the hour.
   var MOODS = {
-    dawn:   { top: [255, 178, 158, 0.16], mid: [140, 150, 200, 0.10], bot: [70, 80, 120, 0.06],  night: 0.25, moon: 0.46 },
-    day:    { top: [150, 190, 235, 0.18], mid: [180, 205, 235, 0.10], bot: [200, 215, 235, 0.05], night: 0,    moon: 0.40 },
-    golden: { top: [255, 160, 110, 0.10], mid: [255, 140, 120, 0.07], bot: [255, 150, 110, 0.05], night: 0,    moon: 0.30 },
-    dusk:   { top: [60, 55, 110, 0.34],   mid: [90, 70, 120, 0.22],   bot: [40, 45, 90, 0.18],    night: 0.55, moon: 0.72 },
-    night:  { top: [8, 14, 38, 0.62],     mid: [10, 18, 46, 0.52],    bot: [6, 12, 34, 0.46],     night: 1,    moon: 0.92 }
+    dawn:   { top: [255, 178, 158, 0.16], mid: [140, 150, 200, 0.10], bot: [70, 80, 120, 0.06],  night: 0.25, moon: 0.12 },
+    day:    { top: [150, 190, 235, 0.18], mid: [180, 205, 235, 0.10], bot: [200, 215, 235, 0.05], night: 0,    moon: 0.08 },
+    golden: { top: [255, 160, 110, 0.10], mid: [255, 140, 120, 0.07], bot: [255, 150, 110, 0.05], night: 0,    moon: 0.07 },
+    dusk:   { top: [60, 55, 110, 0.34],   mid: [90, 70, 120, 0.22],   bot: [40, 45, 90, 0.18],    night: 0.55, moon: 0.24 },
+    night:  { top: [8, 14, 38, 0.62],     mid: [10, 18, 46, 0.52],    bot: [6, 12, 34, 0.46],     night: 1,    moon: 0.36 }
   };
 
   function moodNow(now) {
@@ -78,9 +78,18 @@
   // words instead of hiding behind them.
   var front = document.createElement("canvas");
   front.setAttribute("aria-hidden", "true");
+  front.className = "hero-front";
   front.style.cssText = "position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5;";
   cover.appendChild(front);
   var fctx = front.getContext("2d");
+  // The branch shares the photograph's curtain, while the flock can still
+  // cross in front of the type. This also keeps soft foliage off the letters.
+  var branches = document.createElement("canvas");
+  branches.className = "hero-branches";
+  branches.setAttribute("aria-hidden", "true");
+  branches.style.cssText = "position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;";
+  cover.appendChild(branches);
+  var bctx = branches.getContext("2d");
 
   var stars = [];
   function resize() {
@@ -90,6 +99,8 @@
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     front.width = W * dpr; front.height = H * dpr;
     fctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    branches.width = W * dpr; branches.height = H * dpr;
+    bctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     // Stars live in the top ~55% — the sky part of the photo.
     stars = [];
     var n = Math.round(W / 9);
@@ -143,6 +154,8 @@
      neutral white/grey cells to alpha after loading; the photographed branch
      remains untouched. */
   var perchFrame = null;
+  var resolveBranch;
+  window.BtownSky.ready = new Promise(function (resolve) { resolveBranch = resolve; });
 
   function keyCheckerboard(img) {
     var c = document.createElement("canvas");
@@ -164,7 +177,12 @@
 
   function loadPerchFrame(src) {
     var img = new Image();
-    img.onload = function () { perchFrame = keyCheckerboard(img); };
+    img.onload = function () {
+      perchFrame = keyCheckerboard(img);
+      if (reduceMotion) drawPerch(0, MOODS[currentMood()].night);
+      resolveBranch();
+    };
+    img.onerror = resolveBranch;
     img.src = src;
   }
   loadPerchFrame("assets/img/hero-fx/perch-empty-source.png");
@@ -312,23 +330,23 @@
 
     // Keep the branch's rooted end nearly still while the long tips travel in
     // the breeze. Two slow, offset waves create an occasional gentle gust.
-    var targetW = W * (W < 720 ? 1.42 : 0.98);
+    var targetW = W * (W < 720 ? 1.25 : 0.98);
     var targetH = targetW * 941 / 1672;
-    var x = W * (W < 720 ? 0.05 : 0.34);
-    var y = H * (W < 720 ? 0.33 : 0.21);
+    var x = W * (W < 720 ? 0.16 : 0.34);
+    var y = H * (W < 720 ? 0.17 : 0.21);
     var wind = Math.sin(now * 0.58) * 0.009 + Math.sin(now * 0.21 + 1.7) * 0.0045;
     var pivotX = x + targetW * 0.96;
     var pivotY = y + targetH * 0.55;
 
-    fctx.save();
-    fctx.filter = "blur(" + (W < 720 ? 9 : 12) + "px) saturate(.48) contrast(.90) brightness(" +
+    bctx.save();
+    bctx.filter = "blur(" + (W < 720 ? 7 : 12) + "px) saturate(.48) contrast(.90) brightness(" +
       (0.68 - nightAlpha * 0.16).toFixed(2) + ")";
-    fctx.globalAlpha = sceneAlpha;
-    fctx.translate(pivotX, pivotY);
-    fctx.rotate(wind);
-    fctx.translate(-pivotX, -pivotY);
-    fctx.drawImage(perchFrame, x, y, targetW, targetH);
-    fctx.restore();
+    bctx.globalAlpha = sceneAlpha;
+    bctx.translate(pivotX, pivotY);
+    bctx.rotate(wind);
+    bctx.translate(-pivotX, -pivotY);
+    bctx.drawImage(perchFrame, x, y, targetW, targetH);
+    bctx.restore();
   }
 
   /* ---------------------------------------------------------- night sky */
@@ -348,18 +366,19 @@
 
   function drawMoon(alpha) {
     if (!moonReady || alpha <= 0.01) return;
-    var mx = W * (W < 720 ? 0.80 : 0.79);
-    var my = H * (W < 720 ? 0.17 : 0.19);
-    var size = Math.max(105, Math.min(205, Math.min(W, H) * 0.19));
+    // The moon only glances into the frame; it is atmosphere, not the focus.
+    var mx = W * (W < 720 ? 0.97 : 0.965);
+    var my = H * (W < 720 ? 0.15 : 0.17);
+    var size = Math.max(105, Math.min(205, Math.min(W, H) * 0.20));
     var halo = ctx.createRadialGradient(mx, my, size * 0.22, mx, my, size * 0.8);
-    halo.addColorStop(0, "rgba(236,240,235," + (alpha * 0.10).toFixed(3) + ")");
+    halo.addColorStop(0, "rgba(236,240,235," + (alpha * 0.035).toFixed(3) + ")");
     halo.addColorStop(1, "rgba(236,240,235,0)");
     ctx.fillStyle = halo;
     ctx.fillRect(mx - size, my - size, size * 2, size * 2);
     ctx.save();
-    ctx.globalAlpha = alpha;
+    ctx.globalAlpha = alpha * 0.88;
     ctx.globalCompositeOperation = "screen";
-    ctx.filter = "blur(1.7px) saturate(.36) contrast(.72) brightness(1.14)";
+    ctx.filter = "blur(2.4px) saturate(.28) contrast(.68) brightness(.96)";
     ctx.drawImage(moonImg, mx - size / 2, my - size / 2, size, size);
     ctx.restore();
   }
@@ -390,6 +409,7 @@
     drawNight(now, nightAlpha, moonAlpha);
 
     fctx.clearRect(0, 0, W, H);
+    bctx.clearRect(0, 0, W, H);
     drawPerch(now, nightAlpha);
     if (!mover && now >= nextMoverAt) spawnMover(now, blend.to);
     drawMover(now, nightAlpha);
