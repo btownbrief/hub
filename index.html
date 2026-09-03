@@ -41,6 +41,9 @@
     var t = localStorage.getItem('btown-theme');
     document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light');
   } catch (e) {}
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.documentElement.classList.add('motion-enabled');
+  }
 </script>
 <!-- GoatCounter -->
 <script data-goatcounter="https://btown-brief.goatcounter.com/count"
@@ -97,6 +100,7 @@
 <section class="cover" aria-labelledby="cover-title">
   <img src="assets/img/hero.jpg" alt="Sunset over Burlington Harbor" fetchpriority="high">
   <canvas id="sky-live" aria-hidden="true"></canvas>
+  <div class="scene-curtain" aria-hidden="true"></div>
   <div class="cover-copy">
     <p class="eyebrow">Burlington, Vermont</p>
     <h1 id="cover-title"><span>Everything I made</span><span>for Burlington</span></h1>
@@ -547,8 +551,7 @@
 
 <script src="https://guide.btownbrief.com/js/food-lib.js" defer></script>
 <script src="v2.js?v=20260901c" defer></script>
-<script src="hero-live.js?v=20260902d" defer></script>
-<script src="hero-bird3d.js?v=20260902b" defer></script>
-<script src="editorial.js?v=20260903a" defer></script>
+<script src="hero-live.js?v=20260903h" defer></script>
+<script src="editorial.js?v=20260903b" defer></script>
 </body>
 </html>

@@ -73,10 +73,12 @@ a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visibl
 /* Full-screen photograph, stepped serif title, book contents, sky swatches. */
 .cover { min-height: 680px; height: calc(100svh - var(--header-height)); background: #556573;
   isolation: isolate; }
-.cover > img { object-position: center 47%; }
-.cover::after { pointer-events: none; background: linear-gradient(180deg, #18243318, #14202b24 50%, #111c292b); }
+.cover > img { z-index: 0; object-position: center 47%; filter: blur(1.5px) saturate(.82); transform: scale(1.008); }
+#sky-live { z-index: 1; }
+.scene-curtain { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: #879bb3; }
+.cover::after { z-index: 3; pointer-events: none; background: linear-gradient(180deg, #18243318, #14202b24 50%, #111c292b); }
 .cover-copy { width: min(760px, calc(100% - 80px)); max-width: none; padding: 48px 0 72px;
-  color: #faf9f5; text-shadow: 0 1px 14px #14202b22; }
+  z-index: 4; color: #faf9f5; text-shadow: 0 1px 14px #14202b22; }
 .cover .eyebrow { font-weight: 400; font-size: 12px; letter-spacing: .105em; opacity: 1; }
 .cover h1 { font-family: var(--serif); font-size: clamp(48px, 4.9vw, 72px); font-weight: 400;
   line-height: 1.08; letter-spacing: -.05em; margin: 22px auto 0; max-width: 710px; }
@@ -91,7 +93,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visibl
   transform: translateY(-.2em); }
 .cover-contents a:hover { color: #fff; }
 .cover-contents a:hover .dots { border-bottom-style: solid; border-color: #fff; }
-.sky-controls { position: absolute; left: 24px; bottom: 24px; z-index: 4;
+.sky-controls { position: absolute; left: 24px; bottom: 24px; z-index: 7;
   display: flex; gap: 10px; align-items: center; }
 .sky-swatch { position: relative; width: 18px; height: 18px; padding: 0; border-radius: 50%;
   border: 1px solid #faf9f58c; cursor: pointer; box-shadow: 0 0 0 0 transparent; }
@@ -104,8 +106,46 @@ a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visibl
   background: #faf9f5; color: #141413; font-size: 11px; white-space: nowrap;
   border-radius: 3px; opacity: 0; pointer-events: none; }
 .sky-swatch:hover span, .sky-swatch:focus-visible span { opacity: 1; }
-.cover-credit { position: absolute; z-index: 3; right: 24px; bottom: 21px; margin: 0;
+.cover-credit { position: absolute; z-index: 7; right: 24px; bottom: 21px; margin: 0;
   color: #faf9f5; font-size: 10px; font-weight: 400; letter-spacing: .01em; }
+
+/* Claude's opening is a sequence, not a single fade: sky first, then the
+   photograph resolves, then one line of type at a time. */
+.motion-enabled .cover > img:first-child { opacity: 0; transform: scale(1.035); filter: blur(8px); }
+.motion-enabled .cover .eyebrow,
+.motion-enabled .cover h1 span,
+.motion-enabled .cover-contents a { opacity: 0; }
+.motion-enabled .cover .eyebrow,
+.motion-enabled .cover-contents a { filter: blur(12px); }
+.motion-enabled .cover h1 span { filter: blur(26px); }
+.motion-enabled.motion-ready .scene-curtain { animation: scene-curtain-out 1.55s .12s cubic-bezier(.22,.61,.36,1) both; }
+.motion-enabled.motion-ready .cover > img:first-child { animation: scene-photo-in 1.85s .18s ease-out both; }
+.motion-enabled.motion-ready .cover .eyebrow { animation: scene-element-in .8s .28s ease-out both; }
+.motion-enabled.motion-ready .cover h1 span:first-child { animation: scene-title-in .8s .58s ease-out both; }
+.motion-enabled.motion-ready .cover h1 span:last-child { animation: scene-title-in .8s .88s ease-out both; }
+.motion-enabled.motion-ready .cover-contents a { animation: scene-element-in .8s ease-out both; }
+.motion-enabled.motion-ready .cover-contents a:nth-child(1) { animation-delay: 1.20s; }
+.motion-enabled.motion-ready .cover-contents a:nth-child(2) { animation-delay: 1.245s; }
+.motion-enabled.motion-ready .cover-contents a:nth-child(3) { animation-delay: 1.29s; }
+.motion-enabled.motion-ready .cover-contents a:nth-child(4) { animation-delay: 1.335s; }
+.motion-enabled.motion-ready .cover-contents a:nth-child(5) { animation-delay: 1.38s; }
+@keyframes scene-curtain-out {
+  0%, 18% { opacity: 1; }
+  100% { opacity: 0; visibility: hidden; }
+}
+@keyframes scene-photo-in {
+  0% { opacity: 0; transform: scale(1.035); filter: blur(8px); }
+  100% { opacity: 1; transform: scale(1.008); filter: blur(1.5px) saturate(.82); }
+}
+@keyframes scene-title-in {
+  0% { opacity: 0; filter: blur(26px); transform: translateY(5px); }
+  45% { opacity: 1; }
+  100% { opacity: 1; filter: blur(0); transform: translateY(0); }
+}
+@keyframes scene-element-in {
+  0% { opacity: 0; filter: blur(12px); transform: translateY(3px); }
+  100% { opacity: 1; filter: blur(0); transform: translateY(0); }
+}
 
 /* Compact contents while reading; the hero remains uncluttered. */
 .reading-nav { position: sticky; top: var(--header-height); z-index: 15;
@@ -309,4 +349,5 @@ main.wrap { padding-top: 90px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+  .scene-curtain { display: none; }
 }

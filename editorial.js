@@ -1,6 +1,20 @@
 (function () {
   "use strict";
 
+  /* Wait for the display fonts, as the reference does, so the blur reveal
+     lands on final line breaks instead of shifting midway through. */
+  var revealed = false;
+  function revealOpening() {
+    if (revealed) return;
+    revealed = true;
+    requestAnimationFrame(function () {
+      document.documentElement.classList.add("motion-ready");
+    });
+  }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(revealOpening, revealOpening);
+  else revealOpening();
+  setTimeout(revealOpening, 2500);
+
   var menu = document.getElementById("site-menu");
   if (menu) {
     document.addEventListener("click", function (event) {

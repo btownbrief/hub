@@ -1,6 +1,7 @@
 /* The living photo. A transparent canvas sits over the harbor photo and keeps
    it honest with the sky outside: Burlington's real sun times pick the mood,
-   night brings stars and the actual moon phase, and once in a while something
+   night brings stars, a photographed moon stays faintly visible by day, and
+   once in a while something
    small crosses the frame — a gull by day, a sailboat on the water, a shooting
    star after dark. Everything here is garnish: if this file never runs, the
    page is exactly what it was before.
@@ -38,23 +39,16 @@
     return { rise: fromJulian(Jrise), set: fromJulian(Jset) };
   }
 
-  // 0 = new, 0.5 = full. Anchored to the new moon of Jan 6 2000, 18:14 UTC.
-  function moonPhase(date) {
-    var synodic = 29.53058867;
-    var days = (date.getTime() - 947182440000) / 864e5;
-    return ((days % synodic) + synodic) % synodic / synodic;
-  }
-
   /* ------------------------------------------------------------- moods */
   // Each mood is a tint painted over the photo plus how strongly the night
   // layer (stars + moon) shows through. Tints stay gentle on purpose: the
   // photo is the hero, the canvas just nudges it toward the hour.
   var MOODS = {
-    dawn:   { top: [255, 178, 158, 0.16], mid: [140, 150, 200, 0.10], bot: [70, 80, 120, 0.06],  night: 0.25 },
-    day:    { top: [150, 190, 235, 0.18], mid: [180, 205, 235, 0.10], bot: [200, 215, 235, 0.05], night: 0 },
-    golden: { top: [255, 160, 110, 0.10], mid: [255, 140, 120, 0.07], bot: [255, 150, 110, 0.05], night: 0 },
-    dusk:   { top: [60, 55, 110, 0.34],   mid: [90, 70, 120, 0.22],   bot: [40, 45, 90, 0.18],    night: 0.55 },
-    night:  { top: [8, 14, 38, 0.62],     mid: [10, 18, 46, 0.52],    bot: [6, 12, 34, 0.46],     night: 1 }
+    dawn:   { top: [255, 178, 158, 0.16], mid: [140, 150, 200, 0.10], bot: [70, 80, 120, 0.06],  night: 0.25, moon: 0.46 },
+    day:    { top: [150, 190, 235, 0.18], mid: [180, 205, 235, 0.10], bot: [200, 215, 235, 0.05], night: 0,    moon: 0.40 },
+    golden: { top: [255, 160, 110, 0.10], mid: [255, 140, 120, 0.07], bot: [255, 150, 110, 0.05], night: 0,    moon: 0.30 },
+    dusk:   { top: [60, 55, 110, 0.34],   mid: [90, 70, 120, 0.22],   bot: [40, 45, 90, 0.18],    night: 0.55, moon: 0.72 },
+    night:  { top: [8, 14, 38, 0.62],     mid: [10, 18, 46, 0.52],    bot: [6, 12, 34, 0.46],     night: 1,    moon: 0.92 }
   };
 
   function moodNow(now) {
@@ -81,12 +75,11 @@
   var W = 0, H = 0, dpr = 1;
   var reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // A second canvas ABOVE the headline (z-index 2 beats .cover-copy's 1).
-  // Only the flocks draw here — specks small enough to cross the title
-  // without costing readability, and easy to spot at night.
+  // A second canvas ABOVE the headline. Flocks and the opening hero bird draw
+  // here so they can physically cross the words instead of hiding behind them.
   var front = document.createElement("canvas");
   front.setAttribute("aria-hidden", "true");
-  front.style.cssText = "position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;";
+  front.style.cssText = "position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5;";
   cover.appendChild(front);
   var fctx = front.getContext("2d");
 
@@ -171,8 +164,46 @@
     });
   })();
 
+  var moonImg = new Image();
+  var moonReady = false;
+  moonImg.onload = function () { moonReady = true; };
+  moonImg.src = "assets/img/hero-fx/moon-real.png";
+
+  /* The supplied branch artwork has a baked checkerboard. Key only its nearly
+     neutral white/grey cells to alpha after loading; the photographed branch
+     and bird remain untouched. Keeping empty/perched frames lets the bird
+     visit without making the branch itself pop in and out. */
+  var perchFrames = { empty: null, bird: null };
+  var heroStartedAt = performance.now() / 1000;
+
+  function keyCheckerboard(img) {
+    var c = document.createElement("canvas");
+    c.width = img.naturalWidth; c.height = img.naturalHeight;
+    var cc = c.getContext("2d", { willReadFrequently: true });
+    cc.drawImage(img, 0, 0);
+    var pixels = cc.getImageData(0, 0, c.width, c.height);
+    var d = pixels.data;
+    for (var i = 0; i < d.length; i += 4) {
+      var hi = Math.max(d[i], d[i + 1], d[i + 2]);
+      var lo = Math.min(d[i], d[i + 1], d[i + 2]);
+      var neutral = hi - lo;
+      if (lo > 235 && neutral < 7) d[i + 3] = 0;
+      else if (lo > 222 && neutral < 9) d[i + 3] = Math.round(255 * (240 - lo) / 18);
+    }
+    cc.putImageData(pixels, 0, 0);
+    return c;
+  }
+
+  function loadPerchFrame(name, src) {
+    var img = new Image();
+    img.onload = function () { perchFrames[name] = keyCheckerboard(img); };
+    img.src = src;
+  }
+  loadPerchFrame("empty", "assets/img/hero-fx/perch-empty-source.png");
+  loadPerchFrame("bird", "assets/img/hero-fx/perch-bird-source.png");
+
   var mover = null;
-  var nextMoverAt = performance.now() / 1000 + 4 + Math.random() * 5;
+  var nextMoverAt = performance.now() / 1000 + 3.35;
   var boatSeen = false;
   var firstFlight = true;
 
@@ -180,21 +211,18 @@
     nextMoverAt = now + 12 + Math.random() * 22;
   }
 
-  var lastNightAlpha = 0;
-
-  function spawnGull(now) {
-    var dur = 13 + Math.random() * 6;
-    // If the 3D bird (hero-bird3d.js) is ready, it takes the gull's turn —
-    // a rigged model with a real wing animation. The mover entry just holds
-    // the slot so nothing else flies at the same time.
-    if (window.BtownBird && window.BtownBird.ready &&
-        window.BtownBird.fly({ ltr: Math.random() < 0.5, y: 0.12 + Math.random() * 0.22,
-                               dur: dur, night: function () { return lastNightAlpha; } })) {
-      mover = { kind: "bird3d", t0: now, dur: dur };
-      return;
-    }
-    mover = { kind: "gull", t0: now, dur: dur, ltr: Math.random() < 0.5,
-              y: H * (0.12 + Math.random() * 0.22), amp: 6 + Math.random() * 10 };
+  function spawnGull(now, featured) {
+    var dur = featured ? 2.85 : 13 + Math.random() * 6;
+    mover = {
+      kind: "gull",
+      t0: now,
+      dur: dur,
+      ltr: featured ? true : Math.random() < 0.5,
+      y: featured ? H * (W < 720 ? 0.43 : 0.42) : H * (0.12 + Math.random() * 0.22),
+      amp: featured ? Math.max(11, H * 0.022) : 6 + Math.random() * 10,
+      scale: featured ? (W < 720 ? 2.35 : 2.85) : 1,
+      featured: !!featured
+    };
   }
 
   /* ------------------------------------------------------------- flocks */
@@ -204,7 +232,7 @@
   // cross the title the way credits get crossed in a film. First one shows
   // up within seconds. They fly at night too, as faint moonlit silhouettes.
   var flocks = [];
-  var nextFlockAt = performance.now() / 1000 + 5 + Math.random() * 6;
+  var nextFlockAt = performance.now() / 1000 + 14 + Math.random() * 4;
 
   function spawnFlock(now) {
     // Far-off birds crossing slowly in a ragged V, with a straggler or two
@@ -307,55 +335,70 @@
 
   function spawnMover(now, m) {
     var isNight = m === "night" || m === "dusk";
-    if (forcedMover === "gull") return spawnGull(now);
+    if (forcedMover === "gull") return spawnGull(now, false);
     if (forcedMover === "boat") return spawnBoat(now);
     if (forcedMover === "star") return spawnStar(now);
     if (firstFlight) {
       firstFlight = false;
-      spawnGull(now);
+      spawnGull(now, true);
     } else if (isNight) {
-      Math.random() < 0.45 ? spawnStar(now) : spawnGull(now);
+      Math.random() < 0.45 ? spawnStar(now) : spawnGull(now, false);
     } else {
       var r = Math.random();
       if (r < 0.25 && !boatSeen) spawnBoat(now);
-      else spawnGull(now);
+      else spawnGull(now, false);
     }
   }
 
-  function drawGullSprite(x, y, ltr, frame, tilt, nightAlpha) {
+  function drawGullSprite(target, x, y, ltr, frame, tilt, nightAlpha, sizeBoost) {
     var img = gullImgs[frame], nimg = gullNight[frame];
     if (!img) return;
     // Wingspan lands around 55–75px depending on cover width.
-    var scale = Math.max(0.45, Math.min(0.62, W / 2100));
+    var scale = Math.max(0.45, Math.min(0.62, W / 2100)) * (sizeBoost || 1);
     var w = img.width * scale, h = img.height * scale;
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.rotate(tilt);
-    if (ltr) ctx.scale(-1, 1); // the photographed bird faces left
-    ctx.drawImage(img, -w / 2, -h / 2, w, h);
-    if (nightAlpha > 0.02 && nimg) {
-      // crossfade to the moonlit copy as the sky darkens
-      ctx.globalAlpha = Math.min(1, nightAlpha);
-      ctx.drawImage(nimg, -w / 2, -h / 2, w, h);
+    target.save();
+    if ((sizeBoost || 1) > 1.4) {
+      target.globalAlpha = 0.78;
+      target.filter = "blur(" + (W < 720 ? 4 : 6) + "px) saturate(.48) brightness(.52)";
     }
-    ctx.restore();
+    target.translate(x, y);
+    target.rotate(tilt);
+    if (ltr) target.scale(-1, 1); // the photographed bird faces left
+    target.drawImage(img, -w / 2, -h / 2, w, h);
+    if ((sizeBoost || 1) > 1.4 && nimg) {
+      // The reference's close flyover reads as a dark, defocused shape rather
+      // than white plumage. Lay the moonlit tint over the source even by day.
+      target.globalAlpha = 0.72;
+      target.drawImage(nimg, -w / 2, -h / 2, w, h);
+    } else if (nightAlpha > 0.02 && nimg) {
+      // crossfade to the moonlit copy as the sky darkens
+      target.globalAlpha = Math.min(1, nightAlpha);
+      target.drawImage(nimg, -w / 2, -h / 2, w, h);
+    }
+    target.restore();
   }
 
-  function drawGull(x, y, s, flap, nightAlpha) {
+  function drawGull(target, x, y, s, flap, nightAlpha) {
     // Two strokes of the pen, like every gull ever drawn on a postcard.
     // By day it's ink against the sky; after dark the same bird goes pale,
     // like the moon is catching its wings — ink would vanish in the night.
     var w = 9 * s, lift = flap * 4.5 * s;
     var k = nightAlpha || 0;
-    ctx.strokeStyle = "rgba(" + Math.round(30 + 175 * k) + "," + Math.round(34 + 181 * k) + "," +
+    target.save();
+    if (s > 1.4) {
+      target.globalAlpha = 0.66;
+      target.filter = "blur(" + (W < 720 ? 4 : 7) + "px)";
+    }
+    target.strokeStyle = "rgba(" + Math.round(30 + 175 * k) + "," + Math.round(34 + 181 * k) + "," +
                       Math.round(44 + 186 * k) + ",0.75)";
-    ctx.lineWidth = 1.6 * s;
-    ctx.lineCap = "round";
-    ctx.beginPath();
-    ctx.moveTo(x - w, y + 1 * s);
-    ctx.quadraticCurveTo(x - w * 0.45, y - lift, x, y);
-    ctx.quadraticCurveTo(x + w * 0.45, y - lift, x + w, y + 1 * s);
-    ctx.stroke();
+    target.lineWidth = 1.6 * s;
+    target.lineCap = "round";
+    target.beginPath();
+    target.moveTo(x - w, y + 1 * s);
+    target.quadraticCurveTo(x - w * 0.45, y - lift, x, y);
+    target.quadraticCurveTo(x + w * 0.45, y - lift, x + w, y + 1 * s);
+    target.stroke();
+    target.restore();
   }
 
   function drawBoat(x, y, s) {
@@ -374,7 +417,6 @@
     if (!mover) return;
     var p = (now - mover.t0) / mover.dur;
     if (p >= 1) { mover = null; scheduleNext(now); return; }
-    if (mover.kind === "bird3d") return; // hero-bird3d.js renders this one
     if (mover.kind === "gull") {
       var x = mover.ltr ? lerp(-80, W + 80, p) : lerp(W + 80, -80, p);
       var bobPhase = p * Math.PI * 2 * 2.2;
@@ -391,12 +433,14 @@
         }
         // Lean into the bob: nose dips as it sinks, lifts as it rises.
         var tilt = Math.cos(bobPhase) * -0.07 * (mover.ltr ? 1 : -1);
-        drawGullSprite(x, y, mover.ltr, frame, tilt, nightAlpha);
+        var birdCtx = mover.featured ? fctx : ctx;
+        drawGullSprite(birdCtx, x, y, mover.ltr, frame, tilt, nightAlpha, mover.scale);
       } else {
         // Images not here (yet): the old two-stroke pen gull flies instead.
         var beat = Math.sin(now * 9 + mover.t0);
         var effort = 0.5 + 0.5 * Math.sin(p * Math.PI * 6);
-        drawGull(x, y, 1, Math.max(0.15, beat * effort), nightAlpha);
+        drawGull(mover.featured ? fctx : ctx, x, y, mover.scale || 1,
+                 Math.max(0.15, beat * effort), nightAlpha);
       }
     } else if (mover.kind === "boat") {
       var bx = mover.ltr ? lerp(-16, W * 0.55, p) : lerp(W + 16, W * 0.45, p);
@@ -417,63 +461,81 @@
     }
   }
 
-  /* ---------------------------------------------------------- night sky */
-  function drawNight(now, alpha) {
-    if (alpha <= 0.01) return;
-    for (var i = 0; i < stars.length; i++) {
-      var s = stars[i];
-      var tw = 0.55 + 0.45 * Math.sin(now * (Math.PI * 2) / s.tw + s.ph);
-      ctx.fillStyle = "rgba(235,240,255," + (alpha * tw * 0.85).toFixed(3) + ")";
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    drawMoon(alpha);
+  function smoothstep(edge0, edge1, x) {
+    x = Math.max(0, Math.min(1, (x - edge0) / (edge1 - edge0)));
+    return x * x * (3 - 2 * x);
   }
 
-  // The moon is composed on its own little canvas first — carving the shadow
-  // out in place would punch a hole through the night tint below it.
-  var moonTile = null, moonTileR = 0;
-  function moonSprite(r) {
-    if (moonTile && moonTileR === r) return moonTile;
-    var size = Math.ceil(r * 6.4);
-    var m = document.createElement("canvas");
-    m.width = m.height = size;
-    var mc = m.getContext("2d");
-    var c = size / 2;
-    // Lit disc, then bite the shadow out of it: a same-size disc slid
-    // sideways by how full the moon is. Not textbook astronomy, but it
-    // reads right at postcard size.
-    mc.fillStyle = "rgba(238,238,224,0.92)";
-    mc.beginPath(); mc.arc(c, c, r, 0, Math.PI * 2); mc.fill();
-    var phase = moonPhase(new Date());
-    var lit = (1 - Math.cos(phase * Math.PI * 2)) / 2; // 0 new → 1 full
-    if (lit < 0.97) {
-      mc.globalCompositeOperation = "destination-out";
-      var dir = phase < 0.5 ? -1 : 1; // waxing lights the right side first
-      mc.beginPath();
-      mc.arc(c + dir * 2 * r * lit, c, r, 0, Math.PI * 2);
-      mc.fill();
+  function drawPerch(now, nightAlpha) {
+    if (!perchFrames.empty) return;
+    var elapsed = now - heroStartedAt;
+    var qaPerch = forcedMover === "perch";
+    var sceneAlpha = smoothstep(1.1, 2.4, elapsed) * 0.70;
+    if (sceneAlpha <= 0.001) return;
+
+    // Claude's bird first crosses at ~3s, then a later visit lasts 12–26s.
+    // ?mover=perch pulls the visit forward for visual QA.
+    var visitStart = qaPerch ? 2.8 : 14.5;
+    var birdAlpha = smoothstep(visitStart, visitStart + 0.8, elapsed) *
+                    (1 - smoothstep(visitStart + 16, visitStart + 17.2, elapsed));
+    var targetW = W * (W < 720 ? 1.32 : 0.88);
+    var targetH = targetW * 941 / 1672;
+    var x = W * (W < 720 ? 0.15 : 0.46) + Math.sin(now * 0.31) * 2.2;
+    var y = H * (W < 720 ? 0.39 : 0.28) + Math.sin(now * 0.23 + 1.4) * 1.8;
+
+    fctx.save();
+    fctx.globalAlpha = sceneAlpha;
+    fctx.filter = "blur(" + (W < 720 ? 9 : 12) + "px) saturate(.48) contrast(.90) brightness(" +
+      (0.68 - nightAlpha * 0.16).toFixed(2) + ")";
+    fctx.globalAlpha = sceneAlpha * (1 - birdAlpha);
+    fctx.drawImage(perchFrames.empty, x, y, targetW, targetH);
+    if (perchFrames.bird && birdAlpha > 0.001) {
+      fctx.globalAlpha = sceneAlpha * birdAlpha;
+      fctx.drawImage(perchFrames.bird, x, y, targetW, targetH);
+
+      // Keep the perched bird one optical step nearer than the branch. The
+      // tight source crop avoids adding any foliage while allowing its body
+      // to remain legible through the foreground defocus.
+      fctx.globalAlpha = 0.86 * birdAlpha;
+      fctx.filter = "blur(" + (W < 720 ? 5 : 7) + "px) saturate(.40) brightness(" +
+                    (0.60 - nightAlpha * 0.12).toFixed(2) + ")";
+      fctx.drawImage(perchFrames.bird, 430, 220, 280, 250,
+        x + targetW * 430 / 1672, y + targetH * 220 / 941,
+        targetW * 280 / 1672, targetH * 250 / 941);
     }
-    // Halo goes in last, underneath everything, so the phase bite above
-    // can never punch a hole through it.
-    mc.globalCompositeOperation = "destination-over";
-    var halo = mc.createRadialGradient(c, c, r * 0.6, c, c, r * 3.2);
-    halo.addColorStop(0, "rgba(240,240,225,0.20)");
-    halo.addColorStop(1, "rgba(240,240,225,0)");
-    mc.fillStyle = halo;
-    mc.fillRect(0, 0, size, size);
-    mc.globalCompositeOperation = "source-over";
-    moonTile = m; moonTileR = r;
-    return m;
+    fctx.restore();
+  }
+
+  /* ---------------------------------------------------------- night sky */
+  function drawNight(now, starAlpha, moonAlpha) {
+    if (starAlpha > 0.01) {
+      for (var i = 0; i < stars.length; i++) {
+        var s = stars[i];
+        var tw = 0.55 + 0.45 * Math.sin(now * (Math.PI * 2) / s.tw + s.ph);
+        ctx.fillStyle = "rgba(235,240,255," + (starAlpha * tw * 0.85).toFixed(3) + ")";
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    drawMoon(moonAlpha);
   }
 
   function drawMoon(alpha) {
-    var mx = W * 0.78, my = H * 0.20, r = Math.max(14, Math.min(W, H) * 0.035);
-    var tile = moonSprite(Math.round(r));
+    if (!moonReady || alpha <= 0.01) return;
+    var mx = W * (W < 720 ? 0.80 : 0.79);
+    var my = H * (W < 720 ? 0.17 : 0.19);
+    var size = Math.max(105, Math.min(205, Math.min(W, H) * 0.19));
+    var halo = ctx.createRadialGradient(mx, my, size * 0.22, mx, my, size * 0.8);
+    halo.addColorStop(0, "rgba(236,240,235," + (alpha * 0.10).toFixed(3) + ")");
+    halo.addColorStop(1, "rgba(236,240,235,0)");
+    ctx.fillStyle = halo;
+    ctx.fillRect(mx - size, my - size, size * 2, size * 2);
     ctx.save();
     ctx.globalAlpha = alpha;
-    ctx.drawImage(tile, mx - tile.width / 2, my - tile.height / 2);
+    ctx.globalCompositeOperation = "screen";
+    ctx.filter = "blur(1.7px) saturate(.36) contrast(.72) brightness(1.14)";
+    ctx.drawImage(moonImg, mx - size / 2, my - size / 2, size, size);
     ctx.restore();
   }
 
@@ -499,13 +561,14 @@
     ctx.fillRect(0, 0, W, H);
 
     var nightAlpha = lerp(a.night, b.night, t);
-    lastNightAlpha = nightAlpha; // the 3D bird's lighting reads this
-    drawNight(now, nightAlpha);
+    var moonAlpha = lerp(a.moon, b.moon, t);
+    drawNight(now, nightAlpha, moonAlpha);
 
+    fctx.clearRect(0, 0, W, H);
+    drawPerch(now, nightAlpha);
     if (!mover && now >= nextMoverAt) spawnMover(now, blend.to);
     drawMover(now, nightAlpha);
 
-    fctx.clearRect(0, 0, W, H);
     updateFlocks(now, nightAlpha);
 
     if (running) rafId = requestAnimationFrame(frame);
@@ -532,7 +595,7 @@
     var g2 = ctx.createLinearGradient(0, 0, 0, H);
     g2.addColorStop(0, rgba(m.top)); g2.addColorStop(0.55, rgba(m.mid)); g2.addColorStop(1, rgba(m.bot));
     ctx.fillStyle = g2; ctx.fillRect(0, 0, W, H);
-    drawNight(0, m.night);
+    drawNight(0, m.night, m.moon);
   } else {
     start();
     document.addEventListener("visibilitychange", function () {
