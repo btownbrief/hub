@@ -148,44 +148,29 @@
   var moonImg = new Image();
   var moonReady = false;
   moonImg.onload = function () { moonReady = true; };
-  moonImg.src = "assets/img/hero-fx/moon-real.png";
+  moonImg.src = "assets/img/hero-fx/moon.webp";
 
-  /* The supplied branch artwork has a baked checkerboard. Key only its nearly
-     neutral white/grey cells to alpha after loading; the photographed branch
-     remains untouched. */
-  var perchFrame = null;
+  /* The branch and the moon are baked offline (see README: hero-fx) with the
+     checkerboard keyed out and the blur/saturate/contrast already applied.
+     Canvas ctx.filter is not supported in Safari, so nothing here may depend
+     on it: the only per-frame filter is a CSS brightness on the canvas. */
+  var BRANCH = { lg: { src: "assets/img/hero-fx/branch-lg.webp", w: 1280, h: 755, pad: 40 },
+                 sm: { src: "assets/img/hero-fx/branch-sm.webp", w: 704,  h: 424, pad: 32 } };
+  var perchFrame = null, perchMeta = null;
   var resolveBranch;
   window.BtownSky.ready = new Promise(function (resolve) { resolveBranch = resolve; });
 
-  function keyCheckerboard(img) {
-    var c = document.createElement("canvas");
-    c.width = img.naturalWidth; c.height = img.naturalHeight;
-    var cc = c.getContext("2d", { willReadFrequently: true });
-    cc.drawImage(img, 0, 0);
-    var pixels = cc.getImageData(0, 0, c.width, c.height);
-    var d = pixels.data;
-    for (var i = 0; i < d.length; i += 4) {
-      var hi = Math.max(d[i], d[i + 1], d[i + 2]);
-      var lo = Math.min(d[i], d[i + 1], d[i + 2]);
-      var neutral = hi - lo;
-      if (lo > 235 && neutral < 7) d[i + 3] = 0;
-      else if (lo > 222 && neutral < 9) d[i + 3] = Math.round(255 * (240 - lo) / 18);
-    }
-    cc.putImageData(pixels, 0, 0);
-    return c;
-  }
-
-  function loadPerchFrame(src) {
+  function loadPerchFrame(meta) {
     var img = new Image();
     img.onload = function () {
-      perchFrame = keyCheckerboard(img);
+      perchFrame = img; perchMeta = meta;
       if (reduceMotion) drawPerch(0, MOODS[currentMood()].night);
       resolveBranch();
     };
     img.onerror = resolveBranch;
-    img.src = src;
+    img.src = meta.src;
   }
-  loadPerchFrame("assets/img/hero-fx/perch-empty-source.png");
+  loadPerchFrame((cover.clientWidth || innerWidth) < 720 ? BRANCH.sm : BRANCH.lg);
 
   var mover = null;
   var nextMoverAt = performance.now() / 1000 + 12;
@@ -324,6 +309,7 @@
     }
   }
 
+  var lastBright = "";
   function drawPerch(now, nightAlpha) {
     if (!perchFrame) return;
     var sceneAlpha = 0.70;
@@ -338,14 +324,18 @@
     var pivotX = x + targetW * 0.96;
     var pivotY = y + targetH * 0.55;
 
+    // Night dims the branch. CSS filters on the element work everywhere.
+    var bright = (0.68 - nightAlpha * 0.16).toFixed(2);
+    if (bright !== lastBright) { lastBright = bright; branches.style.filter = "brightness(" + bright + ")"; }
+
+    // The baked image carries a blur margin around the original 1672x941 art.
+    var m = perchMeta, scale = targetW / (m.w - m.pad * 2);
     bctx.save();
-    bctx.filter = "blur(" + (W < 720 ? 7 : 12) + "px) saturate(.48) contrast(.90) brightness(" +
-      (0.68 - nightAlpha * 0.16).toFixed(2) + ")";
     bctx.globalAlpha = sceneAlpha;
     bctx.translate(pivotX, pivotY);
     bctx.rotate(wind);
     bctx.translate(-pivotX, -pivotY);
-    bctx.drawImage(perchFrame, x, y, targetW, targetH);
+    bctx.drawImage(perchFrame, x - m.pad * scale, y - m.pad * scale, m.w * scale, m.h * scale);
     bctx.restore();
   }
 
@@ -378,7 +368,6 @@
     ctx.save();
     ctx.globalAlpha = alpha * 0.88;
     ctx.globalCompositeOperation = "screen";
-    ctx.filter = "blur(2.4px) saturate(.28) contrast(.68) brightness(.96)";
     ctx.drawImage(moonImg, mx - size / 2, my - size / 2, size, size);
     ctx.restore();
   }
