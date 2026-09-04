@@ -213,7 +213,7 @@ main.wrap { padding-top: 90px; }
 .bento .big .sub { color: #faf9f5; }
 
 /* Questions become calm text controls and an editorial answer. */
-.ask, .favs, .az, .band { margin-top: 104px; }
+.ask, .favs, .az, .band { margin-top: 72px; }
 .ask h2, .favhead h2, .azhead h2 { font-size: 38px; margin: 0; }
 .ask h2 { margin-bottom: 32px; }
 .pills { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 24px; }
@@ -223,10 +223,10 @@ main.wrap { padding-top: 90px; }
 .pill:hover { transform: none; box-shadow: none; color: var(--ink); }
 .pill.on, .pill.on:hover { background: none; color: var(--ink); border-bottom: 1px solid var(--ink); font-weight: 600; }
 .panels { margin-top: 32px; }
-.qp { border: 0; border-radius: 0; background: var(--card); padding: 32px; }
-.qp > img { width: 70px; height: 70px; border-radius: 2px; right: 32px; top: 32px; }
+.qp { border: 0; border-radius: 0; background: var(--card); padding: 24px 28px 26px; }
+.qp > img { width: 64px; height: 64px; border-radius: 2px; right: 28px; top: 24px; }
 .qp h3 { font-family: var(--serif); font-weight: 700; font-size: 26px; line-height: 1.25;
-  letter-spacing: -.025em; min-height: 70px; margin-bottom: 20px; padding-right: 100px; }
+  letter-spacing: -.025em; min-height: 0; margin-bottom: 10px; padding-right: 90px; }
 .qp .split { color: var(--mute); font-size: 10px; font-weight: 400; margin: 26px 0 10px; }
 .rows, .qp[data-q="daily"] .rows { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 28px; }
 .rows a, .qp[data-q="daily"] .rows a { background: transparent; border: 0; border-top: 1px solid var(--line);
@@ -264,7 +264,7 @@ main.wrap { padding-top: 90px; }
 .azchip .n { font-family: var(--f); font-size: 11px; font-weight: 400; border-radius: 0; }
 .azchip.on { font-weight: 500; }
 .azchip.on .n { background: none; color: var(--ink); }
-.shelves { columns: 2; column-gap: 48px; margin-top: 50px; }
+.shelves { columns: 2; column-gap: 48px; margin-top: 36px; }
 .grp { margin-bottom: 42px; }
 .gh { border-bottom: 1px solid var(--ink); padding-bottom: 13px; margin-bottom: 0; gap: 0; }
 .gh i { display: none; }
@@ -284,14 +284,14 @@ main.wrap { padding-top: 90px; }
 .tile.lead b { color: var(--ink); }
 
 /* Closing note, not a brightly colored sales banner. */
-.band { border-top: 1px solid var(--line); padding-top: 54px; }
+.band { border-top: 1px solid var(--line); padding-top: 40px; }
 .band .t.dark, :root[data-theme="dark"] .band .t.dark { display: block; background: none; color: var(--ink);
   border-radius: 0; padding: 0; max-width: 680px; margin-inline: auto; }
 .band h2 { font-family: var(--serif); font-size: 48px; font-weight: 700; line-height: 1.15;
   letter-spacing: -.04em; margin: 0 0 26px; }
 .band .t.dark .sub { font-size: 17px; line-height: 1.7; opacity: 1; color: var(--ink2); max-width: 590px; }
 .band .t.dark iframe { display: block; max-width: 480px; width: 100%; border-radius: 0; margin-top: 30px; }
-.foot { border-top: 1px solid var(--line); margin: 90px 0 0; padding: 32px 0 50px;
+.foot { border-top: 1px solid var(--line); margin: 64px 0 0; padding: 32px 0 50px;
   font-size: 11px; gap: 14px; line-height: 1.7; }
 .foot a { font-weight: 400; }
 
@@ -351,7 +351,7 @@ main.wrap { padding-top: 90px; }
   .bento .big .num { font-size: 48px; }
   .bento .num small { font-size: 10px; }
   .bento .sub { font-size: 11px; }
-  .ask, .favs, .az, .band { margin-top: 64px; }
+  .ask, .favs, .az, .band { margin-top: 44px; }
   .pills { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 20px; }
   .pill { font-size: 12px; padding: 13px 0; text-align: left; }
   .pill[data-q="daily"] { grid-column: auto; font-size: 12px; padding: 13px 0; }
@@ -374,7 +374,7 @@ main.wrap { padding-top: 90px; }
   .band { padding-top: 36px; }
   .band h2 { font-size: 37px; }
   .band .t.dark .sub { font-size: 15px; }
-  .foot { margin-top: 64px; padding-bottom: 30px; }
+  .foot { margin-top: 44px; padding-bottom: 30px; }
 }
 @media (max-width: 430px) {
   .read-cta { font-size: 0; width: 50px; justify-content: center; }
@@ -399,7 +399,7 @@ main.wrap { padding-top: 90px; }
    user preferred. The recommendation panel beneath them stays editorial. */
 .classic-layout {
   margin-top: -90px;
-  padding: 55px 0 28px;
+  padding: 55px 0 0;
   color: var(--ink);
   background: var(--paper);
   box-shadow: 0 0 0 100vmax var(--paper);
@@ -454,7 +454,7 @@ main.wrap { padding-top: 90px; }
 .classic-layout .bento .sub,
 .classic-layout .bento .big .sub { color: #fff; font-size: .88rem; font-weight: 500; }
 
-.classic-layout .ask { margin: 64px 0 0; color: var(--ink); }
+.classic-layout .ask { margin: 44px 0 0; color: var(--ink); }
 .classic-layout .ask h2 {
   margin: 0 0 18px;
   color: var(--ink);
@@ -492,13 +492,20 @@ main.wrap { padding-top: 90px; }
 }
 @keyframes pill-cycle-fill { to { background-position: 0 0; } }
 
-.answers { margin-top: 32px; }
+/* The chosen answer sits right under the pills: no blank band between the
+   question and its response. */
+.answers { margin-top: 14px; }
 .answers .panels { margin-top: 0; }
 .favdots button { width: 7px; height: 7px; background: var(--ink2); opacity: .58; }
 .favdots button.on { background: var(--ink); opacity: 1; transform: scale(1.25); }
 
 @media (max-width: 700px) {
   .classic-layout { margin-top: -58px; padding-top: 34px; }
+  .classic-layout .ask { margin-top: 34px; }
+  .answers { margin-top: 10px; }
+  .qp { padding: 20px 20px 22px; }
+  .qp > img { width: 56px; height: 56px; right: 20px; top: 20px; }
+  .qp h3 { font-size: 22px; padding-right: 76px; margin-bottom: 8px; }
   .classic-layout .bento {
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: 260px repeat(2, minmax(168px, auto));
