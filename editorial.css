@@ -42,7 +42,13 @@ a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visibl
 .mark { font-family: var(--serif); font-size: 22px; line-height: 1; font-weight: 500;
   text-transform: none; letter-spacing: -.055em; font-variation-settings: normal; }
 .mark i { color: inherit; font-style: italic; font-weight: 400; }
+.doors { flex: none; gap: 2px; padding: 3px; background: transparent; border: 1px solid var(--line); border-radius: 999px; }
+.door { padding: 6px 11px; font-size: 11px; font-weight: 500; letter-spacing: .07em; color: var(--ink2); }
+.door-cur { background: var(--ink); color: var(--paper); }
 .run { margin-left: auto; flex: 0 1 auto; }
+.top-search { flex: none; width: 38px; height: 38px; border-radius: 8px; color: var(--ink); background: transparent; }
+.top-search:hover { border-color: var(--ink); }
+.menu-read { font-weight: 500; }
 .verbs { justify-content: flex-end; overflow: visible; gap: 28px; color: var(--ink);
   font-size: 14px; font-weight: 400; line-height: 1.2; }
 .verbs a { padding-block: 10px; }
@@ -290,8 +296,9 @@ main.wrap { padding-top: 90px; }
 .foot a { font-weight: 400; }
 
 @media (max-width: 980px) {
-  .bar { padding-inline: 24px; gap: 22px; }
-  .verbs { gap: 20px; font-size: 13px; }
+  .bar { padding-inline: 24px; gap: 16px; }
+  .verbs { gap: 18px; font-size: 13px; }
+  .door { padding: 6px 9px; }
   .cover-copy { width: min(670px, calc(100% - 64px)); }
   .cover h1 { font-size: 60px; }
   .shelves { columns: 2; column-gap: 28px; }
@@ -301,11 +308,15 @@ main.wrap { padding-top: 90px; }
 @media (max-width: 720px) {
   :root { --header-height: 64px; }
   .wrap { padding-inline: 24px; }
-  .bar { padding-block: 0; height: var(--header-height); flex-wrap: nowrap; gap: 16px; }
+  .bar { padding-block: 0; height: var(--header-height); flex-wrap: nowrap; gap: 8px; }
   .bar::before { display: none; }
-  .mark { font-size: 20px; order: initial; }
+  .mark { font-size: 18px; order: initial; }
+  .doors { order: initial; margin-left: 2px; }
+  .door { padding: 5px 8px; font-size: 10px; letter-spacing: .04em; }
   .run { display: none; }
-  .read-group { margin-left: auto; height: 36px; }
+  .top-search, #search-open.top-search { order: 0; margin-left: auto; width: 36px; height: 36px; }
+  .door-long { display: none; }
+  .read-group { margin-left: 0; height: 36px; }
   .read-cta { order: initial; margin: 0; padding-inline: 10px; font-size: 11px; }
   .site-menu > summary { height: 36px; width: 34px; }
   .menu-panel { width: min(310px, calc(100vw - 48px)); }
@@ -365,12 +376,17 @@ main.wrap { padding-top: 90px; }
   .band .t.dark .sub { font-size: 15px; }
   .foot { margin-top: 64px; padding-bottom: 30px; }
 }
-@media (max-width: 360px) {
-  .bar, .wrap { padding-inline: 18px; }
+@media (max-width: 430px) {
+  .read-cta { font-size: 0; width: 50px; justify-content: center; }
+  .read-cta::after { content: "Read"; font-size: 11px; }
+}
+@media (max-width: 380px) {
+  .bar, .wrap { padding-inline: 16px; }
   .mark { font-size: 18px; }
   .cover-copy { width: calc(100% - 36px); }
-  .read-cta { font-size: 0; width: 54px; justify-content: center; }
-  .read-cta::after { content: "Read"; font-size: 11px; }
+  /* Too narrow for everything: Read the Brief stays first in the menu. */
+  .read-cta { display: none; }
+  .site-menu > summary { border-radius: 8px; border-left: 0; }
   .cover h1 { font-size: 31px; }
   .cover-contents { font-size: 12px; }
 }

@@ -35,6 +35,16 @@ the `-s` variants ≈520px for the question panels). `sources.json` maps each fi
 to its Instagram post. To swap a tile's photo, drop a new JPEG in and change the
 `<img src>` in `index.html`; keep them under ~350KB each.
 
+## The cover's branch and moon
+
+`assets/img/hero-fx/branch-lg.webp`, `branch-sm.webp` and `moon.webp` are baked
+offline: checkerboard keyed out, blur/saturate/contrast applied, sized to what
+the cover actually draws. Safari's canvas has no `ctx.filter`, so the runtime
+never filters — `hero-live.js` only draws them and dims the branch at night with
+a CSS `brightness()`. The originals (`perch-empty-source.png`, `moon-real.png`)
+live in git history before Sept 2026; re-bake with a headless Chromium canvas
+if the art changes.
+
 ## Files
 
 - `index.html`, `v2.css`, `v2.js` — the front door.

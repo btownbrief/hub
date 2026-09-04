@@ -30,11 +30,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://guide.btownbrief.com">
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..900&family=Instrument+Serif:ital@0;1&family=Lora:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..900&family=Lora:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="assets/img/hero.jpg">
-<link rel="preload" as="image" href="assets/img/hero-fx/perch-empty-source.png">
+<link rel="preload" as="image" href="assets/img/hero-fx/branch-lg.webp" media="(min-width: 720px)">
+<link rel="preload" as="image" href="assets/img/hero-fx/branch-sm.webp" media="(max-width: 719px)">
 <link rel="stylesheet" href="v2.css?v=20260901c">
-<link rel="stylesheet" href="editorial.css?v=20260903e">
+<link rel="stylesheet" href="editorial.css?v=20260904a">
 <script>
   /* Saved theme before first paint — no flash. System preference stays the
      default until the visitor picks a side with the header toggle. */
@@ -58,20 +59,31 @@
 <header class="top">
   <div class="wrap bar">
     <a class="mark" href="/">BTown <i>Brief</i></a>
+    <!-- The two front doors. The hub is the index you browse; All Day is the
+         feed you read. The switch stays at the very top on every screen. -->
+    <div class="doors" role="group" aria-label="City hub or All Day">
+      <span class="door door-cur" aria-current="page"><span class="door-long">City&nbsp;</span>hub</span>
+      <a class="door" href="https://guide.btownbrief.com/all-day/">All&nbsp;Day</a>
+    </div>
     <div class="run">
       <nav class="verbs" aria-label="BTown Brief">
-        <a href="https://guide.btownbrief.com/all-day/">All Day</a>
-        <a href="#right-now">City guide</a>
+        <a href="https://guide.btownbrief.com/restaurants.html">Eat &amp; drink</a>
+        <a href="https://guide.btownbrief.com/events.html">Events</a>
         <a href="https://play.btownbrief.com/">Games</a>
         <a href="https://guide.btownbrief.com/telegram.html">Community</a>
       </nav>
     </div>
+    <!-- Search up top for people who already know what they want. -->
+    <button class="sbtn top-search" type="button" id="search-open" aria-label="Search everything I made" title="Search (press /)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.2" y2="16.2"/></svg>
+    </button>
     <div class="read-group">
       <a class="read-cta" href="https://www.btownbrief.com?utm_source=hub&amp;utm_medium=referral&amp;utm_campaign=nav">Read the Brief</a>
       <details class="site-menu" id="site-menu">
         <summary aria-label="Open site menu"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
         <div class="menu-panel">
           <p class="menu-label">Around Burlington</p>
+          <a class="menu-read" href="https://www.btownbrief.com?utm_source=hub&amp;utm_medium=referral&amp;utm_campaign=nav">Read the Brief <span>↗</span></a>
           <a href="https://guide.btownbrief.com/all-day/">All Day <span>↗</span></a>
           <a href="https://guide.btownbrief.com/restaurants.html">Eat &amp; drink <span>↗</span></a>
           <a href="https://guide.btownbrief.com/events.html">Events <span>↗</span></a>
@@ -87,10 +99,7 @@
       <svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.6"/><line x1="12" y1="2" x2="12" y2="4.6"/><line x1="12" y1="19.4" x2="12" y2="22"/><line x1="2" y1="12" x2="4.6" y2="12"/><line x1="19.4" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="6.7" y2="6.7"/><line x1="17.3" y1="17.3" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="6.7" y2="17.3"/><line x1="17.3" y1="6.7" x2="19.1" y2="4.9"/></svg>
       <svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
     </button>
-    <button class="sbtn" type="button" id="search-open" aria-label="Search everything I made">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.2" y2="16.2"/></svg>
-    </button>
-            <span>Theme &amp; search</span>
+            <span>Light / dark</span>
           </div>
         </div>
       </details>
@@ -556,7 +565,7 @@
 
 <script src="https://guide.btownbrief.com/js/food-lib.js" defer></script>
 <script src="v2.js?v=20260903b" defer></script>
-<script src="hero-live.js?v=20260903n" defer></script>
+<script src="hero-live.js?v=20260904a" defer></script>
 <script src="editorial.js?v=20260903e" defer></script>
 </body>
 </html>
