@@ -34,7 +34,7 @@
 <link rel="preload" as="image" href="assets/img/hero.jpg">
 <link rel="preload" as="image" href="assets/img/hero-fx/branch-lg.webp" media="(min-width: 720px)">
 <link rel="preload" as="image" href="assets/img/hero-fx/branch-sm.webp" media="(max-width: 719px)">
-<link rel="stylesheet" href="v2.css?v=20260901c">
+<link rel="stylesheet" href="v2.css?v=20260904b">
 <link rel="stylesheet" href="editorial.css?v=20260904b">
 <script>
   /* Saved theme before first paint — no flash. System preference stays the
@@ -53,6 +53,22 @@
         async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
+<div class="now-strip" id="now-strip" hidden aria-live="off"><span id="date-line"></span><span aria-hidden="true"> · </span><span id="now-clock"></span></div>
+<script>
+  /* The clock is page chrome, so paint it before the rest of the body parses. */
+  (function () {
+    try {
+      var now = new Date();
+      document.getElementById('date-line').textContent = new Intl.DateTimeFormat('en-US', {
+        weekday: 'long', month: 'long', day: 'numeric', timeZone: 'America/New_York'
+      }).format(now);
+      document.getElementById('now-clock').textContent = new Intl.DateTimeFormat('en-US', {
+        hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York'
+      }).format(now);
+      document.getElementById('now-strip').hidden = false;
+    } catch (e) {}
+  })();
+</script>
 <a class="skip-link" href="#main-content">Skip to content</a>
 
 <!-- ============ HEADER: wordmark · what people want · subscribe · search ============ -->
@@ -76,6 +92,9 @@
     <!-- Search up top for people who already know what they want. -->
     <button class="sbtn top-search" type="button" id="search-open" aria-label="Search everything I made" title="Search (press /)">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.2" y2="16.2"/></svg>
+    </button>
+    <button class="jarbtn" type="button" id="jar-open" data-jar-open aria-label="Suggestion jar and tip jar" title="Suggestions and tips">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 7.5h9v10.2a2.3 2.3 0 0 1-2.3 2.3H9.8a2.3 2.3 0 0 1-2.3-2.3z"/><path d="M6.6 4.4h10.8v2.2H6.6z"/><path d="M12 10.6v4.2M10.2 12.3h3.6"/></svg><span>Jar</span>
     </button>
     <div class="read-group">
       <a class="read-cta" href="https://www.btownbrief.com?utm_source=hub&amp;utm_medium=referral&amp;utm_campaign=nav">Read the Brief</a>
@@ -154,12 +173,17 @@
       <p class="sub">the local's list</p>
     </a>
 
-    <a class="t ph" href="https://guide.btownbrief.com/weather.html">
-      <img src="assets/img/ig/sky.jpg" alt="Sun through a break in storm clouds over Lake Champlain" loading="lazy">
-      <p class="lab">Right now</p>
-      <p class="num" id="temp">—</p>
-      <p class="sub" id="sky">full forecast</p>
-    </a>
+    <div class="bento-guide-weather">
+      <a class="city-guide-card" href="https://guide.btownbrief.com/things-to-do.html">
+        <span>The City Guide</span><small>206+ things to do, the Top 100, 16 guides</small><b aria-hidden="true">→</b>
+      </a>
+      <a class="t ph" href="https://guide.btownbrief.com/weather.html">
+        <img src="assets/img/ig/sky.jpg" alt="Sun through a break in storm clouds over Lake Champlain" loading="lazy">
+        <p class="lab">Right now</p>
+        <p class="num" id="temp">—</p>
+        <p class="sub" id="sky">full forecast</p>
+      </a>
+    </div>
 
     <a class="t ph" href="https://guide.btownbrief.com/restaurants.html">
       <img src="assets/img/ig/food.jpg" alt="Nachos and fried chicken on a window table, Church Street at sunset outside" loading="lazy">
@@ -396,6 +420,7 @@
       <h2 class="D">Everything I made</h2>
       <p id="az-count">93 pages and games, by shelf. If it isn't in a question above, it's here.</p>
       <label class="find"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.2" y2="16.2"/></svg><input type="search" id="find" placeholder="Find anything — a page, a game, a place" autocomplete="off"></label>
+      <button class="jarbtn jarbtn-az" type="button" data-jar-open aria-label="Suggestion jar and tip jar" title="Suggestions and tips"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 7.5h9v10.2a2.3 2.3 0 0 1-2.3 2.3H9.8a2.3 2.3 0 0 1-2.3-2.3z"/><path d="M6.6 4.4h10.8v2.2H6.6z"/><path d="M12 10.6v4.2M10.2 12.3h3.6"/></svg><span>Missing something? The jar</span></button>
     </div>
     <!-- The table of contents. Same filter buttons as ever, dressed like the
          index page of a book: dotted leaders out to a live count per shelf.
@@ -545,6 +570,9 @@
       </div>
 
     </div>
+    <a class="weather-row" href="https://guide.btownbrief.com/weather.html">
+      <b>Weather &amp; the Lake</b><span>live conditions, lake temp, can-I-swim</span><i aria-hidden="true">→</i>
+    </a>
   </section>
 
   <!-- ============ THE SIGNUP: the last thing on the page ============ -->
@@ -563,8 +591,17 @@
   </footer>
 </main>
 
+<div class="sheet" id="jar-sheet" hidden>
+  <div class="sheet-scrim" data-jar-close></div>
+  <section class="sheet-card" role="dialog" aria-modal="true" aria-labelledby="jar-title">
+    <header class="sheet-head"><h2 id="jar-title">The jar</h2><button class="sheet-close" type="button" data-jar-close aria-label="Close"><span aria-hidden="true">×</span></button></header>
+    <div class="sheet-body"></div>
+  </section>
+</div>
+<div class="toast" id="toast" role="status" hidden></div>
+
 <script src="https://guide.btownbrief.com/js/food-lib.js" defer></script>
-<script src="v2.js?v=20260903b" defer></script>
+<script src="v2.js?v=20260904b" defer></script>
 <script src="hero-live.js?v=20260904b" defer></script>
 <script src="editorial.js?v=20260903e" defer></script>
 </body>

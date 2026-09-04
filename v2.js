@@ -46,11 +46,89 @@
 
   /* ---------- the date line + live clock on the cover ---------- */
   function dateLine() {
-    txt('date-line', new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: TZ }));
-    txt('now-clock', new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: TZ }).toLowerCase());
+    var now = new Date();
+    txt('date-line', new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: TZ }).format(now));
+    txt('now-clock', new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', timeZone: TZ }).format(now));
+    var strip = $('now-strip'); if (strip) strip.hidden = false;
   }
   dateLine();
-  setInterval(dateLine, 30 * 1000);
+  setTimeout(function minuteTick() {
+    dateLine();
+    setTimeout(minuteTick, 60000 - (Date.now() % 60000) + 20);
+  }, 60000 - (Date.now() % 60000) + 20);
+
+  /* ---------- suggestion jar + tip jar ---------- */
+  (function () {
+    var openers = document.querySelectorAll('[data-jar-open]'), sheet = $('jar-sheet'), body = sheet && sheet.querySelector('.sheet-body');
+    if (!openers.length || !sheet || !body) return;
+    var previousFocus = null, toastTimer = 0;
+    function playerId() {
+      var id = null;
+      try { id = localStorage.getItem('btown-player-id'); } catch (e) {}
+      if (id) return id;
+      id = 'p_' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+      try { localStorage.setItem('btown-player-id', id); } catch (e) {}
+      return id;
+    }
+    function showToast(message) {
+      var el = $('toast'); if (!el) return;
+      el.textContent = message; el.hidden = false; clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () { el.hidden = true; }, 3000);
+    }
+    function closeJar() {
+      if (sheet.hidden) return;
+      sheet.hidden = true; document.body.classList.remove('sheet-open'); body.innerHTML = '';
+      if (previousFocus) previousFocus.focus();
+    }
+    function trap(e) {
+      if (sheet.hidden) return;
+      if (e.key === 'Escape') { e.preventDefault(); closeJar(); return; }
+      if (e.key !== 'Tab') return;
+      var focusable = sheet.querySelectorAll('button:not([disabled]), textarea, input, a[href]');
+      if (!focusable.length) return;
+      var first = focusable[0], last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+    function openJar() {
+      previousFocus = document.activeElement;
+      body.innerHTML = '<p class="jar-lede">Two things in one, because they are the same thing. Tell me what is missing, or chip in — both make this better.</p>' +
+        '<form class="jar-form"><label>What should be on here?<textarea name="text" rows="4" maxlength="600" required placeholder="Something missing from the hub? A page that is wrong, a thing I should build?"></textarea></label>' +
+        '<label class="jar-who">Your name or email, if you want an answer<input type="text" name="who" maxlength="120" placeholder="Optional"></label>' +
+        '<p class="jar-err" hidden></p><button class="jar-submit" type="submit">Put it in the jar</button></form>' +
+        '<div class="jar-tip"><p class="jar-tip-lede">All of this — the guide, the arcade, the Hub, the newsletter — is <b>one person</b> in Burlington. No staff, no investors, no ads. A coffee genuinely keeps it going.</p>' +
+        '<a class="jar-kofi" href="https://ko-fi.com/btownbrief" target="_blank" rel="noopener">Chip in on Ko-fi ↗</a></div>' +
+        '<p class="jar-fine">No promises. Most suggestions do not make it on, and I cannot answer every one. I do read every one.</p>';
+      var form = body.querySelector('form');
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var text = form.elements.text.value.trim(), who = form.elements.who.value.trim();
+        var err = form.querySelector('.jar-err'), btn = form.querySelector('button[type="submit"]');
+        if (text.length < 4) { err.textContent = 'A few more words than that.'; err.hidden = false; return; }
+        err.hidden = true; btn.disabled = true; btn.textContent = 'Sending…';
+        fetch('https://jnouvwxomrcffqwilqkq.supabase.co/rest/v1/rpc/ad_suggest', {
+          method: 'POST',
+          headers: { apikey: 'sb_publishable_RkMJQopffWlV6DSwCRkndQ_Xw6GJMf3', 'Content-Type': 'application/json' },
+          body: JSON.stringify({ p_text: text, p_who: who, p_tab: 'hub', p_sender: playerId() })
+        }).then(function (r) {
+          if (!r.ok) return null;
+          return r.text().then(function (t) { return t ? JSON.parse(t) : true; });
+        }).catch(function () { return null; }).then(function (okay) {
+          if (!okay) {
+            btn.disabled = false; btn.textContent = 'Put it in the jar';
+            err.textContent = 'That didn’t send — try again in a minute.'; err.hidden = false; return;
+          }
+          closeJar(); showToast('In the jar. Thank you — I read all of them.');
+        });
+      });
+      sheet.hidden = false; document.body.classList.add('sheet-open');
+      body.querySelector('textarea').focus();
+    }
+    for (var o = 0; o < openers.length; o++) openers[o].addEventListener('click', openJar);
+    var closers = sheet.querySelectorAll('[data-jar-close]');
+    for (var i = 0; i < closers.length; i++) closers[i].addEventListener('click', closeJar);
+    document.addEventListener('keydown', trap);
+  })();
 
   /* ---------- weather: air, sky, lake, sunset, as-of ---------- */
   function weather() {
