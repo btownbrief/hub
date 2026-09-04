@@ -34,8 +34,8 @@
 <link rel="preload" as="image" href="assets/img/hero.jpg">
 <link rel="preload" as="image" href="assets/img/hero-fx/branch-lg.webp" media="(min-width: 720px)">
 <link rel="preload" as="image" href="assets/img/hero-fx/branch-sm.webp" media="(max-width: 719px)">
-<link rel="stylesheet" href="v2.css?v=20260904b">
-<link rel="stylesheet" href="editorial.css?v=20260904b">
+<link rel="stylesheet" href="v2.css?v=20260904c">
+<link rel="stylesheet" href="editorial.css?v=20260904c">
 <script>
   /* Saved theme before first paint — no flash. System preference stays the
      default until the visitor picks a side with the header toggle. */
@@ -146,6 +146,7 @@
     <button type="button" class="theme-sky-toggle" id="theme-sky-toggle" aria-label="Switch to night mode" aria-pressed="false">
       <span>Day</span><i aria-hidden="true"></i><span>Night</span>
     </button>
+    <a class="cover-weather" href="https://guide.btownbrief.com/weather.html"><b id="cover-temp"></b><span>The weather</span><i aria-hidden="true">↗</i></a>
   </div>
   <button class="scroll-cue editorial-scroll-cue" id="scroll-cue" type="button" aria-label="Scroll down to explore">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -166,24 +167,24 @@
   <!-- ============ THE BENTO: live, photographic ============ -->
   <section class="bento" aria-label="Right now">
 
-    <a class="t ph big" href="https://guide.btownbrief.com/things-to-do.html">
-      <img src="assets/img/ig/fools-night.jpg" alt="The Festival of Fools banner over Church Street at night, shops lit behind it" fetchpriority="high">
-      <p class="lab">Things to do</p>
-      <p class="num">206<small>+ ideas</small></p>
-      <p class="sub">the local's list</p>
-    </a>
-
-    <div class="bento-guide-weather">
-      <a class="city-guide-card" href="https://guide.btownbrief.com/things-to-do.html">
-        <span>The City Guide</span><small>206+ things to do, the Top 100, 16 guides</small><b aria-hidden="true">→</b>
+    <div class="bento-stack">
+      <a class="t ph big" href="https://guide.btownbrief.com/things-to-do.html">
+        <img src="assets/img/ig/fools-night.jpg" alt="The Festival of Fools banner over Church Street at night, shops lit behind it" fetchpriority="high">
+        <p class="lab">Things to do</p>
+        <p class="num">206<small>+ ideas</small></p>
+        <p class="sub">the local's list</p>
       </a>
-      <a class="t ph" href="https://guide.btownbrief.com/weather.html">
-        <img src="assets/img/ig/sky.jpg" alt="Sun through a break in storm clouds over Lake Champlain" loading="lazy">
-        <p class="lab">Right now</p>
-        <p class="num" id="temp">—</p>
-        <p class="sub" id="sky">full forecast</p>
+      <a class="bento-bar" href="https://guide.btownbrief.com/things-to-do.html#top-100">
+        <span>The Top 100</span><small>the definitive things to do, ranked</small><b aria-hidden="true">→</b>
       </a>
     </div>
+
+    <a class="t ph" href="https://guide.btownbrief.com/weather.html">
+      <img src="assets/img/ig/sky.jpg" alt="Sun through a break in storm clouds over Lake Champlain" loading="lazy">
+      <p class="lab">Right now</p>
+      <p class="num" id="temp">—</p>
+      <p class="sub" id="sky">full forecast</p>
+    </a>
 
     <a class="t ph" href="https://guide.btownbrief.com/restaurants.html">
       <img src="assets/img/ig/food.jpg" alt="Nachos and fried chicken on a window table, Church Street at sunset outside" loading="lazy">
@@ -601,7 +602,7 @@
 <div class="toast" id="toast" role="status" hidden></div>
 
 <script src="https://guide.btownbrief.com/js/food-lib.js" defer></script>
-<script src="v2.js?v=20260904b" defer></script>
+<script src="v2.js?v=20260904c" defer></script>
 <script src="hero-live.js?v=20260904b" defer></script>
 <script src="editorial.js?v=20260903e" defer></script>
 </body>

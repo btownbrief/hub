@@ -124,14 +124,16 @@ img { display: block; }
   text-transform: uppercase; font-variant-numeric: tabular-nums; }
 .now-strip[hidden] { display: none; }
 
-/* One bento cell, with the requested guide link sitting immediately above weather. */
-.classic-layout .bento .bento-guide-weather { grid-column: span 2; display: grid; grid-template-rows: auto 1fr; gap: 8px; min-width: 0; }
-.classic-layout .bento .bento-guide-weather .t { grid-column: auto; min-height: 0; }
-.city-guide-card { display: grid; grid-template-columns: auto 1fr auto; align-items: baseline; gap: 8px;
+/* The big tile and the Top 100 bar share one 2x2 cell: the tile takes the
+   height, the bar rides underneath it. Weather is then an ordinary tile,
+   the same size as Open right now. */
+.classic-layout .bento .bento-stack { grid-column: span 2; grid-row: span 2; display: grid; grid-template-rows: 1fr auto; gap: 8px; min-width: 0; min-height: 0; }
+.classic-layout .bento .bento-stack .t.big { grid-column: auto; grid-row: auto; min-height: 0; }
+.bento-bar { display: grid; grid-template-columns: auto 1fr auto; align-items: baseline; gap: 8px;
   min-width: 0; padding: 9px 13px; border-radius: 12px; background: var(--lake); color: #fff; }
-.city-guide-card span { font-weight: 800; white-space: nowrap; }
-.city-guide-card small { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; }
-.city-guide-card b { font-size: 16px; }
+.bento-bar span { font-weight: 800; white-space: nowrap; }
+.bento-bar small { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; }
+.bento-bar b { font-size: 16px; }
 
 .weather-row { display: grid; grid-template-columns: auto 1fr auto; align-items: baseline; gap: 14px;
   margin-top: 12px; padding: 18px 0; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--line); }
@@ -411,9 +413,8 @@ img { display: block; }
   .bento { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 142px; }
   .t { grid-column: span 1; padding: .9rem .95rem; }
   .t.big { grid-column: span 2; grid-row: span 2; }
-  .classic-layout .bento .bento-guide-weather { grid-column: span 1; }
-  .city-guide-card { grid-template-columns: 1fr auto; align-content: center; }
-  .city-guide-card small { grid-column: 1 / -1; white-space: normal; line-height: 1.25; }
+  .classic-layout .bento .bento-stack { grid-column: 1 / -1; grid-row: auto; }
+  .classic-layout .bento .bento-stack .t.big { min-height: 260px; }
   .weather-row { grid-template-columns: 1fr auto; gap: 4px 12px; }
   .weather-row span { grid-column: 1 / -1; }
   .sbtn { width: 34px; height: 34px; }
