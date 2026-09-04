@@ -134,7 +134,7 @@
   function weather() {
     return getJSON(GUIDE + 'data/weather/latest.json').then(function (d) {
       var now = d.now || {}, lake = d.lake_gage || {}, sun = d.sun || {};
-      if (now.temp_f != null) txt('temp', Math.round(now.temp_f) + '°');
+      if (now.temp_f != null) { txt('temp', Math.round(now.temp_f) + '°'); txt('cover-temp', Math.round(now.temp_f) + '°'); }
       if (now.description) {
         txt('sky', String(now.description).toLowerCase() + ' · full forecast');
         live('weather', Math.round(now.temp_f) + '° ' + String(now.description).toLowerCase() + (lake.water_temp_f != null ? ' · lake ' + Math.round(lake.water_temp_f) + '°' : ''));

@@ -126,6 +126,17 @@ a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visibl
   transition: transform .28s cubic-bezier(.2,.8,.2,1); }
 .theme-sky-toggle[aria-pressed="true"] i::after { transform: translateX(13px); }
 .theme-sky-toggle:focus-visible { outline-color: #faf9f5; }
+/* The weather, beside the day/night switch: same pill, live temperature. */
+.cover-weather {
+  display: inline-flex; align-items: center; gap: 7px; padding: 7px 12px;
+  border: 1px solid #faf9f58c; border-radius: 999px;
+  background: rgba(16,23,32,.48); color: #faf9f5; text-decoration: none;
+  font: 600 14px/1 var(--f); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+}
+.cover-weather b { font-weight: 800; font-variant-numeric: tabular-nums; }
+.cover-weather b:empty { display: none; }
+.cover-weather i { font-style: normal; opacity: .7; font-size: 12px; }
+.cover-weather:hover { background: rgba(16,23,32,.68); border-color: #faf9f5; }
 .cover-credit { position: absolute; z-index: 7; right: 24px; bottom: 21px; margin: 0;
   color: #faf9f5; font-size: 10px; font-weight: 400; letter-spacing: .01em; }
 .editorial-scroll-cue { z-index: 7; width: 44px; height: 44px; padding: 0; justify-content: center;
@@ -508,7 +519,8 @@ main.wrap { padding-top: 90px; }
   .qp h3 { font-size: 22px; padding-right: 76px; margin-bottom: 8px; }
   .classic-layout .bento {
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: 260px repeat(2, minmax(168px, auto));
+    /* row 1 is the big tile plus the Top 100 bar underneath, so it sizes itself */
+    grid-template-rows: auto repeat(2, minmax(168px, auto));
     grid-auto-rows: minmax(168px, auto);
   }
   .classic-layout .bento .t { grid-column: span 1; padding: 16px 12px; border-radius: 18px; }
