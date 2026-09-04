@@ -320,7 +320,11 @@
     var targetH = targetW * 941 / 1672;
     var x = W * (W < 720 ? 0.16 : 0.34);
     var y = H * (W < 720 ? 0.17 : 0.21);
-    var wind = Math.sin(now * 0.58) * 0.009 + Math.sin(now * 0.21 + 1.7) * 0.0045;
+    // A real breeze, not a tremor: a slow swell, a longer gust cycle, and a
+    // quick flutter on top. Rotation is in radians; the tips travel ~80px.
+    var wind = Math.sin(now * 0.58) * 0.040
+             + Math.sin(now * 0.21 + 1.7) * 0.020
+             + Math.sin(now * 1.45 + 0.6) * 0.006;
     var pivotX = x + targetW * 0.96;
     var pivotY = y + targetH * 0.55;
 
