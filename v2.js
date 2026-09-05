@@ -32,10 +32,11 @@
   function noop() {}
 
   /* Burlington calendar parts for any instant. */
+  // Reuse the timezone formatter across the event feed and periodic refreshes.
+  var partsFormatter = new Intl.DateTimeFormat('en-US', { timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false, weekday: 'short' });
   function btParts(d) {
-    var f = new Intl.DateTimeFormat('en-US', { timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false, weekday: 'short' });
     var o = {};
-    f.formatToParts(d).forEach(function (p) { o[p.type] = p.value; });
+    partsFormatter.formatToParts(d).forEach(function (p) { o[p.type] = p.value; });
     return { ymd: o.year + '-' + o.month + '-' + o.day, h: +o.hour % 24, m: +o.minute, wd: o.weekday };
   }
   function clock(iso) {
