@@ -291,6 +291,27 @@ img { display: block; }
 .rows small { font-size: .82rem; color: var(--ink2); }
 .rows a:hover small { color: #3A2E10; }
 
+/* ------------------------------------------------------------- three doors
+   One next action per pillar for someone who has just arrived. Reuses .rows for
+   the two alternates in each card, so the editorial skin styles them for free. */
+.doors3 { margin-top: clamp(2.4rem, 6vw, 4rem); }
+.doors3-head { display: flex; align-items: flex-end; gap: 1.6rem; margin-bottom: 1rem; }
+.doors3-head h2 { margin: 0; font-size: clamp(1.8rem, 4.2vw, 3rem); }
+.doors3-head p { margin: 0 0 .2rem; color: var(--ink2); font-size: .95rem; max-width: 46ch; }
+.doorgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(258px, 1fr)); gap: 1rem; }
+.door3 { background: var(--card); border: 2px solid var(--ink); border-radius: var(--r);
+  padding: 1.25rem 1.3rem 1.15rem; }
+.door3-lab { margin: 0 0 .85rem; font-size: .72rem; font-weight: 900; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--mute); }
+.door3-main { display: block; padding: .95rem 1.05rem; margin-bottom: 10px; border-radius: 16px;
+  background: var(--paper); border: 1.5px solid var(--line); }
+.door3-main b { display: block; font-weight: 800; font-size: 1.2rem; letter-spacing: -.02em; }
+.door3-main span { display: block; margin-top: .28rem; font-size: .86rem; color: var(--ink2); }
+.door3-main:hover { border-color: var(--ink); background: var(--sap); color: #1B1500; }
+.door3-main:hover span { color: #3A2E10; }
+/* One column inside a card: these are alternates, not a second grid. */
+.door3 .rows { grid-template-columns: 1fr; }
+
 /* ------------------------------------------------- a few of my favorites */
 .favs { margin-top: clamp(2.4rem, 6vw, 4rem); }
 .favhead { display: flex; align-items: flex-end; gap: 1.6rem; margin-bottom: 1rem; }
