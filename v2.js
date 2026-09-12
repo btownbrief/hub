@@ -363,7 +363,7 @@
        ['https://guide.btownbrief.com/', 'brickrow'],
        ['https://guide.btownbrief.com/history-full.html', 'lighthouse']
       ].forEach(function (p) { APPEND_THUMBS[azKey(p[0])] = 'assets/img/ig/thumb/' + p[1] + '.jpg'; });
-      function append(shelfId, name, url, emoji) {
+      function append(shelfId, name, url, emoji, description, keywords) {
         var grp = wrap.querySelector('.grp[data-shelf="' + shelfId + '"]') || wrap.querySelector('.grp[data-shelf="more"]');
         if (!grp) return;
         grp.hidden = false;
@@ -378,22 +378,27 @@
         }
         var tt = document.createElement('span'); tt.className = 'tt';
         var b = document.createElement('b'); b.textContent = name;
-        tt.appendChild(b); a.appendChild(icon); a.appendChild(tt);
-        a.setAttribute('data-n', String(name).toLowerCase());
+        tt.appendChild(b);
+        if (description) {
+          var small = document.createElement('small'); small.textContent = description;
+          tt.appendChild(small);
+        }
+        a.appendChild(icon); a.appendChild(tt);
+        a.setAttribute('data-n', (name + ' ' + (description || '') + ' ' + (keywords || '')).toLowerCase().replace(/\s+/g, ' ').trim());
         grp.appendChild(a);
         tiles[azKey(url)] = a;
       }
       if (cat && cat.groups) cat.groups.forEach(function (g) {
         (g.cards || []).forEach(function (c) {
           if (!c.title || !c.href) return;
-          if (!fold(azKey(c.href), c.title, c.blurb || '')) append(AZ_SHELF_FOR_GROUP[g.title] || 'more', c.title, c.href, c.emoji);
+          if (!fold(azKey(c.href), c.title, c.blurb || '')) append(AZ_SHELF_FOR_GROUP[g.title] || 'more', c.title, c.href, c.emoji, c.blurb);
         });
       });
       if (games && games.games) {
         var liveGames = games.games.filter(function (g) { return g.live && g.slug && g.name; });
         liveGames.forEach(function (g) {
           var u = PLAY + encodeURIComponent(g.slug) + '/';
-          if (!fold(azKey(u), g.name, g.pitch || '')) append(AZ_SHELF_FOR_SECTION[g.section] || 'more', g.name, u, g.emoji);
+          if (!fold(azKey(u), g.name, g.pitch || '')) append(AZ_SHELF_FOR_SECTION[g.section] || 'more', g.name, u, g.emoji, g.pitch);
         });
         txt('games-n', String(liveGames.length));
         live('games', liveGames.length + ' games · free, no accounts');
@@ -402,7 +407,7 @@
         if (!p.title || !p.url) return;
         var k = azKey(p.url);
         if (k === 'https://hub.btownbrief.com') return;   // this page itself
-        if (!fold(k, p.title, p.keywords || '')) append('more', p.title, p.url, '');
+        if (!fold(k, p.title, p.keywords || '')) append('more', p.title, p.url, '', '', p.keywords);
       });
       var total = 0, grps = wrap.querySelectorAll('.grp');
       for (var j = 0; j < grps.length; j++) {
