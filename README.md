@@ -66,3 +66,5 @@ if the art changes.
 
 Type is one family, Archivo (wide + black for display). Colour is the lake, the
 maple, the sap and the ink, used as blocks. Dark mode follows the system.
+
+All rights reserved: this code is published for viewing only and is not open source (see [LICENSE](LICENSE)).
