@@ -23,6 +23,16 @@ inside any one of them.
    filters that list, matching titles *and* keywords. The static list in
    `index.html` is the no-JS / fetch-failure fallback.
 
+   Since 2026-10-22 the shelves sit in six groups, in this order: **All Day**
+   (one wide tile plus its nine tabs as links), **Every day** (The Brief, Right
+   now, News & the city), **Guides** (Go and do, Live here, History), **People
+   & projects**, **Games**, and **Archive** ("Moved or resting": pages that
+   moved into All Day or stopped updating; kept, never deleted). Each `.grp`
+   carries `data-group`; the table-of-contents buttons filter by group. Feed
+   items nobody has shelved land in a hidden "Just added" shelf that appears
+   on its own. To retire something, move its tile into the Archive shelf with
+   a line saying where it went.
+
 **Launching a new page, game or project? Don't edit this site.** Add it to
 `catalog.json` (guide repo), `games.json` (btownbrief.github.io), or
 `search-index.json` (btownbrief.github.io) and it appears in the A–Z and the

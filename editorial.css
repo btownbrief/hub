@@ -293,6 +293,25 @@ main.wrap { padding-top: 90px; }
 .tile .tt small { font-size: 12px; line-height: 1.55; margin-top: 5px; font-weight: 400; }
 .tile.lead { border-color: var(--line); }
 .tile.lead b { color: var(--ink); }
+/* Groups inside "Everything I made" (2026-10-22 cleanup). A band line spans
+   both columns; the shelves under it flow in two columns as before. All Day
+   leads, wide, with its nine tabs as links. */
+.band-h { column-span: all; -webkit-column-span: all; margin: 26px 0 26px; padding-top: 16px;
+  border-top: 1px solid var(--line); color: var(--mute); font-size: 11px; font-weight: 500;
+  letter-spacing: .075em; text-transform: uppercase; }
+.band-h:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
+.band-h[hidden] { display: none; }
+.grp-wide { column-span: all; -webkit-column-span: all; }
+.grp-wide .gh { display: none; }
+.allday-tile { border-top: 1px solid var(--ink); padding: 18px 0; }
+.allday-tile > img { width: 132px; height: 92px; flex-basis: 132px; }
+.allday-tile .tt b { font-family: var(--serif); font-size: 28px; line-height: 1.15; letter-spacing: -.03em; }
+.allday-tile .tt small { font-size: 14px; max-width: 640px; color: var(--ink2); }
+.allday-tabs { display: flex; flex-wrap: wrap; gap: 8px; padding: 16px 0 6px; }
+.allday-tabs a { padding: 7px 13px; border: 1px solid var(--line); border-radius: 999px;
+  font-size: 13px; line-height: 1.2; color: var(--ink); background: var(--paper); }
+.allday-tabs a:hover, .allday-tabs a:focus-visible { border-color: var(--ink); background: var(--card); }
+.grp-archive .tile > img, .grp-archive .tile .mo { opacity: .7; }
 
 /* Closing note, not a brightly colored sales banner. */
 .band { border-top: 1px solid var(--line); padding-top: 40px; }
@@ -381,6 +400,9 @@ main.wrap { padding-top: 90px; }
   .azchips { grid-template-columns: 1fr; margin-top: 24px; }
   .azchip { font-size: 15px; padding: 6px 0; }
   .shelves { columns: 1; margin-top: 38px; }
+  .allday-tile > img { width: 88px; height: 68px; flex-basis: 88px; }
+  .allday-tile .tt b { font-size: 23px; }
+  .band-h { margin: 18px 0 20px; }
   .tile > img, .tile .mo { flex-basis: 62px; }
   .band { padding-top: 36px; }
   .band h2 { font-size: 37px; }
