@@ -34,7 +34,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visibl
   text-transform: none; letter-spacing: -.035em; line-height: 1.18; }
 .section-number { margin: 0 0 20px; color: var(--mute); font-size: 11px;
   font-weight: 500; letter-spacing: .075em; text-transform: uppercase; }
-#right-now, #ask, #favorites, #everything, #subscribe { scroll-margin-top: 142px; }
+#right-now, #ask, #start-here, #favorites, #everything, #subscribe { scroll-margin-top: 142px; }
 
 /* The reference's quiet, single-row masthead and split dark action. */
 .top { background: var(--paper); border: 0; backdrop-filter: none; -webkit-backdrop-filter: none; }
@@ -247,6 +247,23 @@ main.wrap { padding-top: 90px; }
 .rows em, .rows small { font-size: 12px; font-weight: 400; color: var(--ink2); }
 .rows a:hover em, .rows a:hover small { color: var(--ink2); }
 
+/* Three doors, in the editorial key: no boxes, one hairline per link. */
+.doors3 { margin-top: 72px; }
+.doors3-head { display: block; margin-bottom: 0; }
+.doors3-head h2 { font-size: 38px; margin: 0; }
+.doors3-head p { font-size: 14px; line-height: 1.7; margin: 14px 0 0; max-width: 58ch; }
+.doorgrid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 28px; margin-top: 32px; }
+.door3 { background: var(--card); border: 0; border-radius: 0; padding: 24px 28px 26px; }
+.door3-lab { color: var(--mute); font-size: 10px; font-weight: 400; letter-spacing: .075em;
+  margin-bottom: 16px; }
+.door3-main { background: transparent; border: 0; border-top: 1px solid var(--ink);
+  border-radius: 0; padding: 17px 0 20px; margin-bottom: 0; }
+.door3-main b { font-family: var(--serif); font-weight: 700; font-size: 21px; line-height: 1.25;
+  letter-spacing: -.025em; }
+.door3-main span { font-size: 12px; margin-top: 7px; line-height: 1.55; }
+.door3-main:hover { background: transparent; color: var(--ink); }
+.door3-main:hover span { color: var(--ink2); }
+
 /* The shortlist is a photographic essay, with small pagination dots. */
 .favhead { display: block; margin-bottom: 32px; }
 .favhead p { margin: 18px 0 0; font-size: 16px; max-width: 600px; }
@@ -315,6 +332,8 @@ main.wrap { padding-top: 90px; }
   .shelves { columns: 2; column-gap: 28px; }
   .fav > img { height: 175px; }
   .azchips { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .doorgrid { grid-template-columns: 1fr; gap: 0; }
+  .door3 { padding-inline: 0; }
 }
 @media (max-width: 720px) {
   :root { --header-height: 64px; }
