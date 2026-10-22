@@ -314,18 +314,33 @@
      by their arcade section, guide cards by their catalog group, everything else
      under More. Launch something new by adding it to one of those three files;
      this page still needs no edit. */
-  var AZ_SHELF_FOR_SECTION = { 'arcade-action': 'arcade', 'daily-puzzles': 'daily', 'board-card': 'board', 'party-community': 'table', 'party-night': 'table', 'local-more': 'go' };
+  var AZ_SHELF_FOR_SECTION = { 'arcade-action': 'arcade', 'daily-puzzles': 'daily', 'board-card': 'board', 'party-community': 'table', 'party-night': 'table', 'local-more': 'projects' };
   var AZ_SHELF_FOR_GROUP = { 'Right now': 'now', 'Go and do something': 'go', 'Live here': 'live', 'Join in': 'people' };
   /* Canonical link key: drop the fragment and utm_* noise, keep meaningful queries
      (restaurants.html?view=deals is its own tile). A couple of known second names
      for the same destination map onto the tile we shelve. */
-  var AZ_ALIAS = { 'https://guide.btownbrief.com/restaurants.html?view=deals': 'https://guide.btownbrief.com/deals.html' };
+  var AZ_ALIAS = {
+    'https://guide.btownbrief.com/restaurants.html?view=deals': 'https://guide.btownbrief.com/deals.html',
+    'https://www.btownbrief.com/subscribe': 'https://www.btownbrief.com',
+    // the old shop address; it forwards to merch.btownbrief.com
+    'https://stephenvdavis-jpg.github.io/t-shirts': 'https://merch.btownbrief.com'
+  };
+  /* Feed entries that are this page, or forward to it: never shelved. */
+  var AZ_SKIP = { 'https://hub.btownbrief.com': 1, 'https://guide.btownbrief.com': 1 };
   function azKey(u) {
     var s = String(u).split('#')[0];
     var q = s.split('?'), path = q[0].replace(/\/$/, '');
     var keep = (q[1] || '').split('&').filter(function (p) { return p && p.slice(0, 4) !== 'utm_'; }).join('&');
     var k = keep ? path + '?' + keep : path;
     return AZ_ALIAS[k] || k;
+  }
+  /* A group's band line (".band-h") shows while any of its shelves does. */
+  function azBands() {
+    var bands = document.querySelectorAll('#az-shelves .band-h');
+    for (var i = 0; i < bands.length; i++) {
+      var gid = bands[i].getAttribute('data-group');
+      bands[i].hidden = !document.querySelector('#az-shelves .grp[data-group="' + gid + '"]:not([hidden])');
+    }
   }
   function az() {
     return Promise.all([
@@ -390,7 +405,7 @@
       }
       if (cat && cat.groups) cat.groups.forEach(function (g) {
         (g.cards || []).forEach(function (c) {
-          if (!c.title || !c.href) return;
+          if (!c.title || !c.href || AZ_SKIP[azKey(c.href)]) return;
           if (!fold(azKey(c.href), c.title, c.blurb || '')) append(AZ_SHELF_FOR_GROUP[g.title] || 'more', c.title, c.href, c.emoji, c.blurb);
         });
       });
@@ -406,19 +421,23 @@
       if (index && index.pages) index.pages.forEach(function (p) {
         if (!p.title || !p.url) return;
         var k = azKey(p.url);
-        if (k === 'https://hub.btownbrief.com') return;   // this page itself
+        if (AZ_SKIP[k]) return;   // this page itself, or the guide's home that forwards here
         if (!fold(k, p.title, p.keywords || '')) append('more', p.title, p.url, '', '', p.keywords);
       });
-      var total = 0, grps = wrap.querySelectorAll('.grp');
+      var total = 0, perGroup = {}, grps = wrap.querySelectorAll('.grp');
       for (var j = 0; j < grps.length; j++) {
-        var n = grps[j].querySelectorAll('.tile').length;
+        var n = grps[j].querySelectorAll('.tile').length, gid = grps[j].getAttribute('data-group') || '';
         total += n;
+        perGroup[gid] = (perGroup[gid] || 0) + n;
         var s = grps[j].querySelector('.gh small'); if (s) s.textContent = String(n);
-        // the same count feeds the shelf's line in the table of contents
-        var chipN = document.querySelector('.azchip[data-shelf="' + grps[j].getAttribute('data-shelf') + '"] .n');
-        if (chipN) chipN.textContent = String(n);
         if (!n) grps[j].hidden = true;
       }
+      // the table of contents counts whole groups (All Day, Every day, Guides…)
+      Object.keys(perGroup).forEach(function (gid) {
+        var chipN = document.querySelector('.azchip[data-shelf="' + gid + '"] .n');
+        if (chipN) chipN.textContent = String(perGroup[gid]);
+      });
+      azBands();
       var allN = document.querySelector('.azchip[data-shelf=""] .n');
       if (allN) allN.textContent = String(total);
       txt('az-count', total + ' pages and games, by shelf. If it isn’t in a question above, it’s here.');
@@ -567,7 +586,7 @@
       var words = q ? q.split(/\s+/) : [];
       var grps = wrap.querySelectorAll('.grp');
       for (var i = 0; i < grps.length; i++) {
-        var g = grps[i], off = shelf && g.getAttribute('data-shelf') !== shelf;
+        var g = grps[i], off = shelf && g.getAttribute('data-group') !== shelf;
         var ts = g.querySelectorAll('.tile'), shown = 0;
         for (var j = 0; j < ts.length; j++) {
           var n = ' ' + (ts[j].getAttribute('data-n') || ts[j].textContent).toLowerCase().replace(/[^a-z0-9]+/g, ' ');
@@ -577,6 +596,7 @@
         }
         g.hidden = !shown;
       }
+      azBands();
     }
     for (var c = 0; c < chips.length; c++) {
       chips[c].addEventListener('click', function () {
